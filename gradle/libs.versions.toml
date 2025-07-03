@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.2.0"
-dokka = "1.9.20"
+dokka = "2.0.0"
 mockk = "1.13.14"
 # https://detekt.dev/docs/intro
 detekt = "1.23.7"
@@ -33,12 +33,13 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 
 [plugins]
-kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 # https://github.com/Kotlin/binary-compatibility-validator
 kotlinxBinaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.17.0" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [bundles]
 dokka = ["dokka-plugin", "dokka-core", "dokka-base"]

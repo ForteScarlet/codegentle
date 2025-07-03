@@ -7,6 +7,8 @@ plugins {
     // The version is inherited from the root project
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.ksp)
+    `module-maven-publish`
+    id("org.jetbrains.dokka")
 }
 
 kotlin {
@@ -117,10 +119,15 @@ dependencies {
     kspCommonMainMetadata(project(":internal:enum-set"))
 }
 
+// https://github.com/google/ksp/issues/963#issuecomment-2919262595
 tasks.withType<KspAATask>().configureEach {
     if (name != "kspCommonMainKotlinMetadata") {
         dependsOn("kspCommonMainKotlinMetadata")
     }
+}
+
+tasks.sourcesJar.configure {
+    dependsOn("kspCommonMainKotlinMetadata")
 }
 
 tasks.withType<Test> {

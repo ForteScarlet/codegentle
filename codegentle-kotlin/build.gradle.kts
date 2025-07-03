@@ -3,12 +3,10 @@ import com.google.devtools.ksp.gradle.KspTaskMetadata
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    // Use the Kotlin Multiplatform plugin without specifying version
-    // The version is inherited from the root project
-    // id("org.jetbrains.kotlin.multiplatform")
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.ksp)
-    // alias(libs.plugins.kotlinxBinaryCompatibilityValidator)
+    `module-maven-publish`
+    id("org.jetbrains.dokka")
 }
 
 dependencies {
@@ -100,6 +98,9 @@ tasks.withType<KspAATask>().configureEach {
     }
 }
 
+tasks.sourcesJar.configure {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
 tasks.withType<Test> {
     useJUnitPlatform()
 }

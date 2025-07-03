@@ -4,23 +4,19 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    // Use the Kotlin Multiplatform plugin without specifying version
-    // The version is inherited from the root project
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.ksp)
-    // alias(libs.plugins.kotlinxBinaryCompatibilityValidator)
+    `module-maven-publish`
+    id("org.jetbrains.dokka")
 }
-
-// apiValidation {
-//     nonPublicMarkers.addAll(
-//         listOf("love.forte.codepoet.java.InternalApi")
-//     )
-// }
 
 dependencies {
     kspCommonMainMetadata(project(":internal:enum-set"))
 }
 
+tasks.sourcesJar.configure {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
 
 kotlin {
     explicitApi()
