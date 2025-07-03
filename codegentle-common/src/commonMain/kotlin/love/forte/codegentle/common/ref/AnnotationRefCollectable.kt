@@ -46,7 +46,7 @@ internal constructor(public val collectable: B) {
 
 }
 
-public inline val <B : AnnotationRefCollectable<B>> B.annotationRefs
+public inline val <B : AnnotationRefCollectable<B>> B.annotationRefs: AnnotationRefCollectableOps<B>
     get() = AnnotationRefCollectableOps(this)
 
 /**

@@ -7,8 +7,6 @@ plugins {
     // The version is inherited from the root project
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.ksp)
-    // kotlin("multiplatform")
-    // id("com.google.devtools.ksp")
 }
 
 kotlin {
@@ -19,7 +17,6 @@ kotlin {
         optIn.addAll(
             "love.forte.codegentle.common.InternalCommonCodeGentleApi",
             "love.forte.codegentle.common.codepoint.InternalCodePointApi",
-            "love.forte.codegentle.common.InternalCommonApi",
             "love.forte.codegentle.common.naming.CodeGentleNamingImplementation",
             "love.forte.codegentle.common.ref.CodeGentleRefImplementation",
             "love.forte.codegentle.common.writer.CodeGentleCodeWriterImplementation",
@@ -98,8 +95,7 @@ kotlin {
 
     sourceSets {
         commonMain {
-            // kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+            kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
         }
 
         commonTest {
