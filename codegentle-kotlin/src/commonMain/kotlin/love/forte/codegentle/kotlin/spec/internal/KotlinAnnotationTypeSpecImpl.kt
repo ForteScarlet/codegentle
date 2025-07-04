@@ -50,7 +50,7 @@ internal class KotlinAnnotationTypeSpecBuilderImpl(
     private val kDoc = CodeValue.builder()
 
     private val annotationRefs: MutableList<AnnotationRef> = mutableListOf()
-    private val modifierSet = MutableKotlinModifierSet.empty()
+    private val modifierSet = MutableKotlinModifierSet.of(KotlinModifier.ANNOTATION)
     private val typeVariableRefs: MutableList<TypeRef<TypeVariableName>> = mutableListOf()
     private val properties: MutableList<KotlinPropertySpec> = mutableListOf()
 
@@ -104,6 +104,10 @@ internal class KotlinAnnotationTypeSpecBuilderImpl(
 
     override fun addProperty(property: KotlinPropertySpec): KotlinAnnotationTypeSpec.Builder = apply {
         this.properties.add(property)
+    }
+
+    private fun checkProperty(property: KotlinPropertySpec) {
+        // TODO it Must be immutable `val`
     }
 
     override fun build(): KotlinAnnotationTypeSpec {

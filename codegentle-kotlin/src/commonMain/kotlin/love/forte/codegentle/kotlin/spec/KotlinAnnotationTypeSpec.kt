@@ -22,16 +22,33 @@ import love.forte.codegentle.kotlin.spec.internal.KotlinAnnotationTypeSpecBuilde
  */
 @SubclassOptInRequired(CodeGentleKotlinSpecImplementation::class)
 public interface KotlinAnnotationTypeSpec : KotlinTypeSpec {
+    /**
+     * The name of this annotation class
+     */
     override val name: String
 
+    /**
+     * The kind of this annotation type, always returns [KotlinTypeSpec.Kind.CLASS]
+     */
     override val kind: KotlinTypeSpec.Kind
         get() = KotlinTypeSpec.Kind.CLASS
 
+    /**
+     * Always returns null since the annotation class cannot have a superclass
+     */
     override val superclass: TypeName?
         get() = null
 
+    /**
+     * Always returns an empty list since annotation class cannot have superinterfaces
+     */
     override val superinterfaces: List<TypeName>
         get() = emptyList()
+
+    /**
+     * The properties of this annotation type. Must be immutable `val`.
+     */
+    override val properties: List<KotlinPropertySpec>
 
     public companion object {
         /**
@@ -140,11 +157,26 @@ public inline fun KotlinAnnotationTypeSpec(
     return KotlinAnnotationTypeSpec.builder(name).apply(block).build()
 }
 
+/**
+ * Add KDoc to this builder with the given format and configuration block.
+ *
+ * @param format the KDoc format string
+ * @param block the configuration block for the KDoc
+ * @return the builder instance
+ */
 public inline fun KotlinAnnotationTypeSpec.Builder.addKDoc(
     format: String,
     block: CodeValueSingleFormatBuilderDsl = {}
 ): KotlinAnnotationTypeSpec.Builder = addKDoc(CodeValue(format, block))
 
+/**
+ * Add a property to this builder with the given name and type.
+ *
+ * @param name the property name
+ * @param type the property type
+ * @param block the configuration block for the property
+ * @return the builder instance
+ */
 public inline fun KotlinAnnotationTypeSpec.Builder.addProperty(
     name: String,
     type: TypeRef<*>,
