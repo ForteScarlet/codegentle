@@ -11,6 +11,5 @@ internal class TypeVariableNameImpl(
     override val name: String,
     override val bounds: List<TypeRef<*>>,
 ) : TypeVariableName {
-
-
+    // TODO emit/emitTo
 }
