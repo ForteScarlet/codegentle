@@ -88,21 +88,6 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
          */
         OBJECT("object"),
 
-        // /**
-        //  * 枚举类
-        //  */
-        // ENUM("enum class"),
-        //
-        // /**
-        //  * 注解类
-        //  */
-        // ANNOTATION("annotation class"),
-        //
-        // /**
-        //  * 值类
-        //  */
-        // VALUE("value class"),
-
         /**
          * 类型别名
          */
@@ -481,3 +466,33 @@ public inline fun KotlinTypeSpecBuilder<*, *>.addFunction(
 ) {
     addFunction(KotlinFunctionSpec(name, type, block))
 }
+
+
+////
+
+public val KotlinTypeSpec.isClass: Boolean
+    get() = kind == KotlinTypeSpec.Kind.CLASS
+
+public val KotlinTypeSpec.isAnnotationClass: Boolean
+    get() = kind == KotlinTypeSpec.Kind.CLASS && KotlinModifier.ANNOTATION in modifiers
+
+public val KotlinTypeSpec.isEnumClass: Boolean
+    get() = kind == KotlinTypeSpec.Kind.CLASS && KotlinModifier.ENUM in modifiers
+
+public val KotlinTypeSpec.isValueClass: Boolean
+    get() = kind == KotlinTypeSpec.Kind.CLASS && KotlinModifier.VALUE in modifiers
+
+public val KotlinTypeSpec.isSealedClass: Boolean
+    get() = kind == KotlinTypeSpec.Kind.CLASS && KotlinModifier.SEALED in modifiers
+
+public val KotlinTypeSpec.isInterface: Boolean
+    get() = kind == KotlinTypeSpec.Kind.INTERFACE
+
+public val KotlinTypeSpec.isFunInterface: Boolean
+    get() = kind == KotlinTypeSpec.Kind.INTERFACE && KotlinModifier.FUN in modifiers
+
+public val KotlinTypeSpec.isObject: Boolean
+    get() = kind == KotlinTypeSpec.Kind.OBJECT
+
+public val KotlinTypeSpec.isCompanionObject: Boolean
+    get() = kind == KotlinTypeSpec.Kind.OBJECT && KotlinModifier.COMPANION in modifiers

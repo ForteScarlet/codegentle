@@ -51,7 +51,7 @@ internal class KotlinValueClassSpecBuilderImpl(
     private val initializerBlock = CodeValue.builder()
 
     private val annotationRefs: MutableList<AnnotationRef> = mutableListOf()
-    private val modifierSet = MutableKotlinModifierSet.empty()
+    private val modifierSet = MutableKotlinModifierSet.of(KotlinModifier.VALUE)
     private val typeVariableRefs: MutableList<TypeRef<TypeVariableName>> = mutableListOf()
     private val superinterfaces: MutableList<TypeName> = mutableListOf()
     private val properties: MutableList<KotlinPropertySpec> = mutableListOf()
@@ -147,12 +147,16 @@ internal class KotlinValueClassSpecBuilderImpl(
     }
 
     override fun build(): KotlinValueClassSpec {
+        val immutableModifiers = MutableKotlinModifierSet.of(modifierSet).apply {
+            add(KotlinModifier.VALUE)
+        }.immutable()
+
         return KotlinValueClassSpecImpl(
             name = name,
             primaryParameter = primaryParameter,
             kDoc = kDoc.build(),
             annotations = annotationRefs.toList(),
-            modifiers = modifierSet.immutable(),
+            modifiers = immutableModifiers,
             typeVariables = typeVariableRefs.toList(),
             superinterfaces = superinterfaces.toList(),
             properties = properties.toList(),

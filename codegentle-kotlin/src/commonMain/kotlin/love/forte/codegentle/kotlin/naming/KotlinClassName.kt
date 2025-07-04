@@ -194,7 +194,7 @@ private fun KotlinCodeWriter.resolve(simpleName: String): ClassName? {
 
     // Match kotlin.* types implicitly if strategy allows omitting kotlin.*
     if (strategy.omitKotlinPackage() && isCommonKotlinType(simpleName)) {
-        return ClassName(KotlinPackageName, simpleName)
+        return ClassName(KotlinNames.Packages.KOTLIN, simpleName)
     }
 
     // No match
@@ -265,10 +265,7 @@ private fun KotlinCodeWriter.stackClassName(
 
 // Extension property to check if a package is a kotlin.* package
 private val PackageName?.isKotlinPackage: Boolean
-    get() = this?.toString()?.startsWith("kotlin") == true
-
-// Kotlin package name
-private val KotlinPackageName = PackageName("kotlin")
+    get() = this == KotlinNames.Packages.KOTLIN
 
 // Extension to get nested type simple names for KotlinTypeSpec
 internal val KotlinTypeSpec.nestedTypesSimpleNames: Set<String>

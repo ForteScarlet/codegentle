@@ -9,10 +9,11 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 internal fun KotlinTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     when (this) {
         is KotlinSimpleTypeSpec -> emitTo(codeWriter)
+        is KotlinValueClassSpec -> emitTo(codeWriter)
         // Add other type spec implementations as they are created
-        else -> {
-            // Fallback for unknown implementations
-            codeWriter.emit("// Unknown type spec: $this")
-        }
+        is KotlinAnnotationTypeSpec -> TODO()
+        is KotlinAnonymousClassTypeSpec -> TODO()
+        is KotlinEnumTypeSpec -> TODO()
+        is KotlinObjectTypeSpec -> TODO()
     }
 }

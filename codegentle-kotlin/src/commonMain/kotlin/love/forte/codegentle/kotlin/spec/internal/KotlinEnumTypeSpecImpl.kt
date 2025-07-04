@@ -50,7 +50,7 @@ internal class KotlinEnumTypeSpecBuilderImpl(
     private val initializerBlock = CodeValue.builder()
 
     private val annotationRefs: MutableList<AnnotationRef> = mutableListOf()
-    private val modifierSet = MutableKotlinModifierSet.empty()
+    private val modifierSet = MutableKotlinModifierSet.of(KotlinModifier.ENUM)
     private val typeVariableRefs: MutableList<TypeRef<TypeVariableName>> = mutableListOf()
     private val superinterfaces: MutableList<TypeName> = mutableListOf()
     private val properties: MutableList<KotlinPropertySpec> = mutableListOf()
@@ -150,12 +150,18 @@ internal class KotlinEnumTypeSpecBuilderImpl(
     }
 
     override fun build(): KotlinEnumTypeSpec {
+        val immutableModifiers = modifierSet.immutable()
+
+        check(KotlinModifier.VALUE in immutableModifiers) {
+            "Enum class $name must have `${KotlinModifier.ENUM}` modifier, but $immutableModifiers"
+        }
+
         return KotlinEnumTypeSpecImpl(
             name = name,
             enumConstants = enumConstants.toMap(linkedMapOf()),
             kDoc = kDoc.build(),
             annotations = annotationRefs.toList(),
-            modifiers = modifierSet.immutable(),
+            modifiers = immutableModifiers,
             typeVariables = typeVariableRefs.toList(),
             superinterfaces = superinterfaces.toList(),
             properties = properties.toList(),

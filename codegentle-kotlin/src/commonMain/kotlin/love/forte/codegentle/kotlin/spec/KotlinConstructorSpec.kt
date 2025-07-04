@@ -1,5 +1,6 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
@@ -29,7 +30,8 @@ public interface KotlinConstructorSpec : KotlinCallableSpec {
         }
     }
 
-    public interface Builder : 
+    public interface Builder :
+        BuilderDsl,
         KotlinCallableSpec.Builder<KotlinConstructorSpec>,
         KotlinModifierBuilderContainer,
         AnnotationRefCollectable<Builder> {

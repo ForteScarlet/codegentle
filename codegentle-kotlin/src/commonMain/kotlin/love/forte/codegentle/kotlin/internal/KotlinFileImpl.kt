@@ -8,7 +8,7 @@ import love.forte.codegentle.common.naming.*
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinFile
-import love.forte.codegentle.kotlin.naming.KotlinStdPackageName
+import love.forte.codegentle.kotlin.naming.KotlinNames
 import love.forte.codegentle.kotlin.ref.KotlinTypeNameRefStatus
 import love.forte.codegentle.kotlin.spec.*
 import love.forte.codegentle.kotlin.spec.internal.emitTo
@@ -111,7 +111,7 @@ internal class KotlinFileImpl(
             for (className in codeWriter.importedTypes.values) {
                 // 跳过 kotlin.* 包的导入
                 if (skipKotlinImports
-                    && className.packageName == KotlinStdPackageName
+                    && className.packageName == KotlinNames.Packages.KOTLIN
                     && !alwaysQualify.contains(className.simpleName)
                 ) {
                     continue

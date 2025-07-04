@@ -1,5 +1,6 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
@@ -8,6 +9,7 @@ import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
+import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinEnumTypeSpecBuilderImpl
 
 /**
@@ -48,7 +50,7 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinEnumTypeSpec].
      */
-    public interface Builder {
+    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer {
         /**
          * The enum class name.
          */
@@ -87,17 +89,17 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
         /**
          * Add modifiers.
          */
-        public fun addModifiers(vararg modifiers: KotlinModifier): Builder
+        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
 
         /**
          * Add modifiers.
          */
-        public fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
+        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
 
         /**
          * Add modifier.
          */
-        public fun addModifier(modifier: KotlinModifier): Builder
+        override fun addModifier(modifier: KotlinModifier): Builder
 
         /**
          * Add type variable references.

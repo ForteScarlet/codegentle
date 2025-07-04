@@ -12,6 +12,7 @@ import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.naming.KotlinNames
 import love.forte.codegentle.kotlin.ref.kotlinRef
+import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec.Companion.DEFAULT_REF
 import love.forte.codegentle.kotlin.spec.internal.KotlinFunctionSpecBuilderImpl
 
 /**
@@ -160,6 +161,8 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
     }
 
     public companion object {
+        public val DEFAULT_REF: TypeRef<*> = KotlinNames.Classes.UNIT.kotlinRef()
+
         /**
          * Create a function builder.
          *
@@ -167,7 +170,7 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
          * @param type the return type
          * @return new [Builder] instance.
          */
-        public fun builder(name: String, type: TypeRef<*> = KotlinNames.UnitClassName.kotlinRef()): Builder {
+        public fun builder(name: String, type: TypeRef<*> = DEFAULT_REF): Builder {
             return KotlinFunctionSpecBuilderImpl(name, type)
         }
     }
@@ -183,7 +186,7 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
  */
 public inline fun KotlinFunctionSpec(
     name: String,
-    type: TypeRef<*>,
+    type: TypeRef<*> = DEFAULT_REF,
     block: KotlinFunctionSpec.Builder.() -> Unit = {}
 ): KotlinFunctionSpec =
     KotlinFunctionSpec.builder(name, type).apply(block).build()

@@ -3,6 +3,7 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecBuilderImpl
+import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecImpl
 
 /**
  * A Kotlin context parameter.
@@ -47,5 +48,22 @@ public interface KotlinContextParameterSpec : KotlinSpec {
          */
         public fun builder(name: String?, type: TypeRef<*>): Builder =
             KotlinContextParameterSpecBuilderImpl(name, type)
+
+        /**
+         * Create a [KotlinContextParameterSpec].
+         *
+         * @param name the parameter name, or null for `_`
+         * @param type the parameter type
+         */
+        public fun of(name: String?, type: TypeRef<*>): KotlinContextParameterSpec {
+            return KotlinContextParameterSpecImpl(name, type)
+        }
     }
 }
+
+public inline fun KotlinContextParameterSpec(
+    name: String?,
+    type: TypeRef<*>,
+    block: KotlinContextParameterSpec.Builder.() -> Unit = {}
+): KotlinContextParameterSpec =
+    KotlinContextParameterSpec.builder(name, type).also(block).build()

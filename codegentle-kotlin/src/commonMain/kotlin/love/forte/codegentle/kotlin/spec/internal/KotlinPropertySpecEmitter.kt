@@ -44,7 +44,6 @@ internal fun KotlinPropertySpec.emitTo(codeWriter: KotlinCodeWriter) {
     val hasCustomAccessors = getter != null || setter != null
 
     if (hasCustomAccessors) {
-        codeWriter.emit(" {")
         codeWriter.indent()
 
         // Emit getter if present
@@ -61,6 +60,5 @@ internal fun KotlinPropertySpec.emitTo(codeWriter: KotlinCodeWriter) {
 
         codeWriter.unindent()
         codeWriter.emitNewLine()
-        codeWriter.emit("}")
     }
 }

@@ -21,7 +21,6 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal data class KotlinObjectTypeSpecImpl(
     override val name: String,
-    override val kind: KotlinTypeSpec.Kind,
     override val kDoc: CodeValue,
     override val annotations: List<AnnotationRef>,
     override val modifiers: Set<KotlinModifier>,
@@ -56,7 +55,11 @@ internal class KotlinObjectTypeSpecBuilderImpl(
     private val initializerBlock = CodeValue.builder()
 
     private val annotationRefs: MutableList<AnnotationRef> = mutableListOf()
-    private val modifierSet = MutableKotlinModifierSet.empty()
+    private val modifierSet = MutableKotlinModifierSet.empty().apply {
+        if (isCompanion) {
+            add(KotlinModifier.COMPANION)
+        }
+    }
     private val typeVariableRefs: MutableList<TypeRef<TypeVariableName>> = mutableListOf()
     private val superinterfaces: MutableList<TypeName> = mutableListOf()
     private val properties: MutableList<KotlinPropertySpec> = mutableListOf()
@@ -149,14 +152,18 @@ internal class KotlinObjectTypeSpecBuilderImpl(
     }
 
     override fun build(): KotlinObjectTypeSpec {
-        // TODO remove `kind`
-        val kind = KotlinTypeSpec.Kind.OBJECT
+        val immutableModifiers = modifierSet.immutable()
+        if (isCompanion) {
+            check(KotlinModifier.COMPANION in immutableModifiers) {
+                "Companion object `$name` must have `${KotlinModifier.COMPANION}` modifier, but $immutableModifiers"
+            }
+        }
+
         return KotlinObjectTypeSpecImpl(
             name = name,
-            kind = kind,
             kDoc = kDoc.build(),
             annotations = annotationRefs.toList(),
-            modifiers = modifierSet.immutable(),
+            modifiers = immutableModifiers,
             typeVariables = typeVariableRefs.toList(),
             superinterfaces = superinterfaces.toList(),
             properties = properties.toList(),

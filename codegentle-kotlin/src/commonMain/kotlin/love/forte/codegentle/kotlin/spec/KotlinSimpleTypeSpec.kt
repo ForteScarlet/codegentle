@@ -1,20 +1,23 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
+import love.forte.codegentle.common.ref.AnnotationRefCollectable
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
+import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinSimpleTypeSpecBuilderImpl
 
 /**
- * 表示一个简单的 Kotlin 类型规范，如类、接口等。
+ * Represents a simple Kotlin type specification, such as class, interface, etc.
  *
- * @property kind 类型的种类
- * @property name 类型的名称
+ * @property kind The kind of the type
+ * @property name The name of the type
  */
 @SubclassOptInRequired(CodeGentleKotlinSpecImplementation::class)
 public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
@@ -45,141 +48,144 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
     }
 
     /**
-     * 简单 Kotlin 类型规范的构建器。
+     * Builder for simple Kotlin type specification.
      */
-    public interface Builder {
+    public interface Builder :
+        BuilderDsl,
+        KotlinModifierBuilderContainer,
+        AnnotationRefCollectable<Builder> {
         /**
-         * 类型的种类。
+         * The kind of the type.
          */
         public val kind: KotlinTypeSpec.Kind
 
         /**
-         * 类型的名称。
+         * The name of the type.
          */
         public val name: String
 
         /**
-         * 添加KDoc。
+         * Add KDoc.
          */
         public fun addKDoc(codeValue: CodeValue): Builder
 
         /**
-         * 添加KDoc。
+         * Add KDoc.
          */
         public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
 
         /**
-         * 设置父类。
+         * Set superclass.
          */
         public fun superclass(superclass: TypeName): Builder
 
         /**
-         * 添加初始化块。
+         * Add initializer block.
          */
         public fun addInitializerBlock(codeValue: CodeValue): Builder
 
         /**
-         * 添加初始化块。
+         * Add initializer block.
          */
         public fun addInitializerBlock(format: String, vararg argumentParts: CodeArgumentPart): Builder
 
         /**
-         * 添加注解引用。
+         * Add annotation reference.
          */
-        public fun addAnnotationRef(ref: AnnotationRef): Builder
+        override fun addAnnotationRef(ref: AnnotationRef): Builder
 
         /**
-         * 添加多个注解引用。
+         * Add multiple annotation references.
          */
-        public fun addAnnotationRefs(refs: Iterable<AnnotationRef>): Builder
+        override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): Builder
 
         /**
-         * 添加多个修饰符。
+         * Add multiple modifiers.
          */
-        public fun addModifiers(vararg modifiers: KotlinModifier): Builder
+        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
 
         /**
-         * 添加多个修饰符。
+         * Add multiple modifiers.
          */
-        public fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
+        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
 
         /**
-         * 添加修饰符。
+         * Add modifier.
          */
-        public fun addModifier(modifier: KotlinModifier): Builder
+        override fun addModifier(modifier: KotlinModifier): Builder
 
         /**
-         * 添加多个类型变量引用。
+         * Add multiple type variable references.
          */
         public fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): Builder
 
         /**
-         * 添加多个类型变量引用。
+         * Add multiple type variable references.
          */
         public fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): Builder
 
         /**
-         * 添加类型变量引用。
+         * Add type variable reference.
          */
         public fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): Builder
 
         /**
-         * 添加多个父接口。
+         * Add multiple superinterfaces.
          */
         public fun addSuperinterfaces(vararg superinterfaces: TypeName): Builder
 
         /**
-         * 添加多个父接口。
+         * Add multiple superinterfaces.
          */
         public fun addSuperinterfaces(superinterfaces: Iterable<TypeName>): Builder
 
         /**
-         * 添加父接口。
+         * Add superinterface.
          */
         public fun addSuperinterface(superinterface: TypeName): Builder
 
         /**
-         * 添加多个属性。
+         * Add multiple properties.
          */
         public fun addProperties(vararg properties: KotlinPropertySpec): Builder
 
         /**
-         * 添加多个属性。
+         * Add multiple properties.
          */
         public fun addProperties(properties: Iterable<KotlinPropertySpec>): Builder
 
         /**
-         * 添加属性。
+         * Add property.
          */
         public fun addProperty(property: KotlinPropertySpec): Builder
 
         /**
-         * 添加多个函数。
+         * Add multiple functions.
          */
         public fun addFunctions(functions: Iterable<KotlinFunctionSpec>): Builder
 
         /**
-         * 添加多个函数。
+         * Add multiple functions.
          */
         public fun addFunctions(vararg functions: KotlinFunctionSpec): Builder
 
         /**
-         * 添加函数。
+         * Add function.
          */
         public fun addFunction(function: KotlinFunctionSpec): Builder
 
         /**
-         * 添加多个子类型。
+         * Add multiple subtypes.
          */
         public fun addSubtypes(types: Iterable<KotlinTypeSpec>): Builder
 
         /**
-         * 添加多个子类型。
+         * Add multiple subtypes.
          */
         public fun addSubtypes(vararg types: KotlinTypeSpec): Builder
 
         /**
-         * 添加子类型。
+         * Add subtype.
          */
         public fun addSubtype(type: KotlinTypeSpec): Builder
 
@@ -204,9 +210,9 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
         public fun addSecondaryConstructors(vararg constructors: KotlinConstructorSpec): Builder
 
         /**
-         * 构建 [KotlinSimpleTypeSpec] 实例。
+         * Build a [KotlinSimpleTypeSpec] instance.
          *
-         * @return 新的 [KotlinSimpleTypeSpec] 实例
+         * @return A new [KotlinSimpleTypeSpec] instance
          */
         public fun build(): KotlinSimpleTypeSpec
     }

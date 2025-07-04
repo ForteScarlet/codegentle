@@ -59,6 +59,14 @@ public sealed interface KotlinPropertyAccessorSpec : KotlinCallableSpec {
          * Add a statement to the accessor.
          */
         public fun addStatement(codeValue: CodeValue): Builder<S>
+
+        override fun addModifier(modifier: KotlinModifier): Builder<S>
+
+        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder<S>
+
+        override fun addModifiers(vararg modifiers: KotlinModifier): Builder<S>
+
+        override fun build(): S
     }
 
     public companion object {

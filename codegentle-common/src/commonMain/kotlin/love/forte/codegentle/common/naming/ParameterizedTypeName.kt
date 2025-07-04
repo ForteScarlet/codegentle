@@ -48,3 +48,9 @@ public fun ParameterizedTypeName(rawType: ClassName, vararg typeArguments: TypeR
 public fun ParameterizedTypeName(rawType: ClassName, typeArguments: Iterable<TypeRef<*>>): ParameterizedTypeName {
     return ParameterizedTypeNameImpl(null, rawType, typeArguments.toList())
 }
+
+public fun ClassName.parameterized(vararg typeArguments: TypeRef<*>): ParameterizedTypeName =
+    ParameterizedTypeName(this, *typeArguments)
+
+public fun ClassName.parameterized(typeArguments: Iterable<TypeRef<*>>): ParameterizedTypeName =
+    ParameterizedTypeName(this, typeArguments)
