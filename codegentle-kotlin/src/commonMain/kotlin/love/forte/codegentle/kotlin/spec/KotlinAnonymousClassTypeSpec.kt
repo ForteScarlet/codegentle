@@ -14,8 +14,18 @@ import love.forte.codegentle.kotlin.spec.internal.KotlinAnonymousClassTypeSpecBu
  * A Kotlin anonymous class type specification.
  * Can be used as an implementation body for enum constants.
  *
+ * Anonymous classes in Kotlin cannot define their own constructors, but they can
+ * call the superclass constructor with arguments when extending a class.
+ *
  * ```kotlin
  * object : SuperType {
+ *     // implementations
+ * }
+ * ```
+ *
+ * Or with superclass constructor arguments:
+ * ```kotlin
+ * object : SuperType(arg1, arg2) {
  *     // implementations
  * }
  * ```
@@ -37,9 +47,10 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
         get() = KotlinTypeSpec.Kind.CLASS
 
     /**
-     * Constructors for the anonymous class.
+     * Arguments to pass to the superclass constructor when creating the anonymous class.
+     * These arguments will be used in the superclass constructor call.
      */
-    public val constructors: List<KotlinConstructorSpec>
+    public val superConstructorArguments: List<CodeValue>
 
     public companion object {
         /**
@@ -167,19 +178,24 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
         public fun addFunction(function: KotlinFunctionSpec): Builder
 
         /**
-         * Add constructor.
+         * Add arguments to pass to the superclass constructor.
          */
-        public fun addConstructor(constructor: KotlinConstructorSpec): Builder
+        public fun addSuperConstructorArguments(vararg arguments: CodeValue): Builder
 
         /**
-         * Add constructors.
+         * Add arguments to pass to the superclass constructor.
          */
-        public fun addConstructors(constructors: Iterable<KotlinConstructorSpec>): Builder
+        public fun addSuperConstructorArguments(arguments: Iterable<CodeValue>): Builder
 
         /**
-         * Add constructors.
+         * Add a single argument to pass to the superclass constructor.
          */
-        public fun addConstructors(vararg constructors: KotlinConstructorSpec): Builder
+        public fun addSuperConstructorArgument(argument: CodeValue): Builder
+
+        /**
+         * Add a single argument to pass to the superclass constructor.
+         */
+        public fun addSuperConstructorArgument(format: String, vararg argumentParts: CodeArgumentPart): Builder
 
         /**
          * Build [KotlinAnonymousClassTypeSpec] instance.
@@ -222,6 +238,7 @@ public inline fun KotlinAnonymousClassTypeSpec.Builder.addFunction(
     block: KotlinFunctionSpec.Builder.() -> Unit = {}
 ): KotlinAnonymousClassTypeSpec.Builder = addFunction(KotlinFunctionSpec(name, type, block))
 
-public inline fun KotlinAnonymousClassTypeSpec.Builder.addConstructor(
-    block: KotlinConstructorSpec.Builder.() -> Unit = {}
-): KotlinAnonymousClassTypeSpec.Builder = addConstructor(KotlinConstructorSpec.builder().apply(block).build())
+public inline fun KotlinAnonymousClassTypeSpec.Builder.addSuperConstructorArgument(
+    format: String,
+    block: CodeValueSingleFormatBuilderDsl = {}
+): KotlinAnonymousClassTypeSpec.Builder = addSuperConstructorArgument(CodeValue(format, block))

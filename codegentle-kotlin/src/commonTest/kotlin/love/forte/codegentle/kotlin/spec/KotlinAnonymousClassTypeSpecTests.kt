@@ -144,24 +144,19 @@ class KotlinAnonymousClassTypeSpecTests {
     }
 
     @Test
-    fun testAnonymousClassWithConstructors() {
+    fun testAnonymousClassWithSuperConstructorArguments() {
         val superclassType = ClassName("test", "MySuperClass")
-        val stringType = ClassName("kotlin", "String").kotlinRef()
-
-        val constructor = KotlinConstructorSpec.builder()
-            .addParameter(KotlinValueParameterSpec.builder("name", stringType).build())
-            .build()
 
         val typeSpec = KotlinAnonymousClassTypeSpec.builder()
             .superclass(superclassType)
-            .addConstructor(constructor)
+            .addSuperConstructorArgument("\"John\"")
+            .addSuperConstructorArgument("30")
             .build()
 
         val code = typeSpec.writeToKotlinString()
         assertEquals(
             """
-            object : test.MySuperClass {
-                constructor(name: String)
+            object : test.MySuperClass("John", 30) {
             }
             """.trimIndent(),
             code

@@ -30,7 +30,7 @@ internal data class KotlinAnonymousClassTypeSpecImpl(
     override val initializerBlock: CodeValue,
     override val functions: List<KotlinFunctionSpec>,
     override val subtypes: List<KotlinTypeSpec>,
-    override val constructors: List<KotlinConstructorSpec>
+    override val superConstructorArguments: List<CodeValue>
 ) : KotlinAnonymousClassTypeSpec {
     override fun emit(codeWriter: KotlinCodeWriter) {
         emitTo(codeWriter)
@@ -57,7 +57,7 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
     private val superinterfaces: MutableList<TypeName> = mutableListOf()
     private val properties: MutableList<KotlinPropertySpec> = mutableListOf()
     private val functions: MutableList<KotlinFunctionSpec> = mutableListOf()
-    private val constructors: MutableList<KotlinConstructorSpec> = mutableListOf()
+    private val superConstructorArguments: MutableList<CodeValue> = mutableListOf()
 
     override fun addKDoc(codeValue: CodeValue): KotlinAnonymousClassTypeSpec.Builder = apply {
         kDoc.add(codeValue)
@@ -147,16 +147,20 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
         this.functions.add(function)
     }
 
-    override fun addConstructor(constructor: KotlinConstructorSpec): KotlinAnonymousClassTypeSpec.Builder = apply {
-        this.constructors.add(constructor)
+    override fun addSuperConstructorArguments(vararg arguments: CodeValue): KotlinAnonymousClassTypeSpec.Builder = apply {
+        this.superConstructorArguments.addAll(arguments)
     }
 
-    override fun addConstructors(constructors: Iterable<KotlinConstructorSpec>): KotlinAnonymousClassTypeSpec.Builder = apply {
-        this.constructors.addAll(constructors)
+    override fun addSuperConstructorArguments(arguments: Iterable<CodeValue>): KotlinAnonymousClassTypeSpec.Builder = apply {
+        this.superConstructorArguments.addAll(arguments)
     }
 
-    override fun addConstructors(vararg constructors: KotlinConstructorSpec): KotlinAnonymousClassTypeSpec.Builder = apply {
-        this.constructors.addAll(constructors)
+    override fun addSuperConstructorArgument(argument: CodeValue): KotlinAnonymousClassTypeSpec.Builder = apply {
+        this.superConstructorArguments.add(argument)
+    }
+
+    override fun addSuperConstructorArgument(format: String, vararg argumentParts: CodeArgumentPart): KotlinAnonymousClassTypeSpec.Builder = apply {
+        this.superConstructorArguments.add(CodeValue(format, *argumentParts))
     }
 
     override fun build(): KotlinAnonymousClassTypeSpec {
@@ -171,7 +175,7 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
             initializerBlock = initializerBlock.build(),
             functions = functions.toList(),
             subtypes = emptyList(),
-            constructors = constructors.toList()
+            superConstructorArguments = superConstructorArguments.toList()
         )
     }
 }
@@ -205,6 +209,17 @@ internal fun KotlinAnonymousClassTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
         if (hasExtends) {
             codeWriter.emit(superclass!!)
 
+            // Emit super constructor arguments if any
+            // This allows anonymous classes to call superclass constructors with arguments
+            if (superConstructorArguments.isNotEmpty()) {
+                codeWriter.emit("(")
+                superConstructorArguments.forEachIndexed { index, argument ->
+                    if (index > 0) codeWriter.emit(", ")
+                    codeWriter.emit(argument)
+                }
+                codeWriter.emit(")")
+            }
+
             if (hasImplements) {
                 codeWriter.emit(", ")
             }
@@ -219,30 +234,21 @@ internal fun KotlinAnonymousClassTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     }
 
     // Emit the body
-    codeWriter.emit(" {\n")
+    codeWriter.emitNewLine(" {")
     codeWriter.indent()
 
-    // Emit constructors
-    if (constructors.isNotEmpty()) {
-        for (constructor in constructors) {
-            constructor.emitTo(codeWriter, false)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
-    }
+    // Anonymous classes cannot have constructors, so we skip constructor emission
 
     // Emit initializer block
     if (!initializerBlock.isEmpty) {
         if (blockLineRequired) {
             codeWriter.emitNewLine()
         }
-        codeWriter.emit("init {")
-        codeWriter.emitNewLine()
+        codeWriter.emitNewLine("init {")
         codeWriter.withIndent {
             emit(initializerBlock)
         }
-        codeWriter.emit("}")
-        codeWriter.emitNewLine()
+        codeWriter.emitNewLine("}")
         blockLineRequired = true
     }
 

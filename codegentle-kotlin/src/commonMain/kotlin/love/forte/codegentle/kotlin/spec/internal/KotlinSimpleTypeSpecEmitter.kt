@@ -89,13 +89,11 @@ internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitM
 
     // Emit initializer block
     if (!initializerBlock.isEmpty) {
-        codeWriter.emit("init {")
-        codeWriter.emitNewLine()
+        codeWriter.emitNewLine("init {")
         codeWriter.withIndent {
             emit(initializerBlock)
         }
-        codeWriter.emit("}")
-        codeWriter.emitNewLine()
+        codeWriter.emitNewLine("}")
         blockLineRequired = true
     }
 
