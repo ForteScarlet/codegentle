@@ -10,6 +10,8 @@ import love.forte.codegentle.common.ref.AnnotationRefCollectable
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.naming.KotlinNames
+import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.internal.KotlinFunctionSpecBuilderImpl
 
 /**
@@ -123,6 +125,8 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
          */
         public fun addContextParameters(vararg contextParameters: KotlinContextParameterSpec): Builder
 
+        public fun returns(type: TypeRef<*>): Builder
+
         /**
          * Add code to the function.
          */
@@ -163,7 +167,7 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
          * @param type the return type
          * @return new [Builder] instance.
          */
-        public fun builder(name: String, type: TypeRef<*>): Builder {
+        public fun builder(name: String, type: TypeRef<*> = KotlinNames.UnitClassName.kotlinRef()): Builder {
             return KotlinFunctionSpecBuilderImpl(name, type)
         }
     }

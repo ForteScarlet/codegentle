@@ -47,7 +47,7 @@ internal data class KotlinFunctionSpecImpl(
  */
 internal class KotlinFunctionSpecBuilderImpl(
     override val name: String,
-    override val returnType: TypeRef<*>
+    override var returnType: TypeRef<*>
 ) : KotlinFunctionSpec.Builder {
 
     private val kDoc: CodeValueBuilder = CodeValue.builder()
@@ -125,6 +125,10 @@ internal class KotlinFunctionSpecBuilderImpl(
 
     override fun addContextParameters(vararg contextParameters: KotlinContextParameterSpec): KotlinFunctionSpec.Builder = apply {
         this.contextParameters.addAll(contextParameters)
+    }
+
+    override fun returns(type: TypeRef<*>): KotlinFunctionSpec.Builder = apply {
+        this.returnType = type
     }
 
     override fun addCode(codeValue: CodeValue): KotlinFunctionSpec.Builder = apply {

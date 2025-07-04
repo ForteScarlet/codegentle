@@ -53,7 +53,12 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Emit parameters
     codeWriter.emit("(")
     parameters.forEachIndexed { index, param ->
-        if (index > 0) codeWriter.emit(", ")
+        if (index > 0) {
+            codeWriter.emit(", ")
+            if (!param.kDoc.isEmpty) {
+                codeWriter.emitNewLine()
+            }
+        }
         param.emitTo(codeWriter)
     }
     codeWriter.emit(")")
