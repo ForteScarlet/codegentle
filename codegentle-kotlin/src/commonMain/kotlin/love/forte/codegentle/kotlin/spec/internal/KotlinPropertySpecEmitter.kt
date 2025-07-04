@@ -20,8 +20,7 @@ internal fun KotlinPropertySpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emitModifiers(modifiers)
 
     // Emit the property keyword (val or var)
-    val isMutable = modifiers.any { it.keyword == "var" }
-    codeWriter.emit(if (isMutable) "var " else "val ")
+    codeWriter.emit(if (mutable) "var " else "val ")
 
     // Emit the name
     codeWriter.emit(name)

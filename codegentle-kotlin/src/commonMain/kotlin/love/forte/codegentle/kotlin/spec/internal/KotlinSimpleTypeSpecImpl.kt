@@ -57,9 +57,8 @@ internal class KotlinSimpleTypeSpecBuilderImpl(
         )
     }
 
-    // TODO 校验kind
     init {
-        require(kind !in validKinds) {
+        require(kind in validKinds) {
             "Invalid kind $kind, must be one of $validKinds"
         }
     }

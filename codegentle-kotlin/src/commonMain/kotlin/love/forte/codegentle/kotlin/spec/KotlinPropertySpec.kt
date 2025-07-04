@@ -37,6 +37,13 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
     public val setter: KotlinSetterSpec?
 
     /**
+     * Whether this property is mutable (var) or immutable (val).
+     * 
+     * @return true if the property is mutable (var), false if immutable (val)
+     */
+    public val mutable: Boolean
+
+    /**
      * Builder for [KotlinPropertySpec].
      */
     public interface Builder : BuilderDsl,
@@ -124,6 +131,14 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
          */
         public fun setter(setter: KotlinSetterSpec): Builder
 
+        /**
+         * Set whether this property is mutable (var) or immutable (val).
+         *
+         * @param mutable true for mutable property (var), false for immutable property (val)
+         * @return this builder
+         */
+        public fun mutable(mutable: Boolean): Builder
+
         override fun addModifier(modifier: KotlinModifier): Builder
 
         override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
@@ -159,6 +174,15 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
         }
     }
 }
+
+/**
+ * Whether this property is immutable (val) or mutable (var).
+ *
+ * @return ![KotlinPropertySpec.mutable],
+ * true if the property is immutable (val).
+ */
+public val KotlinPropertySpec.immutable: Boolean
+    get() = !mutable
 
 /**
  * Create a [KotlinPropertySpec] with the given name and type.
@@ -211,3 +235,17 @@ public inline fun KotlinPropertySpec.Builder.setter(
     parameterName: String = "value",
     block: KotlinSetterSpec.Builder.() -> Unit
 ): KotlinPropertySpec.Builder = setter(KotlinPropertyAccessorSpec.setterBuilder(parameterName).apply(block).build())
+
+/**
+ * Set this property as mutable (var).
+ *
+ * @return this builder
+ */
+public fun KotlinPropertySpec.Builder.mutable(): KotlinPropertySpec.Builder = mutable(true)
+
+/**
+ * Set this property as immutable (val).
+ *
+ * @return this builder
+ */
+public fun KotlinPropertySpec.Builder.immutable(): KotlinPropertySpec.Builder = mutable(false)

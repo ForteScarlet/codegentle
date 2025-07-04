@@ -7,10 +7,7 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.MutableKotlinModifierSet
-import love.forte.codegentle.kotlin.spec.KotlinAnnotationTypeSpec
-import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
-import love.forte.codegentle.kotlin.spec.KotlinPropertySpec
-import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
+import love.forte.codegentle.kotlin.spec.*
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
 /**
@@ -95,19 +92,26 @@ internal class KotlinAnnotationTypeSpecBuilderImpl(
     }
 
     override fun addProperties(vararg properties: KotlinPropertySpec): KotlinAnnotationTypeSpec.Builder = apply {
-        this.properties.addAll(properties)
+        properties.forEach {
+            addProperty(it)
+        }
     }
 
     override fun addProperties(properties: Iterable<KotlinPropertySpec>): KotlinAnnotationTypeSpec.Builder = apply {
-        this.properties.addAll(properties)
+        properties.forEach {
+            addProperty(it)
+        }
     }
 
     override fun addProperty(property: KotlinPropertySpec): KotlinAnnotationTypeSpec.Builder = apply {
+        checkProperty(property)
         this.properties.add(property)
     }
 
     private fun checkProperty(property: KotlinPropertySpec) {
-        // TODO it Must be immutable `val`
+        require(property.immutable) {
+            "Annotation's property must be immutable, but $property"
+        }
     }
 
     override fun build(): KotlinAnnotationTypeSpec {
@@ -118,8 +122,8 @@ internal class KotlinAnnotationTypeSpecBuilderImpl(
             modifiers = modifierSet.immutable(),
             typeVariables = typeVariableRefs.toList(),
             properties = properties.toList(),
-            functions = emptyList<KotlinFunctionSpec>(),
-            subtypes = emptyList<KotlinTypeSpec>()
+            functions = emptyList(),
+            subtypes = emptyList()
         )
     }
 }

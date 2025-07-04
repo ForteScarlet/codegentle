@@ -25,14 +25,15 @@ internal data class KotlinPropertySpecImpl(
     override val initializer: CodeValue?,
     override val delegate: CodeValue?,
     override val getter: KotlinGetterSpec?,
-    override val setter: KotlinSetterSpec?
+    override val setter: KotlinSetterSpec?,
+    override val mutable: Boolean
 ) : KotlinPropertySpec {
     override fun emit(codeWriter: KotlinCodeWriter) {
         emitTo(codeWriter)
     }
 
     override fun toString(): String {
-        return "KotlinPropertySpec(name='$name', type=${typeRef.typeName})"
+        return "KotlinPropertySpec(name='$name', type=${typeRef.typeName}, mutable=$mutable)"
     }
 }
 
@@ -74,6 +75,12 @@ internal class KotlinPropertySpecBuilderImpl(
      * Custom setter for the property.
      */
     private var setter: KotlinSetterSpec? = null
+
+    /**
+     * Whether this property is mutable (var) or immutable (val).
+     * Defaults to false (val/immutable).
+     */
+    private var mutable: Boolean = false
 
     /**
      * @throws IllegalArgumentException Cannot exist at the same time as `delegate`.
@@ -155,6 +162,16 @@ internal class KotlinPropertySpecBuilderImpl(
     }
 
     /**
+     * Set whether this property is mutable (var) or immutable (val).
+     *
+     * @param mutable true for mutable property (var), false for immutable property (val)
+     * @return this builder
+     */
+    override fun mutable(mutable: Boolean): KotlinPropertySpec.Builder = apply {
+        this.mutable = mutable
+    }
+
+    /**
      * Build [KotlinPropertySpec] instance.
      */
     override fun build(): KotlinPropertySpec =
@@ -167,6 +184,7 @@ internal class KotlinPropertySpecBuilderImpl(
             initializer = initializer,
             delegate = delegate,
             getter = getter,
-            setter = setter
+            setter = setter,
+            mutable = mutable
         )
 }
