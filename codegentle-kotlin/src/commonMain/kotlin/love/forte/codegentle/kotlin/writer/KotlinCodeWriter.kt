@@ -3,10 +3,7 @@ package love.forte.codegentle.kotlin.writer
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.code.isEmpty
-import love.forte.codegentle.common.naming.ClassName
-import love.forte.codegentle.common.naming.PackageName
-import love.forte.codegentle.common.naming.TypeName
-import love.forte.codegentle.common.naming.TypeVariableName
+import love.forte.codegentle.common.naming.*
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.writer.*
@@ -121,7 +118,118 @@ public class KotlinCodeWriter private constructor(
                 typeName.emitTo(this)
             }
 
-            else -> emit(typeName.toString())
+            is ArrayTypeName -> {
+                emitArrayTypeName(typeName)
+            }
+
+            is TypeVariableName -> {
+                emitTypeVariableName(typeName)
+            }
+
+            is ParameterizedTypeName -> {
+                emitParameterizedTypeName(typeName)
+            }
+
+            is WildcardTypeName -> {
+                emitWildcardTypeName(typeName)
+            }
+
+            else -> throw IllegalArgumentException("Unsupported TypeName for Kotlin code writer $typeName (${typeName::class})")
+
+        }
+    }
+
+    /**
+     * Emits an ArrayTypeName in Kotlin syntax.
+     * In Kotlin, arrays are represented as Array<T> for object types or specialized arrays like IntArray.
+     */
+    private fun emitArrayTypeName(arrayTypeName: ArrayTypeName) {
+        val componentType = arrayTypeName.componentType.typeName
+
+        // Handle primitive array types with specialized Kotlin array classes
+        when (componentType) {
+            is ClassName -> {
+                when (componentType.canonicalName) {
+                    "kotlin.Byte" -> emit("ByteArray")
+                    "kotlin.Short" -> emit("ShortArray")
+                    "kotlin.Int" -> emit("IntArray")
+                    "kotlin.Long" -> emit("LongArray")
+                    "kotlin.Float" -> emit("FloatArray")
+                    "kotlin.Double" -> emit("DoubleArray")
+                    "kotlin.Boolean" -> emit("BooleanArray")
+                    "kotlin.Char" -> emit("CharArray")
+                    else -> {
+                        // Generic array type
+                        emit("Array<")
+                        emit(arrayTypeName.componentType)
+                        emit(">")
+                    }
+                }
+            }
+            else -> {
+                // For non-primitive types, use Array<T>
+                emit("Array<")
+                emit(arrayTypeName.componentType)
+                emit(">")
+            }
+        }
+    }
+
+    /**
+     * Emits a TypeVariableName in Kotlin syntax.
+     * Type variables in Kotlin are represented by their name, with bounds handled separately in declarations.
+     */
+    private fun emitTypeVariableName(typeVariableName: TypeVariableName) {
+        emit(typeVariableName.name)
+    }
+
+    /**
+     * Emits a ParameterizedTypeName in Kotlin syntax.
+     * Parameterized types in Kotlin follow the pattern: RawType<TypeArg1, TypeArg2, ...>
+     */
+    private fun emitParameterizedTypeName(parameterizedTypeName: ParameterizedTypeName) {
+        // Emit the raw type
+        emit(parameterizedTypeName.rawType)
+
+        // Emit type arguments if any
+        if (parameterizedTypeName.typeArguments.isNotEmpty()) {
+            emit("<")
+            parameterizedTypeName.typeArguments.forEachIndexed { index, typeArg ->
+                if (index > 0) emit(", ")
+                emit(typeArg)
+            }
+            emit(">")
+        }
+    }
+
+    /**
+     * Emits a WildcardTypeName in Kotlin syntax.
+     * Kotlin uses variance annotations: 'out T' for covariance, 'in T' for contravariance, and '*' for star projection.
+     */
+    private fun emitWildcardTypeName(wildcardTypeName: WildcardTypeName) {
+        when (wildcardTypeName) {
+            is EmptyWildcardTypeName -> {
+                // Star projection in Kotlin
+                emit("*")
+            }
+            is LowerWildcardTypeName -> {
+                // Covariance: out T (equivalent to Java's ? extends T)
+                emit("out ")
+                if (wildcardTypeName.bounds.isNotEmpty()) {
+                    emit(wildcardTypeName.bounds.first())
+                }
+            }
+            is UpperWildcardTypeName -> {
+                // Contravariance: in T (equivalent to Java's ? super T)
+                emit("in ")
+                if (wildcardTypeName.bounds.isNotEmpty()) {
+                    emit(wildcardTypeName.bounds.first())
+                }
+            }
+            else -> {
+                // Fallback for unknown wildcard types
+                emit("*")
+            }
         }
     }
 
