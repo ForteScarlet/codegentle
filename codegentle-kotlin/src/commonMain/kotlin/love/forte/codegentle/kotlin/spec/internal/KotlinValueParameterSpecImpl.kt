@@ -20,7 +20,8 @@ internal data class KotlinValueParameterSpecImpl(
     override val annotations: List<AnnotationRef>,
     override val modifiers: Set<KotlinModifier>,
     override val kDoc: CodeValue,
-    override val defaultValue: CodeValue?
+    override val defaultValue: CodeValue?,
+    override val propertyization: KotlinValueParameterSpec.Propertyization?
 ) : KotlinValueParameterSpec {
     override fun emit(codeWriter: KotlinCodeWriter) {
         emitTo(codeWriter)
@@ -29,6 +30,26 @@ internal data class KotlinValueParameterSpecImpl(
     override fun toString(): String {
         return "KotlinValueParameterSpec(name='$name', type=${typeRef.typeName})"
     }
+}
+
+/**
+ * Internal implementation of [KotlinValueParameterSpec.Propertyization].
+ */
+internal data class PropertyizationImpl(
+    override val mutable: Boolean
+) : KotlinValueParameterSpec.Propertyization
+
+/**
+ * Internal implementation of [KotlinValueParameterSpec.PropertyizationBuilder].
+ */
+internal class PropertyizationBuilderImpl : KotlinValueParameterSpec.PropertyizationBuilder {
+    override var mutable: Boolean = false
+
+    override fun mutable(mutable: Boolean): KotlinValueParameterSpec.PropertyizationBuilder = apply {
+        this.mutable = mutable
+    }
+
+    override fun build(): KotlinValueParameterSpec.Propertyization = PropertyizationImpl(mutable)
 }
 
 /**
@@ -44,6 +65,7 @@ internal class KotlinValueParameterSpecBuilderImpl(
     private var defaultValue: CodeValue? = null
     private val kDoc: CodeValueBuilder = CodeValue.builder()
     private val annotations = mutableListOf<AnnotationRef>()
+    private var propertyization: KotlinValueParameterSpec.Propertyization? = null
 
     override fun addModifier(modifier: KotlinModifier): KotlinValueParameterSpec.Builder = apply {
         modifierSet.add(modifier)
@@ -82,6 +104,10 @@ internal class KotlinValueParameterSpecBuilderImpl(
         annotations.addAll(refs)
     }
 
+    override fun propertyize(propertyization: KotlinValueParameterSpec.Propertyization): KotlinValueParameterSpec.Builder = apply {
+        this.propertyization = propertyization
+    }
+
     /**
      * Build [KotlinValueParameterSpec].
      */
@@ -92,6 +118,7 @@ internal class KotlinValueParameterSpecBuilderImpl(
             annotations = annotations.toList(),
             modifiers = modifierSet.immutable(),
             kDoc = kDoc.build(),
-            defaultValue = defaultValue
+            defaultValue = defaultValue,
+            propertyization = propertyization
         )
 }
