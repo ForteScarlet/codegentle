@@ -98,9 +98,5 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
             codeWriter.unindent()
             codeWriter.emit("\n}")
         }
-
-        parts.first() as? CodeSimplePart
-
-
     }
 }

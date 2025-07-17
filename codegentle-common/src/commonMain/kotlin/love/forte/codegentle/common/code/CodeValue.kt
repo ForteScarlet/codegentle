@@ -165,14 +165,14 @@ public class CodeValueBuilder internal constructor() : BuilderDsl {
     public fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): CodeValueBuilder = apply {
         parts.add(CodePart.statementBegin())
         add(CodeValue(format, *argumentParts))
-        add(";\n")
+        add("\n")
         parts.add(CodePart.statementEnd())
     }
 
     public fun addStatement(codeValue: CodeValue): CodeValueBuilder = apply {
         parts.add(CodePart.statementBegin())
         add(codeValue)
-        add(";\n")
+        add("\n")
         parts.add(CodePart.statementEnd())
     }
 
