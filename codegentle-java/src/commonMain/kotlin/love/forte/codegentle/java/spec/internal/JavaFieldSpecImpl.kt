@@ -32,7 +32,7 @@ internal class JavaFieldSpecImpl internal constructor(
         codeWriter.emit("%V $name") {
             emitType(type)
         }
-        if (!initializer.isEmpty) {
+        if (!initializer.isEmpty()) {
             codeWriter.emit(" = ")
             codeWriter.emit(initializer)
         }

@@ -84,7 +84,7 @@ internal class KotlinFileImpl(
         val blankLineRequired = BlankLineRequirer()
 
         codeWriter.inPackage(packageName) {
-            if (!fileComment.isEmpty) {
+            if (!fileComment.isEmpty()) {
                 codeWriter.emitComment(fileComment)
             }
 

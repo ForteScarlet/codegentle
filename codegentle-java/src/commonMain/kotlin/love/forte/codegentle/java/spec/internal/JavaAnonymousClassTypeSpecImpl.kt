@@ -43,7 +43,7 @@ internal class JavaAnonymousClassTypeSpecImpl(
                 // javadoc.emit(codeWriter)
                 codeWriter.emitAnnotationRefs(annotations, false)
                 codeWriter.emit(enumName)
-                if (!anonymousTypeArguments.isEmpty) {
+                if (!anonymousTypeArguments.isEmpty()) {
                     codeWriter.emit("(")
                     codeWriter.emit(anonymousTypeArguments)
                     // anonymousTypeArguments.emit(codeWriter)

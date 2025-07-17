@@ -61,6 +61,14 @@ public interface KotlinContextParameterSpec : KotlinSpec {
     }
 }
 
+/**
+ * Create a [KotlinContextParameterSpec] with the given name and type.
+ *
+ * @param name the parameter name, or null for `_`
+ * @param type the parameter type
+ * @param block the configuration block
+ * @return a new [KotlinContextParameterSpec] instance
+ */
 public inline fun KotlinContextParameterSpec(
     name: String?,
     type: TypeRef<*>,

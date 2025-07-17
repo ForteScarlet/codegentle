@@ -218,14 +218,15 @@ class KotlinCodeWriterTests {
                  * This is a function with parameters.
                  */
                 fun myFunction(
-                /**
-                 * This is parameter 1.
-                 */
-                param1: com.example.MyClass, 
-                /**
-                 * This is parameter 2.
-                 */
-                param2: com.example.MyClass = null): com.example.MyClass = param1
+                    /**
+                     * This is parameter 1.
+                     */
+                    param1: com.example.MyClass,
+                    /**
+                     * This is parameter 2.
+                     */
+                    param2: com.example.MyClass = null
+                ): com.example.MyClass = param1
             }
         """.trimIndent()
 

@@ -10,7 +10,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal fun KotlinGetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Emit KDoc if present
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -23,7 +23,7 @@ internal fun KotlinGetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emit("get")
 
     // If getter has code, emit it as a block
-    if (!code.isEmpty) {
+    if (!code.isEmpty()) {
         codeWriter.emit("() {")
         codeWriter.indent()
         codeWriter.emitNewLine()
@@ -42,7 +42,7 @@ internal fun KotlinGetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
  */
 internal fun KotlinSetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Emit KDoc if present
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -55,7 +55,7 @@ internal fun KotlinSetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emit("set")
 
     // If setter has code, emit it as a block with parameter
-    if (!code.isEmpty) {
+    if (!code.isEmpty()) {
         codeWriter.emit("(${parameterName}) {")
         codeWriter.indent()
         codeWriter.emitNewLine()

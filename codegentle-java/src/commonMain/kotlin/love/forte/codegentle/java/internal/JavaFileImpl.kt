@@ -60,7 +60,7 @@ internal class JavaFileImpl(
 
     override fun emit(codeWriter: JavaCodeWriter) {
         codeWriter.inPackage(packageName) {
-            if (!fileComment.isEmpty) {
+            if (!fileComment.isEmpty()) {
                 codeWriter.emitComment(fileComment)
             }
 

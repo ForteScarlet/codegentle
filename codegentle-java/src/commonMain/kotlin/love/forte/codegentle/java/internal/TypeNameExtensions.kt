@@ -101,7 +101,7 @@ internal inline fun JavaTypeSpec.emitMembers(
     }
 
     // Static block
-    if (!staticBlock.isEmpty) {
+    if (!staticBlock.isEmpty()) {
         codeWriter.newLineIfNot(firstMember)
         codeWriter.emit(staticBlock)
         // staticBlock.emit(codeWriter)
@@ -117,7 +117,7 @@ internal inline fun JavaTypeSpec.emitMembers(
     }
 
     // Initializer block
-    if (!initializerBlock.isEmpty) {
+    if (!initializerBlock.isEmpty()) {
         if (!isRecord) {
             codeWriter.newLineIfNot(firstMember)
             codeWriter.emit(initializerBlock)

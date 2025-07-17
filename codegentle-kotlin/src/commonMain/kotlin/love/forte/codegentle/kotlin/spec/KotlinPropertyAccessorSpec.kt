@@ -131,3 +131,29 @@ public interface KotlinSetterSpec : KotlinPropertyAccessorSpec {
         override fun build(): KotlinSetterSpec
     }
 }
+
+/**
+ * Create a [KotlinGetterSpec] with the given configuration.
+ *
+ * @param block the configuration block
+ * @return a new [KotlinGetterSpec] instance
+ */
+public inline fun KotlinGetterSpec(
+    block: KotlinGetterSpec.Builder.() -> Unit = {}
+): KotlinGetterSpec {
+    return KotlinPropertyAccessorSpec.getterBuilder().apply(block).build()
+}
+
+/**
+ * Create a [KotlinSetterSpec] with the given parameter name and configuration.
+ *
+ * @param parameterName the setter parameter name
+ * @param block the configuration block
+ * @return a new [KotlinSetterSpec] instance
+ */
+public inline fun KotlinSetterSpec(
+    parameterName: String,
+    block: KotlinSetterSpec.Builder.() -> Unit = {}
+): KotlinSetterSpec {
+    return KotlinPropertyAccessorSpec.setterBuilder(parameterName).apply(block).build()
+}

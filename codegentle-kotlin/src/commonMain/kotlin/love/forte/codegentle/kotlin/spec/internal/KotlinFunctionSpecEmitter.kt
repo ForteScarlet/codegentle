@@ -1,9 +1,6 @@
 package love.forte.codegentle.kotlin.spec.internal
 
-import love.forte.codegentle.common.code.CodePart
-import love.forte.codegentle.common.code.CodeSimplePart
-import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.code.*
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
@@ -12,7 +9,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Emit KDoc
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -52,22 +49,36 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
 
     // Emit parameters
     codeWriter.emit("(")
+    val mutableLine = parameters.any { it.kDoc.isNotEmpty() }
+    if (mutableLine) {
+        codeWriter.emitNewLine()
+        codeWriter.indent()
+    }
+
     parameters.forEachIndexed { index, param ->
         if (index > 0) {
-            codeWriter.emit(", ")
-            if (!param.kDoc.isEmpty) {
-                codeWriter.emitNewLine()
+            if (mutableLine) {
+                codeWriter.emitNewLine(",")
+            } else {
+                codeWriter.emit(", ")
             }
         }
         param.emitTo(codeWriter)
     }
-    codeWriter.emit(")")
+
+    if (mutableLine) {
+        codeWriter.unindent()
+        codeWriter.emitNewLine()
+        codeWriter.emit(")")
+    } else {
+        codeWriter.emit(")")
+    }
 
     // Emit return type
     codeWriter.emit(": ")
     codeWriter.emit(returnType)
 
-    if (!code.isEmpty) {
+    if (!code.isEmpty()) {
         val parts = code.parts
         val firstPart = parts.first()
         if (firstPart is CodeSimplePart && firstPart.value.trimStart().startsWith("return ")) {

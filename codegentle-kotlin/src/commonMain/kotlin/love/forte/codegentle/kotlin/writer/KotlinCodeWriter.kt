@@ -54,7 +54,7 @@ public class KotlinCodeWriter private constructor(
         doc: CodeValue,
         vararg options: CodeValueEmitOption
     ) {
-        if (doc.isEmpty) return
+        if (doc.isEmpty()) return
 
         emit("/**${strategy.newline()}")
         this.commentType = CommentType.DOC

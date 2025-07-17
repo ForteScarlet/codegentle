@@ -9,7 +9,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal fun KotlinValueParameterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Skip emitting KDoc for parameters to match the expected output in tests
-    if (!(kDoc.isEmpty)) {
+    if (!(kDoc.isEmpty())) {
         codeWriter.emitDoc(kDoc)
     }
 

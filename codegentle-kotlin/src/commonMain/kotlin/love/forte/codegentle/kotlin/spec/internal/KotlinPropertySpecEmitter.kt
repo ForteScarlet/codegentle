@@ -9,7 +9,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal fun KotlinPropertySpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Emit KDoc
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 

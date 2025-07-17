@@ -6,6 +6,7 @@ import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.ConstructorDelegationBuilderImpl
@@ -165,6 +166,68 @@ public inline fun ConstructorDelegation(
     kind: ConstructorDelegation.Kind,
     block: ConstructorDelegation.Builder.() -> Unit = {}
 ): ConstructorDelegation = ConstructorDelegation.builder(kind).apply(block).build()
+
+/**
+ * Create a [KotlinConstructorSpec] with the given configuration.
+ *
+ * @param block the configuration block
+ * @return a new [KotlinConstructorSpec] instance
+ */
+public inline fun KotlinConstructorSpec(
+    block: KotlinConstructorSpec.Builder.() -> Unit = {}
+): KotlinConstructorSpec {
+    return KotlinConstructorSpec.builder().apply(block).build()
+}
+
+/**
+ * Add KDoc to this builder with the given format and configuration block.
+ *
+ * @param format the KDoc format string
+ * @param block the configuration block for the KDoc
+ * @return the builder instance
+ */
+public inline fun KotlinConstructorSpec.Builder.addKDoc(
+    format: String,
+    block: CodeValueSingleFormatBuilderDsl = {}
+): KotlinConstructorSpec.Builder = addKDoc(CodeValue(format, block))
+
+/**
+ * Add code to this builder with the given format and configuration block.
+ *
+ * @param format the code format string
+ * @param block the configuration block for the code
+ * @return the builder instance
+ */
+public inline fun KotlinConstructorSpec.Builder.addCode(
+    format: String,
+    block: CodeValueSingleFormatBuilderDsl = {}
+): KotlinConstructorSpec.Builder = addCode(CodeValue(format, block))
+
+/**
+ * Add a statement to this builder with the given format and configuration block.
+ *
+ * @param format the statement format string
+ * @param block the configuration block for the statement
+ * @return the builder instance
+ */
+public inline fun KotlinConstructorSpec.Builder.addStatement(
+    format: String,
+    block: CodeValueSingleFormatBuilderDsl = {}
+): KotlinConstructorSpec.Builder = addStatement(CodeValue(format, block))
+
+/**
+ * Add a parameter to this builder with the given name and type.
+ *
+ * @param name the parameter name
+ * @param type the parameter type
+ * @param block the configuration block for the parameter
+ * @return the builder instance
+ */
+public inline fun KotlinConstructorSpec.Builder.addParameter(
+    name: String,
+    type: TypeRef<*>,
+    block: KotlinValueParameterSpec.Builder.() -> Unit = {}
+): KotlinConstructorSpec.Builder = addParameter(KotlinValueParameterSpec(name, type, block))
 
 public inline fun ConstructorDelegation.Builder.addArgument(
     format: String,

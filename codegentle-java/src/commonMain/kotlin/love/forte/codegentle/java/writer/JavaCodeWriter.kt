@@ -119,7 +119,7 @@ public class JavaCodeWriter private constructor(
 
 
     override fun emitDoc(doc: CodeValue, vararg options: CodeValueEmitOption) {
-        if (doc.isEmpty) return
+        if (doc.isEmpty()) return
 
         emit("/**${strategy.newline()}")
         this.commentType = CommentType.JAVADOC

@@ -253,3 +253,19 @@ public inline fun KotlinSimpleTypeSpec.Builder.primaryConstructor(
 public inline fun KotlinSimpleTypeSpec.Builder.addSecondaryConstructor(
     block: KotlinConstructorSpec.Builder.() -> Unit = {}
 ): KotlinSimpleTypeSpec.Builder = addSecondaryConstructor(KotlinConstructorSpec.builder().apply(block).build())
+
+/**
+ * Create a [KotlinSimpleTypeSpec] with the given kind and name.
+ *
+ * @param kind the type kind (CLASS, INTERFACE, etc.)
+ * @param name the type name
+ * @param block the configuration block
+ * @return a new [KotlinSimpleTypeSpec] instance
+ */
+public inline fun KotlinSimpleTypeSpec(
+    kind: KotlinTypeSpec.Kind,
+    name: String,
+    block: KotlinSimpleTypeSpec.Builder.() -> Unit = {}
+): KotlinSimpleTypeSpec {
+    return KotlinSimpleTypeSpec.builder(kind, name).apply(block).build()
+}

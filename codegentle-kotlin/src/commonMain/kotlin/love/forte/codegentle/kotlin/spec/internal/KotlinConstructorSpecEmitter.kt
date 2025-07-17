@@ -12,7 +12,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal fun KotlinConstructorSpec.emitTo(codeWriter: KotlinCodeWriter, isPrimary: Boolean = false) {
     // Emit KDoc
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -54,7 +54,7 @@ internal fun KotlinConstructorSpec.emitTo(codeWriter: KotlinCodeWriter, isPrimar
     }
 
     // Emit constructor body if not empty
-    if (!code.isEmpty) {
+    if (!code.isEmpty()) {
         codeWriter.emitNewLine(" {")
         codeWriter.withIndent {
             emit(code)

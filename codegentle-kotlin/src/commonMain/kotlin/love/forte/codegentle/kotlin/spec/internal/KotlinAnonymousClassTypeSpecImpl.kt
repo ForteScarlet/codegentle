@@ -189,7 +189,7 @@ internal fun KotlinAnonymousClassTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     var blockLineRequired = false
 
     // Emit KDoc
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -240,7 +240,7 @@ internal fun KotlinAnonymousClassTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Anonymous classes cannot have constructors, so we skip constructor emission
 
     // Emit initializer block
-    if (!initializerBlock.isEmpty) {
+    if (!initializerBlock.isEmpty()) {
         if (blockLineRequired) {
             codeWriter.emitNewLine()
         }

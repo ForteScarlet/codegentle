@@ -162,6 +162,14 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
     }
 }
 
+/**
+ * Create a [KotlinValueParameterSpec] with the given name and type.
+ *
+ * @param name the parameter name
+ * @param type the parameter type
+ * @param block the configuration block
+ * @return a new [KotlinValueParameterSpec] instance
+ */
 public inline fun KotlinValueParameterSpec(
     name: String,
     type: TypeRef<*>,

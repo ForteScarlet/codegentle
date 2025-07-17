@@ -16,7 +16,7 @@ internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitM
     var blockLineRequired = false
 
     // Emit KDoc
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -88,7 +88,7 @@ internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitM
     codeWriter.indent()
 
     // Emit initializer block
-    if (!initializerBlock.isEmpty) {
+    if (!initializerBlock.isEmpty()) {
         codeWriter.emitNewLine("init {")
         codeWriter.withIndent {
             emit(initializerBlock)

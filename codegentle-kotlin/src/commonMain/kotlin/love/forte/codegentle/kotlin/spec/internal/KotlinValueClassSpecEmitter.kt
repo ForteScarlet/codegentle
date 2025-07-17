@@ -18,7 +18,7 @@ internal fun KotlinValueClassSpec.emitTo(codeWriter: KotlinCodeWriter) {
     var blockLineRequired = false
 
     // Emit KDoc
-    if (!kDoc.isEmpty) {
+    if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
     }
 
@@ -39,7 +39,7 @@ internal fun KotlinValueClassSpec.emitTo(codeWriter: KotlinCodeWriter) {
         codeWriter.emitTypeVariableRefs(typeVariables)
     }
 
-    val hasKDoc = !primaryParameter.kDoc.isEmpty
+    val hasKDoc = !primaryParameter.kDoc.isEmpty()
 
     // Emit primary parameter (value classes always have exactly one primary parameter)
     codeWriter.emit("(")
@@ -68,7 +68,7 @@ internal fun KotlinValueClassSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.indent()
 
     // Emit initializer block
-    if (!initializerBlock.isEmpty) {
+    if (!initializerBlock.isEmpty()) {
         codeWriter.emitNewLine("init {")
         codeWriter.withIndent {
             emit(initializerBlock)

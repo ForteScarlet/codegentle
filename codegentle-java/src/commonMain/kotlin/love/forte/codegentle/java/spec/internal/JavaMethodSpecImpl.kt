@@ -69,7 +69,7 @@ internal class JavaMethodSpecImpl(
 
         codeWriter.emit(")")
 
-        if (!defaultValue.isEmpty) {
+        if (!defaultValue.isEmpty()) {
             codeWriter.emit(" default ")
             codeWriter.emit(defaultValue)
             // defaultValue.emit(codeWriter)
@@ -123,12 +123,12 @@ internal class JavaMethodSpecImpl(
         var emitTagNewline = true
         for (parameter in parameters) {
             val parameterDoc = parameter.javadoc
-            if (parameterDoc.isEmpty) {
+            if (parameterDoc.isEmpty()) {
                 continue
             }
 
             // Emit a new line before @param section only if the method javadoc is present.
-            if (emitTagNewline && !javadoc.isEmpty) builder.add("\n")
+            if (emitTagNewline && !javadoc.isEmpty()) builder.add("\n")
             emitTagNewline = false
             builder.add("@param ${parameter.name} %V") {
                 literal(parameterDoc)

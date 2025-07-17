@@ -23,8 +23,9 @@ public interface CodeValue {
     }
 }
 
-public val CodeValue.isEmpty: Boolean
-    get() = parts.isEmpty()
+public fun CodeValue.isEmpty(): Boolean = parts.isEmpty()
+
+public fun CodeValue.isNotEmpty(): Boolean = !isEmpty()
 
 
 public operator fun CodeValue.plus(codeValue: CodeValue): CodeValue {
