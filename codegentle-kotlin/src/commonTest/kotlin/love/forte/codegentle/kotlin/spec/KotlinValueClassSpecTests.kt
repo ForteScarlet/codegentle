@@ -32,7 +32,9 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassWithKDoc() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
             .addKDoc("A value class representing a user ID.")
@@ -40,10 +42,13 @@ class KotlinValueClassSpecTests {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("/**"))
-        assertTrue(code.contains("A value class representing a user ID."))
-        assertTrue(code.contains("@param value the string value of the user ID"))
-        assertTrue(code.contains("*/"))
+        val expectedCode = """/**
+ * A value class representing a user ID.
+ * @param value the string value of the user ID
+ */
+value class UserId(val value: String) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
@@ -64,14 +69,19 @@ class KotlinValueClassSpecTests {
         val code = valueClass.writeToKotlinString()
         println("[DEBUG_LOG] Generated code for testValueClassWithAnnotations:")
         println("[DEBUG_LOG] $code")
-        assertTrue(code.contains("@kotlinx.serialization.Serializable"))
-        assertTrue(code.contains("@kotlin.jvm.JvmInline"))
+        val expectedCode = """@kotlinx.serialization.Serializable
+@kotlin.jvm.JvmInline
+value class UserId(val value: String) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithMultipleAnnotations() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val serializable = ClassName("kotlinx.serialization", "Serializable").annotationRef()
         val jvmInline = ClassName("kotlin.jvm", "JvmInline").annotationRef()
@@ -84,44 +94,55 @@ class KotlinValueClassSpecTests {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("@kotlinx.serialization.Serializable"))
-        assertTrue(code.contains("@kotlin.jvm.JvmInline"))
-        assertTrue(code.contains("@kotlin.Deprecated"))
+        val expectedCode = """@kotlinx.serialization.Serializable
+@kotlin.jvm.JvmInline
+@Deprecated(message = "Use NewUserId instead")
+value class UserId(val value: String) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithAdditionalModifiers() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
             .addModifier(KotlinModifier.INTERNAL)
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("internal"))
-        assertTrue(code.contains("value"))
+        val expectedCode = """internal value class UserId(val value: String) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithMultipleModifiers() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
             .addModifiers(KotlinModifier.INTERNAL, KotlinModifier.INLINE)
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("internal"))
-        assertTrue(code.contains("value"))
+        val expectedCode = """internal inline value class UserId(val value: String) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithTypeVariables() {
         val tType = TypeVariableName("T")
         val tRef = tType.kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", tRef).build()
+        val parameter = KotlinValueParameterSpec.builder("value", tRef)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("Wrapper", parameter)
             .addTypeVariableRef(tRef)
@@ -130,8 +151,9 @@ class KotlinValueClassSpecTests {
 
         val code = valueClass.writeToKotlinString()
         println(code)
-        assertTrue(code.contains("value class Wrapper<T>"))
-        assertTrue(code.contains("val value: T"))
+        val expectedCode = """value class Wrapper<T>(val value: T) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
@@ -140,7 +162,9 @@ class KotlinValueClassSpecTests {
         val uType = TypeVariableName("U")
         val tRef = tType.kotlinRef()
         val uRef = uType.kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", tRef).build()
+        val parameter = KotlinValueParameterSpec.builder("value", tRef)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("Wrapper", parameter)
             .addTypeVariableRef(tRef)
@@ -148,13 +172,17 @@ class KotlinValueClassSpecTests {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("value class Wrapper<T, U>"))
+        val expectedCode = """value class Wrapper<T, U>(val value: T) {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithSuperinterfaces() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val comparable = ClassName("kotlin", "Comparable")
         val serializable = ClassName("java.io", "Serializable")
@@ -165,14 +193,18 @@ class KotlinValueClassSpecTests {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains(": kotlin.Comparable, java.io.Serializable"))
+        val expectedCode = """value class UserId(val value: String) : Comparable, java.io.Serializable {
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithProperties() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val intType = ClassName("kotlin", "Int").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val lengthProperty = KotlinPropertySpec.builder("length", intType)
             .getter {
@@ -185,15 +217,22 @@ class KotlinValueClassSpecTests {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("val length: kotlin.Int"))
-        assertTrue(code.contains("get() = value.length"))
+        val expectedCode = """value class UserId(val value: String) {
+    val length: Int
+        get() {
+            return value.length
+        }
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithFunctions() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val booleanType = ClassName("kotlin", "Boolean").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val isEmptyFunction = KotlinFunctionSpec.builder("isEmpty", booleanType)
             .addCode("return value.isEmpty()")
@@ -207,7 +246,7 @@ class KotlinValueClassSpecTests {
 
         assertEquals(
             """
-                value class UserId(value: String) {
+                value class UserId(val value: String) {
                     fun isEmpty(): Boolean = value.isEmpty()
                 }
             """.trimIndent(),
@@ -218,45 +257,44 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassWithInitializerBlock() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
-            .addInitializerBlock("require(value.isNotEmpty()) { \"UserId cannot be empty\" }")
-            .build()
+        val parameter = KotlinValueParameterSpec("value", stringType) {
+            immutableProperty()
+        }
+
+        val valueClass = KotlinValueClassSpec("UserId", parameter) {
+            addInitializerBlock("require(value.isNotEmpty()) { \"UserId cannot be empty\" }")
+        }
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("init {"))
-        assertTrue(code.contains("require(value.isNotEmpty())"))
-        assertTrue(code.contains("\"UserId cannot be empty\""))
+        val expectedCode = """value class UserId(val value: String) {
+    init {
+        require(value.isNotEmpty()) { "UserId cannot be empty" }
+    }
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
     fun testValueClassWithMultipleInitializerBlocks() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
             .addInitializerBlock("require(value.isNotEmpty()) { \"UserId cannot be empty\" }")
-            .addInitializerBlock("println(\"Creating UserId with value: \$value\")")
+            .addInitializerBlock("\nprintln(\"Creating UserId with value: \$value\")")
             .build()
 
         val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("init {"))
-        assertTrue(code.contains("require(value.isNotEmpty())"))
-        assertTrue(code.contains("println(\"Creating UserId"))
+        val expectedCode = """value class UserId(val value: String) {
+    init {
+        require(value.isNotEmpty()) { "UserId cannot be empty" }
+        println("Creating UserId with value: ${'$'}value")
     }
-
-    @Test
-    fun testValueClassWithParameterProperty() {
-        val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType)
-            .varProperty() // mutable property
-            .build()
-
-        val valueClass = KotlinValueClassSpec.builder("MutableUserId", parameter).build()
-
-        val code = valueClass.writeToKotlinString()
-        assertTrue(code.contains("var value: String"))
+}"""
+        assertEquals(expectedCode, code)
     }
 
     @Test
@@ -299,6 +337,7 @@ class KotlinValueClassSpecTests {
         val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
 
         val parameter = KotlinValueParameterSpec.builder("id", stringType)
+            .immutableProperty()
             .addKDoc("The unique identifier")
             .build()
 
@@ -339,7 +378,7 @@ class KotlinValueClassSpecTests {
                     /**
                      * The unique identifier
                      */
-                    id: String
+                    val id: String
                 ) : Comparable {
                     init {
                         require(id.isNotEmpty()) { "ID cannot be empty" }
@@ -360,7 +399,9 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassBuilderValidation() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         // Test that VALUE modifier is automatically added and validated
         val builder = KotlinValueClassSpec.builder("UserId", parameter)
@@ -372,7 +413,9 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassBuilderWithoutValueModifierFails() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         // Create a builder and try to remove VALUE modifier (this should fail during build)
         val builder = KotlinValueClassSpec.builder("UserId", parameter)
@@ -385,7 +428,9 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassConvenienceFunction() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec("UserId", parameter) {
             addKDoc("Convenience function test")
@@ -403,7 +448,9 @@ class KotlinValueClassSpecTests {
     fun testValueClassExtensionFunctions() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val intType = ClassName("kotlin", "Int").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
             .addKDoc("Test KDoc") {
@@ -432,7 +479,9 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassSuperclassIsNull() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
 
@@ -443,7 +492,9 @@ class KotlinValueClassSpecTests {
     @Test
     fun testValueClassSubtypesIsEmpty() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType).build()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
 

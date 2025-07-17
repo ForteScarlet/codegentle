@@ -162,6 +162,13 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
     }
 }
 
+public inline fun KotlinValueParameterSpec(
+    name: String,
+    type: TypeRef<*>,
+    block: KotlinValueParameterSpec.Builder.() -> Unit = {}
+): KotlinValueParameterSpec =
+    KotlinValueParameterSpec.builder(name, type).apply(block).build()
+
 /**
  * Create a [KotlinValueParameterSpec.Propertyization] instance using a configuration block.
  *

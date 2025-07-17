@@ -47,6 +47,15 @@ internal class KotlinValueClassSpecBuilderImpl(
     override val name: String,
     override val primaryParameter: KotlinValueParameterSpec
 ) : KotlinValueClassSpec.Builder {
+    init {
+        val propertyization = primaryParameter.propertyization
+        require(propertyization?.mutable == false) {
+            "The primary parameter property of value class must be immutable " +
+                "(`propertyization.mutable` must be `false`), " +
+                "but current parameter's `propertyization.mutable` is ${propertyization?.mutable}"
+        }
+    }
+
     private val kDoc = CodeValue.builder()
     private val initializerBlock = CodeValue.builder()
 
