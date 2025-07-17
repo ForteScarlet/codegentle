@@ -3,6 +3,7 @@ package love.forte.codegentle.kotlin.writer
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.computeValue
 import love.forte.codegentle.common.naming.*
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
@@ -460,32 +461,24 @@ public class KotlinCodeWriter private constructor(
     }
 }
 
-private data class IntWrapper(var value: Int = 0)
-
 internal class Multiset<T> {
-    private val map = linkedMapOf<T, IntWrapper>()
+    private val map = linkedMapOf<T, Int>()
 
     fun add(t: T) {
-        val wrapper = map[t]
-        if (wrapper != null) {
-            wrapper.value += 1
-        } else {
-            map[t] = IntWrapper(1)
+        map.computeValue(t) { _, old ->
+            old?.plus(1) ?: 1
         }
     }
 
     fun remove(t: T) {
-        val wrapper = map[t]
-        if (wrapper != null) {
-            wrapper.value -= 1
-            if (wrapper.value == 0) {
-                map.remove(t)
-            }
+        map.computeValue(t) { _, old ->
+            // 如果-1后小于等于0，移除，否则保存计算结果
+            old?.minus(1)?.takeIf { value -> value > 0 }
         }
     }
 
     fun contains(t: T): Boolean {
-        return (map[t]?.value ?: 0) > 0
+        return (map[t] ?: 0) > 0
     }
 }
 
