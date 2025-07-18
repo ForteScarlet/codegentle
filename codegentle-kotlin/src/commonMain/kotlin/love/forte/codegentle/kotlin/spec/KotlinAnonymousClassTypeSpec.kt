@@ -2,9 +2,8 @@ package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.*
-import love.forte.codegentle.common.naming.TypeName
+import love.forte.codegentle.common.naming.SuperConfigurer
 import love.forte.codegentle.common.ref.AnnotationRefCollector
-import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.spec.internal.KotlinAnonymousClassTypeSpecBuilderImpl
@@ -45,11 +44,15 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
     override val kind: KotlinTypeSpec.Kind
         get() = KotlinTypeSpec.Kind.CLASS
 
+
     /**
      * Arguments to pass to the superclass constructor when creating the anonymous class.
      * These arguments will be used in the superclass constructor call.
      */
     public val superConstructorArguments: List<CodeValue>
+
+    // TODO 把 superConstructorArguments 换成 constructorDelegation
+    // public val constructorDelegation: ConstructorDelegation
 
     public companion object {
         /**
@@ -67,61 +70,14 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
      */
     public interface Builder :
         BuilderDsl,
-        KotlinModifierCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
         InitializerBlockCollector<Builder>,
-        TypeVariableCollector<Builder> {
-        /**
-         * Set superclass.
-         */
-        public fun superclass(superclass: TypeName): Builder
-
-        /**
-         * Add superinterfaces.
-         */
-        public fun addSuperinterfaces(vararg superinterfaces: TypeName): Builder
-
-        /**
-         * Add superinterfaces.
-         */
-        public fun addSuperinterfaces(superinterfaces: Iterable<TypeName>): Builder
-
-        /**
-         * Add superinterface.
-         */
-        public fun addSuperinterface(superinterface: TypeName): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(vararg properties: KotlinPropertySpec): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(properties: Iterable<KotlinPropertySpec>): Builder
-
-        /**
-         * Add property.
-         */
-        public fun addProperty(property: KotlinPropertySpec): Builder
-
-        /**
-         * Add functions.
-         */
-        public fun addFunctions(functions: Iterable<KotlinFunctionSpec>): Builder
-
-        /**
-         * Add functions.
-         */
-        public fun addFunctions(vararg functions: KotlinFunctionSpec): Builder
-
-        /**
-         * Add function.
-         */
-        public fun addFunction(function: KotlinFunctionSpec): Builder
-
+        TypeVariableCollector<Builder>,
+        SuperConfigurer<Builder>,
+        KotlinModifierCollector<Builder>,
+        KotlinPropertyCollector<Builder>,
+        KotlinFunctionCollector<Builder> {
         /**
          * Add arguments to pass to the superclass constructor.
          */
@@ -160,18 +116,6 @@ public inline fun KotlinAnonymousClassTypeSpec(
 ): KotlinAnonymousClassTypeSpec {
     return KotlinAnonymousClassTypeSpec.builder().apply(block).build()
 }
-
-public inline fun KotlinAnonymousClassTypeSpec.Builder.addProperty(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinPropertySpec.Builder.() -> Unit = {}
-): KotlinAnonymousClassTypeSpec.Builder = addProperty(KotlinPropertySpec(name, type, block))
-
-public inline fun KotlinAnonymousClassTypeSpec.Builder.addFunction(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinFunctionSpec.Builder.() -> Unit = {}
-): KotlinAnonymousClassTypeSpec.Builder = addFunction(KotlinFunctionSpec(name, type, block))
 
 public inline fun KotlinAnonymousClassTypeSpec.Builder.addSuperConstructorArgument(
     format: String,

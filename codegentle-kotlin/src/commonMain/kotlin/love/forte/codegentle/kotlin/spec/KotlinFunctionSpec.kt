@@ -1,12 +1,14 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.code.CodeValue
+import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.naming.KotlinNames
+import love.forte.codegentle.kotlin.ref.KotlinTypeRefBuilderDsl
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec.Companion.DEFAULT_REF
 import love.forte.codegentle.kotlin.spec.internal.KotlinFunctionSpecBuilderImpl
@@ -124,6 +126,12 @@ public inline fun KotlinFunctionSpec.Builder.addContextParameter(
     name: String?,
     type: TypeRef<*>,
     block: KotlinContextParameterSpec.Builder.() -> Unit = {}
-): KotlinFunctionSpec.Builder = addContextParameter(KotlinContextParameterSpec.builder(name, type).apply(block).build())
+): KotlinFunctionSpec.Builder =
+    addContextParameter(KotlinContextParameterSpec.builder(name, type).apply(block).build())
 
-// TODO functionCollector
+
+public inline fun <T : TypeName> KotlinFunctionSpec.Builder.returns(
+    type: T,
+    block: KotlinTypeRefBuilderDsl<T> = {}
+): KotlinFunctionSpec.Builder = returns(type.kotlinRef(block))
+

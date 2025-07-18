@@ -36,6 +36,18 @@ public interface KotlinConstructorSpec : KotlinCallableSpec {
     }
 }
 
+/**
+ * Create a [KotlinConstructorSpec] with the given configuration.
+ *
+ * @param block the configuration block
+ * @return a new [KotlinConstructorSpec] instance
+ */
+public inline fun KotlinConstructorSpec(
+    block: KotlinConstructorSpec.Builder.() -> Unit = {}
+): KotlinConstructorSpec {
+    return KotlinConstructorSpec.builder().apply(block).build()
+}
+
 public inline fun KotlinConstructorSpec.Builder.constructorDelegation(
     kind: ConstructorDelegation.Kind,
     block: ConstructorDelegation.Builder.() -> Unit = {}
@@ -51,15 +63,3 @@ public inline fun KotlinConstructorSpec.Builder.superConstructorDelegation(
     block: ConstructorDelegation.Builder.() -> Unit = {}
 ): KotlinConstructorSpec.Builder =
     constructorDelegation(ConstructorDelegation.Kind.SUPER, block)
-
-/**
- * Create a [KotlinConstructorSpec] with the given configuration.
- *
- * @param block the configuration block
- * @return a new [KotlinConstructorSpec] instance
- */
-public inline fun KotlinConstructorSpec(
-    block: KotlinConstructorSpec.Builder.() -> Unit = {}
-): KotlinConstructorSpec {
-    return KotlinConstructorSpec.builder().apply(block).build()
-}

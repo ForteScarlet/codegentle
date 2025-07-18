@@ -4,7 +4,6 @@ import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
-import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.spec.internal.KotlinAnnotationTypeSpecBuilderImpl
@@ -64,26 +63,12 @@ public interface KotlinAnnotationTypeSpec : KotlinTypeSpec {
         KotlinModifierCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
-        TypeVariableCollector<Builder> {
+        TypeVariableCollector<Builder>,
+        KotlinPropertyCollector<Builder> {
         /**
          * The annotation class name.
          */
         public val name: String
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(vararg properties: KotlinPropertySpec): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(properties: Iterable<KotlinPropertySpec>): Builder
-
-        /**
-         * Add property.
-         */
-        public fun addProperty(property: KotlinPropertySpec): Builder
 
         /**
          * Build [KotlinAnnotationTypeSpec] instance.
@@ -105,17 +90,3 @@ public inline fun KotlinAnnotationTypeSpec(
 ): KotlinAnnotationTypeSpec {
     return KotlinAnnotationTypeSpec.builder(name).apply(block).build()
 }
-
-/**
- * Add a property to this builder with the given name and type.
- *
- * @param name the property name
- * @param type the property type
- * @param block the configuration block for the property
- * @return the builder instance
- */
-public inline fun KotlinAnnotationTypeSpec.Builder.addProperty(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinPropertySpec.Builder.() -> Unit = {}
-): KotlinAnnotationTypeSpec.Builder = addProperty(KotlinPropertySpec(name, type, block))

@@ -31,6 +31,7 @@ internal data class KotlinAnonymousClassTypeSpecImpl(
     override val subtypes: List<KotlinTypeSpec>,
     override val superConstructorArguments: List<CodeValue>
 ) : KotlinAnonymousClassTypeSpec {
+
     override fun emit(codeWriter: KotlinCodeWriter) {
         emitTo(codeWriter)
     }

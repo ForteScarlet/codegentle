@@ -3,9 +3,9 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.InitializerBlockCollector
 import love.forte.codegentle.common.code.KDocCollector
+import love.forte.codegentle.common.naming.SuperinterfaceCollector
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
-import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.spec.internal.KotlinEnumTypeSpecBuilderImpl
@@ -50,60 +50,18 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
      */
     public interface Builder :
         BuilderDsl,
-        AnnotationRefCollector<Builder>,
         KotlinModifierCollector<Builder>,
+        KotlinPropertyCollector<Builder>,
+        KotlinFunctionCollector<Builder>,
+        AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
         InitializerBlockCollector<Builder>,
-        TypeVariableCollector<Builder> {
+        TypeVariableCollector<Builder>,
+        SuperinterfaceCollector<Builder> {
         /**
          * The enum class name.
          */
         public val name: String
-
-        /**
-         * Add superinterfaces.
-         */
-        public fun addSuperinterfaces(vararg superinterfaces: TypeName): Builder
-
-        /**
-         * Add superinterfaces.
-         */
-        public fun addSuperinterfaces(superinterfaces: Iterable<TypeName>): Builder
-
-        /**
-         * Add superinterface.
-         */
-        public fun addSuperinterface(superinterface: TypeName): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(vararg properties: KotlinPropertySpec): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(properties: Iterable<KotlinPropertySpec>): Builder
-
-        /**
-         * Add property.
-         */
-        public fun addProperty(property: KotlinPropertySpec): Builder
-
-        /**
-         * Add functions.
-         */
-        public fun addFunctions(functions: Iterable<KotlinFunctionSpec>): Builder
-
-        /**
-         * Add functions.
-         */
-        public fun addFunctions(vararg functions: KotlinFunctionSpec): Builder
-
-        /**
-         * Add function.
-         */
-        public fun addFunction(function: KotlinFunctionSpec): Builder
 
         /**
          * Add enum constant.
@@ -135,15 +93,3 @@ public inline fun KotlinEnumTypeSpec(
 ): KotlinEnumTypeSpec {
     return KotlinEnumTypeSpec.builder(name).apply(block).build()
 }
-
-public inline fun KotlinEnumTypeSpec.Builder.addProperty(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinPropertySpec.Builder.() -> Unit = {}
-): KotlinEnumTypeSpec.Builder = addProperty(KotlinPropertySpec(name, type, block))
-
-public inline fun KotlinEnumTypeSpec.Builder.addFunction(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinFunctionSpec.Builder.() -> Unit = {}
-): KotlinEnumTypeSpec.Builder = addFunction(KotlinFunctionSpec(name, type, block))

@@ -3,9 +3,8 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.InitializerBlockCollector
 import love.forte.codegentle.common.code.KDocCollector
-import love.forte.codegentle.common.naming.TypeName
+import love.forte.codegentle.common.naming.SuperConfigurer
 import love.forte.codegentle.common.ref.AnnotationRefCollector
-import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierCollector
@@ -51,10 +50,13 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
     public interface Builder :
         BuilderDsl,
         KotlinModifierCollector<Builder>,
+        KotlinPropertyCollector<Builder>,
+        KotlinFunctionCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
         InitializerBlockCollector<Builder>,
-        TypeVariableCollector<Builder> {
+        TypeVariableCollector<Builder>,
+        SuperConfigurer<Builder> {
         /**
          * The kind of the type.
          */
@@ -64,56 +66,6 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
          * The name of the type.
          */
         public val name: String
-
-        /**
-         * Set superclass.
-         */
-        public fun superclass(superclass: TypeName): Builder
-
-        /**
-         * Add multiple superinterfaces.
-         */
-        public fun addSuperinterfaces(vararg superinterfaces: TypeName): Builder
-
-        /**
-         * Add multiple superinterfaces.
-         */
-        public fun addSuperinterfaces(superinterfaces: Iterable<TypeName>): Builder
-
-        /**
-         * Add superinterface.
-         */
-        public fun addSuperinterface(superinterface: TypeName): Builder
-
-        /**
-         * Add multiple properties.
-         */
-        public fun addProperties(vararg properties: KotlinPropertySpec): Builder
-
-        /**
-         * Add multiple properties.
-         */
-        public fun addProperties(properties: Iterable<KotlinPropertySpec>): Builder
-
-        /**
-         * Add property.
-         */
-        public fun addProperty(property: KotlinPropertySpec): Builder
-
-        /**
-         * Add multiple functions.
-         */
-        public fun addFunctions(functions: Iterable<KotlinFunctionSpec>): Builder
-
-        /**
-         * Add multiple functions.
-         */
-        public fun addFunctions(vararg functions: KotlinFunctionSpec): Builder
-
-        /**
-         * Add function.
-         */
-        public fun addFunction(function: KotlinFunctionSpec): Builder
 
         /**
          * Add multiple subtypes.
@@ -174,18 +126,6 @@ public inline fun KotlinSimpleTypeSpec(
 ): KotlinSimpleTypeSpec {
     return KotlinSimpleTypeSpec.builder(kind, name).apply(block).build()
 }
-
-public inline fun KotlinSimpleTypeSpec.Builder.addProperty(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinPropertySpec.Builder.() -> Unit = {}
-): KotlinSimpleTypeSpec.Builder = addProperty(KotlinPropertySpec(name, type, block))
-
-public inline fun KotlinSimpleTypeSpec.Builder.addFunction(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinFunctionSpec.Builder.() -> Unit = {}
-): KotlinSimpleTypeSpec.Builder = addFunction(KotlinFunctionSpec(name, type, block))
 
 /**
  * Set the primary constructor for this type.

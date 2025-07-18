@@ -3,9 +3,8 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.InitializerBlockCollector
 import love.forte.codegentle.common.code.KDocCollector
-import love.forte.codegentle.common.naming.TypeName
+import love.forte.codegentle.common.naming.SuperinterfaceCollector
 import love.forte.codegentle.common.ref.AnnotationRefCollector
-import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.spec.internal.KotlinValueClassSpecBuilderImpl
@@ -50,10 +49,13 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
     public interface Builder :
         BuilderDsl,
         KotlinModifierCollector<Builder>,
+        KotlinPropertyCollector<Builder>,
+        KotlinFunctionCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
         InitializerBlockCollector<Builder>,
-        TypeVariableCollector<Builder> {
+        TypeVariableCollector<Builder>,
+        SuperinterfaceCollector<Builder> {
         /**
          * The value class name.
          */
@@ -63,51 +65,6 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
          * The primary constructor parameter of the value class.
          */
         public val primaryParameter: KotlinValueParameterSpec
-
-        /**
-         * Add superinterfaces.
-         */
-        public fun addSuperinterfaces(vararg superinterfaces: TypeName): Builder
-
-        /**
-         * Add superinterfaces.
-         */
-        public fun addSuperinterfaces(superinterfaces: Iterable<TypeName>): Builder
-
-        /**
-         * Add superinterface.
-         */
-        public fun addSuperinterface(superinterface: TypeName): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(vararg properties: KotlinPropertySpec): Builder
-
-        /**
-         * Add properties.
-         */
-        public fun addProperties(properties: Iterable<KotlinPropertySpec>): Builder
-
-        /**
-         * Add property.
-         */
-        public fun addProperty(property: KotlinPropertySpec): Builder
-
-        /**
-         * Add functions.
-         */
-        public fun addFunctions(functions: Iterable<KotlinFunctionSpec>): Builder
-
-        /**
-         * Add functions.
-         */
-        public fun addFunctions(vararg functions: KotlinFunctionSpec): Builder
-
-        /**
-         * Add function.
-         */
-        public fun addFunction(function: KotlinFunctionSpec): Builder
 
         /**
          * Build [KotlinValueClassSpec] instance.
@@ -132,15 +89,3 @@ public inline fun KotlinValueClassSpec(
 ): KotlinValueClassSpec {
     return KotlinValueClassSpec.builder(name, primaryParameter).apply(block).build()
 }
-
-public inline fun KotlinValueClassSpec.Builder.addProperty(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinPropertySpec.Builder.() -> Unit = {}
-): KotlinValueClassSpec.Builder = addProperty(KotlinPropertySpec(name, type, block))
-
-public inline fun KotlinValueClassSpec.Builder.addFunction(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinFunctionSpec.Builder.() -> Unit = {}
-): KotlinValueClassSpec.Builder = addFunction(KotlinFunctionSpec(name, type, block))

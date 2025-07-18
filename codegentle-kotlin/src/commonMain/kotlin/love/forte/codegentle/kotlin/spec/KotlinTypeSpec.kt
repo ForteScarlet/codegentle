@@ -177,6 +177,7 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
         }
     }
 
+    // TODO Builder 还有用吗
     /**
      * Base interface for all Kotlin type spec builders.
      */
