@@ -1,5 +1,8 @@
 package love.forte.codegentle.common.code
 
+import love.forte.codegentle.common.CodeGentleBuilderExtensionImplementation
+
+@SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface CodeValueCollector<B : CodeValueCollector<B>> {
     /**
      * Add code to this collector.
@@ -22,6 +25,7 @@ public interface CodeValueCollector<B : CodeValueCollector<B>> {
     public fun addStatement(codeValue: CodeValue): B
 }
 
+@SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface KDocCollector<B : KDocCollector<B>> {
     /**
      * Add KDoc to the collector.
@@ -34,6 +38,7 @@ public interface KDocCollector<B : KDocCollector<B>> {
     public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): B
 }
 
+@SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface InitializerBlockCollector<B : InitializerBlockCollector<B>> {
     /**
      * Add an initializer block.

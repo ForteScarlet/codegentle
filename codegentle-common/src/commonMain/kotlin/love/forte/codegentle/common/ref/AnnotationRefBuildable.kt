@@ -1,6 +1,7 @@
 package love.forte.codegentle.common.ref
 
 import love.forte.codegentle.common.BuilderDsl
+import love.forte.codegentle.common.CodeGentleBuilderExtensionImplementation
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
@@ -9,7 +10,7 @@ import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
  *
  * @author ForteScarlet
  */
-@SubclassOptInRequired(CodeGentleRefImplementation::class)
+@SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface AnnotationRefBuildable<B : AnnotationRefBuildable<B>> : BuilderDsl {
     // expect: members: MutableMap<String, MutableList<JavaCodeValue>>
 

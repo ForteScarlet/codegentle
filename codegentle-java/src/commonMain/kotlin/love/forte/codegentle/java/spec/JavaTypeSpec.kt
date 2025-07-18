@@ -25,7 +25,7 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.java.JavaModifier
-import love.forte.codegentle.java.JavaModifierBuilderContainer
+import love.forte.codegentle.java.JavaModifierCollector
 import love.forte.codegentle.java.MutableJavaModifierSet
 import love.forte.codegentle.java.internal.isSourceName
 import love.forte.codegentle.java.naming.isPrimitive
@@ -211,7 +211,7 @@ public val JavaTypeSpec.nestedTypesSimpleNames: Set<String>
 public sealed class JavaTypeSpecBuilder<B : JavaTypeSpecBuilder<B, T>, T : JavaTypeSpec>(
     public val kind: JavaTypeSpec.Kind,
     public val name: String?,
-) : JavaModifierBuilderContainer<B>,
+) : JavaModifierCollector<B>,
     AnnotationRefCollector<B>,
     BuilderDsl {
     init {

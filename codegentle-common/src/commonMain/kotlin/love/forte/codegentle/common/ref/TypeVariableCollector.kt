@@ -1,5 +1,6 @@
 package love.forte.codegentle.common.ref
 
+import love.forte.codegentle.common.CodeGentleBuilderExtensionImplementation
 import love.forte.codegentle.common.naming.TypeVariableName
 
 
@@ -7,6 +8,7 @@ import love.forte.codegentle.common.naming.TypeVariableName
  * Collector for [TypeRef]<[love.forte.codegentle.common.naming.TypeVariableName]>.
  * @author ForteScarlet
  */
+@SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface TypeVariableCollector<B : TypeVariableCollector<B>> {
     /**
      * Add type variable reference.

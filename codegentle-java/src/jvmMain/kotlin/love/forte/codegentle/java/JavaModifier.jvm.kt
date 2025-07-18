@@ -15,11 +15,11 @@ public fun Modifier.toJavaModifier(): JavaModifier = JavaModifier.valueOf(name)
 public fun JavaModifier.toJavaxModifier(): Modifier = Modifier.valueOf(name)
 
 
-public fun <B : JavaModifierBuilderContainer<B>> B.addModifier(modifier: Modifier): B =
+public fun <B : JavaModifierCollector<B>> B.addModifier(modifier: Modifier): B =
     addModifier(modifier.toJavaModifier())
 
-public fun <B : JavaModifierBuilderContainer<B>> B.addModifier(vararg modifiers: Modifier): B =
+public fun <B : JavaModifierCollector<B>> B.addModifier(vararg modifiers: Modifier): B =
     addModifiers(modifiers.map { it.toJavaModifier() })
 
-public fun <B : JavaModifierBuilderContainer<B>> B.addModifier(modifiers: Iterable<Modifier>): B =
+public fun <B : JavaModifierCollector<B>> B.addModifier(modifiers: Iterable<Modifier>): B =
     addModifiers(modifiers.map { it.toJavaModifier() })

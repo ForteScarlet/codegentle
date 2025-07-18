@@ -19,7 +19,7 @@ import love.forte.codegentle.common.GenEnumSet
 
 @GenEnumSet(
     internal = true,
-    containerName = "KotlinModifierBuilderContainer",
+    containerName = "KotlinModifierCollector",
     containerSingleAdder = "addModifier",
     containerMultiAdder = "addModifiers",
     operatorsName = "KotlinModifiers"
@@ -107,7 +107,7 @@ public interface KotlinModifierContainer {
 }
 
 
-public inline val KotlinModifierBuilderContainer<*>.modifiers: KotlinModifiers
+public inline val KotlinModifierCollector<*>.modifiers: KotlinModifiers
     get() = KotlinModifiers(this)
 
 /**
@@ -121,6 +121,6 @@ public inline val KotlinModifierBuilderContainer<*>.modifiers: KotlinModifiers
  * }
  * ```
  */
-public inline fun KotlinModifierBuilderContainer<*>.modifiers(block: KotlinModifiers.() -> Unit) {
+public inline fun KotlinModifierCollector<*>.modifiers(block: KotlinModifiers.() -> Unit) {
     modifiers.block()
 }

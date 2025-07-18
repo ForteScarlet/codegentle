@@ -11,7 +11,7 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 
 /**
@@ -181,7 +181,7 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
      * Base interface for all Kotlin type spec builders.
      */
     public interface Builder<B : Builder<B, T>, T : KotlinTypeSpec> :
-        KotlinModifierBuilderContainer<B>,
+        KotlinModifierCollector<B>,
         AnnotationRefCollector<B>,
         KDocCollector<B>,
         InitializerBlockCollector<B>,

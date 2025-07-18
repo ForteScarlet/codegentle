@@ -8,7 +8,7 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec.Companion.propertyizationBuilder
 import love.forte.codegentle.kotlin.spec.internal.KotlinValueParameterSpecBuilderImpl
@@ -77,7 +77,7 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
      */
     public interface Builder :
         KotlinParameterSpec.Builder<KotlinValueParameterSpec>,
-        KotlinModifierBuilderContainer<Builder>,
+        KotlinModifierCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder> {
         /**

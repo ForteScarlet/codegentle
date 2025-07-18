@@ -7,7 +7,7 @@ import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 
 /**
@@ -29,7 +29,7 @@ public sealed interface KotlinCallableSpec : KotlinSpec, KotlinModifierContainer
 
     public interface Builder<S : KotlinCallableSpec, B : Builder<S, B>> :
         BuilderDsl,
-        KotlinModifierBuilderContainer<B>,
+        KotlinModifierCollector<B>,
         AnnotationRefCollector<B>,
         CodeValueCollector<B>,
         KDocCollector<B> {

@@ -1,5 +1,6 @@
 package love.forte.codegentle.common.ref
 
+import love.forte.codegentle.common.CodeGentleBuilderExtensionImplementation
 import love.forte.codegentle.common.naming.ClassName
 import kotlin.jvm.JvmInline
 
@@ -15,7 +16,7 @@ import kotlin.jvm.JvmInline
  *
  * @author ForteScarlet
  */
-@SubclassOptInRequired(CodeGentleRefImplementation::class)
+@SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface AnnotationRefCollector<B : AnnotationRefCollector<B>> {
     public fun addAnnotationRef(ref: AnnotationRef): B
 

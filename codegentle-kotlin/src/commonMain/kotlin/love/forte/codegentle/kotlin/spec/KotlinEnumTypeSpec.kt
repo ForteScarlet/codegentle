@@ -7,7 +7,7 @@ import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.spec.internal.KotlinEnumTypeSpecBuilderImpl
 
 /**
@@ -51,7 +51,7 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
     public interface Builder :
         BuilderDsl,
         AnnotationRefCollector<Builder>,
-        KotlinModifierBuilderContainer<Builder>,
+        KotlinModifierCollector<Builder>,
         KDocCollector<Builder>,
         InitializerBlockCollector<Builder>,
         TypeVariableCollector<Builder> {

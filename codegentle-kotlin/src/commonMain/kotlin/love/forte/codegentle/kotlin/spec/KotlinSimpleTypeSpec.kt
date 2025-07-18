@@ -8,7 +8,7 @@ import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.spec.internal.KotlinSimpleTypeSpecBuilderImpl
 
 /**
@@ -50,7 +50,7 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
      */
     public interface Builder :
         BuilderDsl,
-        KotlinModifierBuilderContainer<Builder>,
+        KotlinModifierCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
         InitializerBlockCollector<Builder>,

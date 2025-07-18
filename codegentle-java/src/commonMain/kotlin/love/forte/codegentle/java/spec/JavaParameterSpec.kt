@@ -24,7 +24,7 @@ import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.spec.NamedSpec
 import love.forte.codegentle.java.JavaModifier
-import love.forte.codegentle.java.JavaModifierBuilderContainer
+import love.forte.codegentle.java.JavaModifierCollector
 import love.forte.codegentle.java.MutableJavaModifierSet
 import love.forte.codegentle.java.spec.internal.JavaParameterSpecImpl
 import love.forte.codegentle.java.writer.JavaCodeWriter
@@ -64,7 +64,7 @@ public interface JavaParameterSpec : JavaSpec, NamedSpec {
 public class JavaParameterSpecBuilder internal constructor(
     public val type: TypeRef<*>,
     public val name: String
-) : JavaModifierBuilderContainer<JavaParameterSpecBuilder>,
+) : JavaModifierCollector<JavaParameterSpecBuilder>,
     AnnotationRefCollector<JavaParameterSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal val annotations = mutableListOf<AnnotationRef>()

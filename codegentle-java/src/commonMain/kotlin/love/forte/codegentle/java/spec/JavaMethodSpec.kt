@@ -26,7 +26,7 @@ import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.spec.NamedSpec
 import love.forte.codegentle.java.JavaModifier
-import love.forte.codegentle.java.JavaModifierBuilderContainer
+import love.forte.codegentle.java.JavaModifierCollector
 import love.forte.codegentle.java.JavaModifierContainer
 import love.forte.codegentle.java.MutableJavaModifierSet
 import love.forte.codegentle.java.ref.JavaTypeRefBuilderDsl
@@ -89,7 +89,7 @@ public inline fun JavaMethodSpec(block: JavaMethodSpecBuilder.() -> Unit = {}): 
 public class JavaMethodSpecBuilder internal constructor(
     public var name: String,
 ) : BuilderDsl,
-    JavaModifierBuilderContainer<JavaMethodSpecBuilder>,
+    JavaModifierCollector<JavaMethodSpecBuilder>,
     AnnotationRefCollector<JavaMethodSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal var returnType: TypeRef<*>? = null

@@ -9,7 +9,7 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinPropertySpecBuilderImpl
 
@@ -48,7 +48,7 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
      * Builder for [KotlinPropertySpec].
      */
     public interface Builder : BuilderDsl,
-        KotlinModifierBuilderContainer<Builder>,
+        KotlinModifierCollector<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder> {
 
