@@ -1,4 +1,4 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
@@ -6,14 +6,20 @@ import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.VISIBILITY_MODIFIERS
 import love.forte.codegentle.kotlin.spec.ConstructorDelegation
 import love.forte.codegentle.kotlin.spec.KotlinSimpleTypeSpec
+import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
+import love.forte.codegentle.kotlin.writer.inType
 
 /**
  * Extension function to emit a [KotlinSimpleTypeSpec] to a [KotlinCodeWriter].
  */
 internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitModifiers: Set<KotlinModifier> = emptySet()) {
-    // Push this type spec onto the stack so that functions can check if they're in an interface
-    codeWriter.pushType(this)
+    codeWriter.inType(this) {
+        emitTo0(codeWriter, implicitModifiers)
+    }
+}
+
+private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitModifiers: Set<KotlinModifier>) {
     var blockLineRequired = false
 
     // Emit KDoc
@@ -150,9 +156,6 @@ internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitM
 
     codeWriter.unindent()
     codeWriter.emit("}")
-
-    // Pop this type spec from the stack
-    codeWriter.popType()
 }
 
 /**

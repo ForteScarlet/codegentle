@@ -1,20 +1,18 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierSet
 import love.forte.codegentle.kotlin.spec.KotlinAnnotationTypeSpec
+import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
-
-private val DEFAULT_IMPLICIT = KotlinModifierSet.of(KotlinModifier.ANNOTATION)
 
 /**
  * Extension function to emit a [KotlinAnnotationTypeSpec] to a [KotlinCodeWriter].
  */
 internal fun KotlinAnnotationTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
-    require(modifiers.contains(KotlinModifier.ANNOTATION)) {
-        "Annotation type spec must contains ANNOTATION modifier."
+    require(KotlinModifier.ANNOTATION in modifiers) {
+        "Annotation type spec must contains ANNOTATION modifier, but $modifiers."
     }
 
     codeWriter.inType(this) {

@@ -1,6 +1,7 @@
 package love.forte.codegentle.kotlin.spec.internal
 
 import love.forte.codegentle.kotlin.spec.*
+import love.forte.codegentle.kotlin.spec.emitter.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
 /**

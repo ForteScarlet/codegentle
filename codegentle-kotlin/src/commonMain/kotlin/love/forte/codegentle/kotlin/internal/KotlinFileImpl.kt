@@ -11,7 +11,7 @@ import love.forte.codegentle.kotlin.KotlinFile
 import love.forte.codegentle.kotlin.naming.KotlinNames
 import love.forte.codegentle.kotlin.ref.KotlinTypeNameRefStatus
 import love.forte.codegentle.kotlin.spec.*
-import love.forte.codegentle.kotlin.spec.internal.emitTo
+import love.forte.codegentle.kotlin.spec.emitter.emitTo
 import love.forte.codegentle.kotlin.strategy.KotlinWriteStrategy
 import love.forte.codegentle.kotlin.strategy.ToStringKotlinWriteStrategy
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter

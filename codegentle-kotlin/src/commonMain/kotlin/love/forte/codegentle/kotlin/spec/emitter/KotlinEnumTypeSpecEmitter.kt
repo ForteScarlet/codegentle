@@ -1,20 +1,27 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierSet
 import love.forte.codegentle.kotlin.spec.KotlinEnumTypeSpec
+import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
-
-private val DEFAULT_IMPLICIT = KotlinModifierSet.of(KotlinModifier.ENUM)
+import love.forte.codegentle.kotlin.writer.inType
 
 /**
  * Extension function to emit a [KotlinEnumTypeSpec] to a [KotlinCodeWriter].
  */
 internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
-    // Push this type spec onto the stack so that functions can check if they're in an enum class
-    codeWriter.pushType(this)
+    require(KotlinModifier.ENUM in modifiers) {
+        "Enum type spec must have ENUM modifier, but $modifiers"
+    }
+
+    codeWriter.inType(this) {
+        emitTo0(codeWriter)
+    }
+}
+
+private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     var blockLineRequired = false
 
     // Emit KDoc
@@ -25,8 +32,7 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     // Emit annotations
     codeWriter.emitAnnotationRefs(annotations, false)
 
-    // Emit modifiers (exclude ENUM modifier since we emit "enum class" explicitly)
-    codeWriter.emitModifiers(modifiers, DEFAULT_IMPLICIT)
+    codeWriter.emitModifiers(modifiers)
 
     // Emit the enum class keyword
     codeWriter.emit("enum class ")
@@ -59,9 +65,9 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
             if (blockLineRequired) {
                 codeWriter.emitNewLine()
             }
-            
+
             codeWriter.emit(constantName)
-            
+
             // If the enum constant has an anonymous class implementation
             if (anonymousClass != null) {
                 codeWriter.emit("(")
@@ -73,13 +79,13 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
                     }
                 }
                 codeWriter.emit(")")
-                
+
                 // Emit the anonymous class body
                 codeWriter.emit(" {")
                 codeWriter.indent()
-                
+
                 var anonymousBlockLineRequired = false
-                
+
                 // Emit initializer block
                 if (!anonymousClass.initializerBlock.isEmpty()) {
                     codeWriter.emitNewLine("init {")
@@ -89,7 +95,7 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
                     codeWriter.emitNewLine("}")
                     anonymousBlockLineRequired = true
                 }
-                
+
                 // Emit properties
                 if (anonymousClass.properties.isNotEmpty()) {
                     if (anonymousBlockLineRequired) {
@@ -101,7 +107,7 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
                     }
                     anonymousBlockLineRequired = true
                 }
-                
+
                 // Emit functions
                 if (anonymousClass.functions.isNotEmpty()) {
                     if (anonymousBlockLineRequired) {
@@ -112,11 +118,11 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
                         codeWriter.emitNewLine()
                     }
                 }
-                
+
                 codeWriter.unindent()
                 codeWriter.emit("}")
             }
-            
+
             // Add comma and newline for all but the last constant
             if (index < constantEntries.size - 1) {
                 codeWriter.emit(",")
@@ -124,9 +130,10 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
             codeWriter.emitNewLine()
             blockLineRequired = true
         }
-        
+
         // Add semicolon after enum constants if there are other members
-        val hasOtherMembers = !initializerBlock.isEmpty() || properties.isNotEmpty() || functions.isNotEmpty() || subtypes.isNotEmpty()
+        val hasOtherMembers =
+            !initializerBlock.isEmpty() || properties.isNotEmpty() || functions.isNotEmpty() || subtypes.isNotEmpty()
         if (hasOtherMembers) {
             codeWriter.emit(";")
             codeWriter.emitNewLine()
@@ -183,7 +190,4 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
 
     codeWriter.unindent()
     codeWriter.emit("}")
-
-    // Pop this type spec from the stack
-    codeWriter.popType()
 }

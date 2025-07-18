@@ -1,18 +1,23 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
-import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinObjectTypeSpec
+import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
+import love.forte.codegentle.kotlin.writer.inType
 
 /**
  * Extension function to emit a [KotlinObjectTypeSpec] to a [KotlinCodeWriter].
  */
 internal fun KotlinObjectTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
-    // Push this type spec onto the stack so that functions can check if they're in an object
-    codeWriter.pushType(this)
-    var blockLineRequired = false
+    codeWriter.inType(this) {
+        emitTo0(codeWriter)
+    }
+}
+
+private fun KotlinObjectTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
+    val blankLineManager = BlankLineManager(codeWriter)
 
     // Emit KDoc
     if (!kDoc.isEmpty()) {
@@ -23,19 +28,10 @@ internal fun KotlinObjectTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emitAnnotationRefs(annotations, false)
 
     // Emit modifiers (companion objects have COMPANION modifier)
-    val isCompanion = KotlinModifier.COMPANION in modifiers
-    if (isCompanion) {
-        // For companion objects, emit modifiers excluding COMPANION since we emit "companion object" explicitly
-        codeWriter.emitModifiers(modifiers, setOf(KotlinModifier.COMPANION))
-        codeWriter.emit("companion object")
-    } else {
-        // For regular objects, emit all modifiers
-        codeWriter.emitModifiers(modifiers, emptySet())
-        codeWriter.emit("object")
-    }
+    codeWriter.emitModifiers(modifiers)
 
     // Emit the name (companion objects can have names or be anonymous)
-    if (name.isNotEmpty()) {
+    if (name.isNotEmpty() && name != KotlinObjectTypeSpec.DEFAULT_COMPANION_NAME) {
         codeWriter.emit(" ")
         codeWriter.emit(name)
     }
@@ -65,47 +61,39 @@ internal fun KotlinObjectTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
             emit(initializerBlock)
         }
         codeWriter.emitNewLine("}")
-        blockLineRequired = true
+        blankLineManager.required()
     }
 
     // Emit properties
     if (properties.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (property in properties) {
+                property.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-        for (property in properties) {
-            property.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit functions
     if (functions.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (function in functions) {
+                function.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-        for (function in functions) {
-            function.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit subtypes
     if (subtypes.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
-        }
-        for (subtype in subtypes) {
-            subtype.emitTo(codeWriter)
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (subtype in subtypes) {
+                subtype.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
     }
 
     codeWriter.unindent()
     codeWriter.emit("}")
-
-    // Pop this type spec from the stack
-    codeWriter.popType()
 }

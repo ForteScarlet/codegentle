@@ -6,7 +6,7 @@ import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.*
-import love.forte.codegentle.kotlin.spec.internal.emitTo
+import love.forte.codegentle.kotlin.spec.emitter.emitTo
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

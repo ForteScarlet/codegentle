@@ -1,11 +1,13 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierSet
 import love.forte.codegentle.kotlin.spec.KotlinValueClassSpec
+import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
+import love.forte.codegentle.kotlin.writer.inType
 
 private val DEFAULT_IMPLICIT = KotlinModifierSet.of(KotlinModifier.VALUE)
 
@@ -13,8 +15,12 @@ private val DEFAULT_IMPLICIT = KotlinModifierSet.of(KotlinModifier.VALUE)
  * Extension function to emit a [KotlinValueClassSpec] to a [KotlinCodeWriter].
  */
 internal fun KotlinValueClassSpec.emitTo(codeWriter: KotlinCodeWriter) {
-    // Push this type spec onto the stack so that functions can check if they're in a value class
-    codeWriter.pushType(this)
+    codeWriter.inType(this) {
+        emitTo0(codeWriter)
+    }
+}
+
+private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     var blockLineRequired = false
 
     // Emit KDoc
@@ -102,7 +108,4 @@ internal fun KotlinValueClassSpec.emitTo(codeWriter: KotlinCodeWriter) {
 
     codeWriter.unindent()
     codeWriter.emit("}")
-
-    // Pop this type spec from the stack
-    codeWriter.popType()
 }
