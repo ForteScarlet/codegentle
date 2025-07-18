@@ -1,12 +1,11 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.BuilderDsl
-import love.forte.codegentle.common.code.CodeArgumentPart
-import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
+import love.forte.codegentle.common.code.InitializerBlockCollector
+import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
-import love.forte.codegentle.common.ref.AnnotationRef
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
@@ -61,7 +60,12 @@ public interface KotlinObjectTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinObjectTypeSpec].
      */
-    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer<Builder> {
+    public interface Builder :
+        BuilderDsl,
+        KotlinModifierBuilderContainer<Builder>,
+        KDocCollector<Builder>,
+        InitializerBlockCollector<Builder>,
+        AnnotationRefCollector<Builder> {
         /**
          * The object name.
          */
@@ -71,51 +75,6 @@ public interface KotlinObjectTypeSpec : KotlinTypeSpec {
          * Whether this is a companion object.
          */
         public val isCompanion: Boolean
-
-        /**
-         * Add KDoc.
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc.
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add initializer block.
-         */
-        public fun addInitializerBlock(codeValue: CodeValue): Builder
-
-        /**
-         * Add initializer block.
-         */
-        public fun addInitializerBlock(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add annotation reference.
-         */
-        public fun addAnnotationRef(ref: AnnotationRef): Builder
-
-        /**
-         * Add annotation references.
-         */
-        public fun addAnnotationRefs(refs: Iterable<AnnotationRef>): Builder
-
-        /**
-         * Add modifiers.
-         */
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
-
-        /**
-         * Add modifiers.
-         */
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        /**
-         * Add modifier.
-         */
-        override fun addModifier(modifier: KotlinModifier): Builder
 
         /**
          * Add type variable references.
@@ -238,16 +197,6 @@ public inline fun KotlinObjectTypeSpec(
 ): KotlinObjectTypeSpec {
     return KotlinObjectTypeSpec.companionBuilder().apply(block).build()
 }
-
-public inline fun KotlinObjectTypeSpec.Builder.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinObjectTypeSpec.Builder = addKDoc(CodeValue(format, block))
-
-public inline fun KotlinObjectTypeSpec.Builder.addInitializerBlock(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinObjectTypeSpec.Builder = addInitializerBlock(CodeValue(format, block))
 
 public inline fun KotlinObjectTypeSpec.Builder.addProperty(
     name: String,

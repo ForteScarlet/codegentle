@@ -17,7 +17,7 @@ public interface JavaTypeNameRefStatus : TypeNameRefStatus {
  * A builder for [JavaTypeNameRefStatus].
  */
 public class JavaTypeNameRefStatusBuilder @PublishedApi internal constructor() :
-    AnnotationRefCollectable<JavaTypeNameRefStatusBuilder>,
+    AnnotationRefCollector<JavaTypeNameRefStatusBuilder>,
     TypeNameRefStatusBuilder<JavaTypeNameRefStatus> {
     private val annotations: MutableList<AnnotationRef> = mutableListOf()
 

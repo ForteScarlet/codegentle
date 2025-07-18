@@ -1,7 +1,6 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
@@ -35,7 +34,8 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
      * Builder for [KotlinFunctionSpec].
      */
     public interface Builder :
-        KotlinCallableSpec.Builder<KotlinFunctionSpec, Builder> {
+        KotlinCallableSpec.Builder<KotlinFunctionSpec, Builder>,
+        KotlinValueParameterCollector<Builder> {
 
         /**
          * Function name.
@@ -97,21 +97,6 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
         public fun returns(type: TypeRef<*>): Builder
 
         /**
-         * Add a parameter to the function.
-         */
-        public fun addParameter(parameter: KotlinValueParameterSpec): Builder
-
-        /**
-         * Add parameters to the function.
-         */
-        public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): Builder
-
-        /**
-         * Add parameters to the function.
-         */
-        public fun addParameters(vararg parameters: KotlinValueParameterSpec): Builder
-
-        /**
          * Build a [KotlinFunctionSpec] instance.
          */
         override fun build(): KotlinFunctionSpec
@@ -148,56 +133,10 @@ public inline fun KotlinFunctionSpec(
 ): KotlinFunctionSpec =
     KotlinFunctionSpec.builder(name, type).apply(block).build()
 
-/**
- * Add KDoc with a format string and a configuration block.
- *
- * @param format the format string
- * @param block the configuration block
- * @return this builder
- */
-public inline fun KotlinFunctionSpec.Builder.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinFunctionSpec.Builder = apply {
-    addKDoc(CodeValue(format, block))
-}
-
-/**
- * Add code with a format string and a configuration block.
- *
- * @param format the format string
- * @param block the configuration block
- * @return this builder
- */
-public inline fun KotlinFunctionSpec.Builder.addCode(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinFunctionSpec.Builder = apply {
-    addCode(CodeValue(format, block))
-}
-
-/**
- * Add a statement with a format string and a configuration block.
- *
- * @param format the format string
- * @param block the configuration block
- * @return this builder
- */
-public inline fun KotlinFunctionSpec.Builder.addStatement(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinFunctionSpec.Builder = apply {
-    addStatement(CodeValue(format, block))
-}
-
-public inline fun KotlinFunctionSpec.Builder.addParameter(
-    name: String,
-    type: TypeRef<*>,
-    block: KotlinValueParameterSpec.Builder.() -> Unit = {}
-): KotlinFunctionSpec.Builder = addParameter(KotlinValueParameterSpec.builder(name, type).apply(block).build())
-
 public inline fun KotlinFunctionSpec.Builder.addContextParameter(
     name: String?,
     type: TypeRef<*>,
     block: KotlinContextParameterSpec.Builder.() -> Unit = {}
 ): KotlinFunctionSpec.Builder = addContextParameter(KotlinContextParameterSpec.builder(name, type).apply(block).build())
+
+// TODO functionCollector

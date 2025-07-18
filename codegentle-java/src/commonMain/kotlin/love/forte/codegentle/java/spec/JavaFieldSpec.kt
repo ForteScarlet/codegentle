@@ -21,7 +21,7 @@ import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.spec.NamedSpec
 import love.forte.codegentle.java.InternalJavaCodeGentleApi
@@ -88,7 +88,7 @@ public class JavaFieldSpecBuilder @PublishedApi internal constructor(
     public val type: TypeRef<*>,
     public val name: String,
 ) : JavaModifierBuilderContainer<JavaFieldSpecBuilder>,
-    AnnotationRefCollectable<JavaFieldSpecBuilder> {
+    AnnotationRefCollector<JavaFieldSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal val annotations = mutableListOf<AnnotationRef>()
     internal val modifiers = MutableJavaModifierSet.empty()

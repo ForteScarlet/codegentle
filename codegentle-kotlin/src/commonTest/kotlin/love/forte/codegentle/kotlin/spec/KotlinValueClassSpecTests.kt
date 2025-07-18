@@ -1,5 +1,7 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.code.addInitializerBlock
+import love.forte.codegentle.common.code.addKDoc
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.annotationRef
@@ -20,7 +22,7 @@ class KotlinValueClassSpecTests {
     fun testBasicValueClass() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val parameter = KotlinValueParameterSpec.builder("value", stringType)
-            .valProperty()
+            .immutableProperty()
             .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
@@ -55,7 +57,7 @@ value class UserId(val value: String) {
     fun testValueClassWithAnnotations() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val parameter = KotlinValueParameterSpec.builder("value", stringType)
-            .valProperty()
+            .immutableProperty()
             .build()
 
         val serializable = ClassName("kotlinx.serialization", "Serializable").annotationRef()
@@ -301,7 +303,7 @@ value class UserId(val value: String) {
     fun testValueClassWithImmutableParameterProperty() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val parameter = KotlinValueParameterSpec.builder("value", stringType)
-            .valProperty() // immutable property
+            .immutableProperty() // immutable property
             .build()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
@@ -314,7 +316,7 @@ value class UserId(val value: String) {
     fun testValueClassWithParameterDefaultValue() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val parameter = KotlinValueParameterSpec.builder("value", stringType)
-            .valProperty()
+            .immutableProperty()
             .defaultValue("\"default\"")
             .build()
 

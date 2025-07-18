@@ -22,7 +22,7 @@ import love.forte.codegentle.common.code.CodePart.Companion.literal
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.spec.NamedSpec
 import love.forte.codegentle.java.JavaModifier
@@ -90,7 +90,7 @@ public class JavaMethodSpecBuilder internal constructor(
     public var name: String,
 ) : BuilderDsl,
     JavaModifierBuilderContainer<JavaMethodSpecBuilder>,
-    AnnotationRefCollectable<JavaMethodSpecBuilder> {
+    AnnotationRefCollector<JavaMethodSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal var returnType: TypeRef<*>? = null
 

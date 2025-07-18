@@ -1,13 +1,11 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.BuilderDsl
-import love.forte.codegentle.common.code.CodeArgumentPart
-import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
+import love.forte.codegentle.common.code.InitializerBlockCollector
+import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
-import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
@@ -53,7 +51,8 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
     public interface Builder :
         BuilderDsl,
         KotlinModifierBuilderContainer<Builder>,
-        AnnotationRefCollectable<Builder> {
+        AnnotationRefCollector<Builder>,
+        KDocCollector<Builder>, InitializerBlockCollector<Builder> {
         /**
          * The kind of the type.
          */
@@ -65,54 +64,9 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
         public val name: String
 
         /**
-         * Add KDoc.
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc.
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
          * Set superclass.
          */
         public fun superclass(superclass: TypeName): Builder
-
-        /**
-         * Add initializer block.
-         */
-        public fun addInitializerBlock(codeValue: CodeValue): Builder
-
-        /**
-         * Add initializer block.
-         */
-        public fun addInitializerBlock(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add annotation reference.
-         */
-        override fun addAnnotationRef(ref: AnnotationRef): Builder
-
-        /**
-         * Add multiple annotation references.
-         */
-        override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): Builder
-
-        /**
-         * Add multiple modifiers.
-         */
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
-
-        /**
-         * Add multiple modifiers.
-         */
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        /**
-         * Add modifier.
-         */
-        override fun addModifier(modifier: KotlinModifier): Builder
 
         /**
          * Add multiple type variable references.
@@ -218,15 +172,21 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
     }
 }
 
-public inline fun KotlinSimpleTypeSpec.Builder.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinSimpleTypeSpec.Builder = addKDoc(CodeValue(format, block))
-
-public inline fun KotlinSimpleTypeSpec.Builder.addInitializerBlock(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinSimpleTypeSpec.Builder = addInitializerBlock(CodeValue(format, block))
+/**
+ * Create a [KotlinSimpleTypeSpec] with the given kind and name.
+ *
+ * @param kind the type kind (CLASS, INTERFACE, etc.)
+ * @param name the type name
+ * @param block the configuration block
+ * @return a new [KotlinSimpleTypeSpec] instance
+ */
+public inline fun KotlinSimpleTypeSpec(
+    kind: KotlinTypeSpec.Kind,
+    name: String,
+    block: KotlinSimpleTypeSpec.Builder.() -> Unit = {}
+): KotlinSimpleTypeSpec {
+    return KotlinSimpleTypeSpec.builder(kind, name).apply(block).build()
+}
 
 public inline fun KotlinSimpleTypeSpec.Builder.addProperty(
     name: String,
@@ -253,19 +213,3 @@ public inline fun KotlinSimpleTypeSpec.Builder.primaryConstructor(
 public inline fun KotlinSimpleTypeSpec.Builder.addSecondaryConstructor(
     block: KotlinConstructorSpec.Builder.() -> Unit = {}
 ): KotlinSimpleTypeSpec.Builder = addSecondaryConstructor(KotlinConstructorSpec.builder().apply(block).build())
-
-/**
- * Create a [KotlinSimpleTypeSpec] with the given kind and name.
- *
- * @param kind the type kind (CLASS, INTERFACE, etc.)
- * @param name the type name
- * @param block the configuration block
- * @return a new [KotlinSimpleTypeSpec] instance
- */
-public inline fun KotlinSimpleTypeSpec(
-    kind: KotlinTypeSpec.Kind,
-    name: String,
-    block: KotlinSimpleTypeSpec.Builder.() -> Unit = {}
-): KotlinSimpleTypeSpec {
-    return KotlinSimpleTypeSpec.builder(kind, name).apply(block).build()
-}

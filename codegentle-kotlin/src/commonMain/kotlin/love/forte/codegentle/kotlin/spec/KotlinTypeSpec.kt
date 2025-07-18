@@ -2,14 +2,11 @@ package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.GenEnumSet
-import love.forte.codegentle.common.code.CodeArgumentPart
-import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.code.CodeValueBuilder
-import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
+import love.forte.codegentle.common.code.*
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
@@ -185,7 +182,9 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
  */
 public interface KotlinTypeSpecBuilder<B : KotlinTypeSpecBuilder<B, T>, T : KotlinTypeSpec> :
     KotlinModifierBuilderContainer<B>,
-    AnnotationRefCollectable<B>,
+    AnnotationRefCollector<B>,
+    KDocCollector<B>,
+    InitializerBlockCollector<B>,
     BuilderDsl {
 
     /**
@@ -199,29 +198,9 @@ public interface KotlinTypeSpecBuilder<B : KotlinTypeSpecBuilder<B, T>, T : Kotl
     public val name: String?
 
     /**
-     * Add KDoc.
-     */
-    public fun addKDoc(codeValue: CodeValue): B
-
-    /**
-     * Add KDoc.
-     */
-    public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): B
-
-    /**
      * Set superclass.
      */
     public fun superclass(superclass: TypeName): B
-
-    /**
-     * Add initializer block.
-     */
-    public fun addInitializerBlock(codeValue: CodeValue): B
-
-    /**
-     * Add initializer block.
-     */
-    public fun addInitializerBlock(format: String, vararg argumentParts: CodeArgumentPart): B
 
     /**
      * Add type variable references.
@@ -434,20 +413,6 @@ internal abstract class AbstractKotlinTypeSpecBuilder<B : AbstractKotlinTypeSpec
 
 // extensions
 
-public inline fun KotlinTypeSpecBuilder<*, *>.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-) {
-    addKDoc(CodeValue(format, block))
-}
-
-public inline fun KotlinTypeSpecBuilder<*, *>.addInitializerBlock(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-) {
-    addInitializerBlock(CodeValue(format, block))
-}
-
 public inline fun KotlinTypeSpecBuilder<*, *>.addProperty(
     name: String,
     type: TypeRef<*>,
@@ -466,9 +431,6 @@ public inline fun KotlinTypeSpecBuilder<*, *>.addFunction(
 ) {
     addFunction(KotlinFunctionSpec(name, type, block))
 }
-
-
-////
 
 public val KotlinTypeSpec.isClass: Boolean
     get() = kind == KotlinTypeSpec.Kind.CLASS

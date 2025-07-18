@@ -33,3 +33,27 @@ public sealed interface KotlinParameterSpec : KotlinSpec {
         public fun build(): S
     }
 }
+
+public interface KotlinValueParameterCollector<B : KotlinValueParameterCollector<B>> {
+    /**
+     * Add a value parameter to the function.
+     */
+    public fun addParameter(parameter: KotlinValueParameterSpec): B
+
+    /**
+     * Add value parameters to the function.
+     */
+    public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): B
+
+    /**
+     * Add value parameters to the function.
+     */
+    public fun addParameters(vararg parameters: KotlinValueParameterSpec): B
+
+}
+
+public inline fun <C : KotlinValueParameterCollector<C>> C.addParameter(
+    name: String,
+    type: TypeRef<*>,
+    block: KotlinValueParameterSpec.Builder.() -> Unit = {}
+): C = addParameter(KotlinValueParameterSpec.builder(name, type).apply(block).build())

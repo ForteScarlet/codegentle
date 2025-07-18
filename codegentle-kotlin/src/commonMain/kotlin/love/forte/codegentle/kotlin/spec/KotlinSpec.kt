@@ -13,7 +13,6 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 @SubclassOptInRequired(CodeGentleKotlinSpecImplementation::class)
 public interface KotlinSpec : Spec, KotlinCodeEmitter
 
-
 public fun KotlinSpec.writeToKotlinString(strategy: KotlinWriteStrategy = ToStringKotlinWriteStrategy): String {
     return buildString {
         val writer = KotlinCodeWriter.create(this, strategy)

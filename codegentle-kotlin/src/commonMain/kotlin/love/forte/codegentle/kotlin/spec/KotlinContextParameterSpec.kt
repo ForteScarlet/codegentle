@@ -1,5 +1,6 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecBuilderImpl
 import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecImpl
@@ -19,7 +20,9 @@ public interface KotlinContextParameterSpec : KotlinParameterSpec {
     /**
      * Builder for [KotlinContextParameterSpec].
      */
-    public interface Builder : KotlinParameterSpec.Builder<KotlinContextParameterSpec> {
+    public interface Builder :
+        BuilderDsl,
+        KotlinParameterSpec.Builder<KotlinContextParameterSpec> {
         /**
          * Parameter name.
          * `null` if it's `_`, e.g., `context(_: ParameterType)`.

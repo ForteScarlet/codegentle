@@ -4,8 +4,9 @@ import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
+import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
@@ -38,7 +39,7 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
 
     /**
      * Whether this property is mutable (var) or immutable (val).
-     * 
+     *
      * @return true if the property is mutable (var), false if immutable (val)
      */
     public val mutable: Boolean
@@ -48,7 +49,8 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
      */
     public interface Builder : BuilderDsl,
         KotlinModifierBuilderContainer<Builder>,
-        AnnotationRefCollectable<Builder> {
+        AnnotationRefCollector<Builder>,
+        KDocCollector<Builder> {
 
         /**
          * Property's name.
@@ -99,23 +101,6 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
         public fun delegate(format: String, vararg arguments: CodeArgumentPart): Builder
 
         /**
-         * Add KDoc to the property.
-         *
-         * @param codeValue the KDoc code
-         * @return this builder
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc to the property.
-         *
-         * @param format the KDoc format string
-         * @param argumentParts the KDoc arguments
-         * @return this builder
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
          * Set a custom getter for the property.
          *
          * @param getter the getter spec
@@ -138,12 +123,6 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
          * @return this builder
          */
         public fun mutable(mutable: Boolean): Builder
-
-        override fun addModifier(modifier: KotlinModifier): Builder
-
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
 
         /**
          * Build a [KotlinPropertySpec] instance.
@@ -208,11 +187,6 @@ public inline fun KotlinPropertySpec.Builder.delegate(
     format: String,
     block: CodeValueSingleFormatBuilderDsl = {}
 ): KotlinPropertySpec.Builder = delegate(CodeValue(format, block))
-
-public inline fun KotlinPropertySpec.Builder.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinPropertySpec.Builder = addKDoc(CodeValue(format, block))
 
 /**
  * Set a custom getter for the property using a configuration block.

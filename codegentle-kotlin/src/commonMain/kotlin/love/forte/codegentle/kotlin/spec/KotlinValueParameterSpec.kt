@@ -4,7 +4,7 @@ import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
@@ -77,7 +77,7 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
     public interface Builder :
         KotlinParameterSpec.Builder<KotlinValueParameterSpec>,
         KotlinModifierBuilderContainer<Builder>,
-        AnnotationRefCollectable<Builder> {
+        AnnotationRefCollector<Builder> {
         /**
          * Parameter name.
          */
@@ -191,7 +191,7 @@ public inline fun KotlinValueParameterSpec(
 public inline fun propertyization(
     block: KotlinValueParameterSpec.PropertyizationBuilder.() -> Unit = {}
 ): KotlinValueParameterSpec.Propertyization =
-    KotlinValueParameterSpec.propertyizationBuilder().apply(block).build()
+    propertyizationBuilder().apply(block).build()
 
 public inline fun KotlinValueParameterSpec.Builder.defaultValue(
     format: String,
@@ -230,20 +230,3 @@ public fun KotlinValueParameterSpec.Builder.mutableProperty(): KotlinValueParame
 public fun KotlinValueParameterSpec.Builder.immutableProperty(): KotlinValueParameterSpec.Builder =
     propertyize { mutable = false }
 
-/**
- * Set this parameter as a mutable property (var) in the constructor.
- * Alias for [mutableProperty].
- *
- * @return this builder
- */
-public fun KotlinValueParameterSpec.Builder.varProperty(): KotlinValueParameterSpec.Builder =
-    mutableProperty()
-
-/**
- * Set this parameter as an immutable property (val) in the constructor.
- * Alias for [immutableProperty].
- *
- * @return this builder
- */
-public fun KotlinValueParameterSpec.Builder.valProperty(): KotlinValueParameterSpec.Builder =
-    immutableProperty()

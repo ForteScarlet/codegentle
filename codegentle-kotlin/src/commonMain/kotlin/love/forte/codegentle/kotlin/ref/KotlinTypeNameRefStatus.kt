@@ -19,7 +19,7 @@ public interface KotlinTypeNameRefStatus : TypeNameRefStatus {
  * A builder for [KotlinTypeNameRefStatus].
  */
 public class KotlinTypeNameRefStatusBuilder @PublishedApi internal constructor() :
-    AnnotationRefCollectable<KotlinTypeNameRefStatusBuilder>,
+    AnnotationRefCollector<KotlinTypeNameRefStatusBuilder>,
     TypeNameRefStatusBuilder<KotlinTypeNameRefStatus> {
     public var nullable: Boolean = false
     private val annotations: MutableList<AnnotationRef> = mutableListOf()

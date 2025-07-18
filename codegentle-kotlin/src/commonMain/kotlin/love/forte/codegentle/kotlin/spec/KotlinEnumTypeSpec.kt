@@ -1,14 +1,12 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.BuilderDsl
-import love.forte.codegentle.common.code.CodeArgumentPart
-import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
+import love.forte.codegentle.common.code.InitializerBlockCollector
+import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
-import love.forte.codegentle.common.ref.AnnotationRef
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
-import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinEnumTypeSpecBuilderImpl
 
@@ -50,56 +48,16 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinEnumTypeSpec].
      */
-    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer<Builder> {
+    public interface Builder :
+        BuilderDsl,
+        AnnotationRefCollector<Builder>,
+        KotlinModifierBuilderContainer<Builder>,
+        KDocCollector<Builder>,
+        InitializerBlockCollector<Builder> {
         /**
          * The enum class name.
          */
         public val name: String
-
-        /**
-         * Add KDoc.
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc.
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add initializer block.
-         */
-        public fun addInitializerBlock(codeValue: CodeValue): Builder
-
-        /**
-         * Add initializer block.
-         */
-        public fun addInitializerBlock(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add annotation reference.
-         */
-        public fun addAnnotationRef(ref: AnnotationRef): Builder
-
-        /**
-         * Add annotation references.
-         */
-        public fun addAnnotationRefs(refs: Iterable<AnnotationRef>): Builder
-
-        /**
-         * Add modifiers.
-         */
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
-
-        /**
-         * Add modifiers.
-         */
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        /**
-         * Add modifier.
-         */
-        override fun addModifier(modifier: KotlinModifier): Builder
 
         /**
          * Add type variable references.
@@ -191,16 +149,6 @@ public inline fun KotlinEnumTypeSpec(
 ): KotlinEnumTypeSpec {
     return KotlinEnumTypeSpec.builder(name).apply(block).build()
 }
-
-public inline fun KotlinEnumTypeSpec.Builder.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinEnumTypeSpec.Builder = addKDoc(CodeValue(format, block))
-
-public inline fun KotlinEnumTypeSpec.Builder.addInitializerBlock(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinEnumTypeSpec.Builder = addInitializerBlock(CodeValue(format, block))
 
 public inline fun KotlinEnumTypeSpec.Builder.addProperty(
     name: String,

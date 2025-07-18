@@ -4,6 +4,7 @@ import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.VISIBILITY_MODIFIERS
+import love.forte.codegentle.kotlin.spec.ConstructorDelegation
 import love.forte.codegentle.kotlin.spec.KotlinSimpleTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
@@ -61,7 +62,7 @@ internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitM
 
             // Check if the primary constructor has super delegation and add arguments
             val primaryDelegation = primary?.constructorDelegation
-            if (primaryDelegation != null && primaryDelegation.kind == love.forte.codegentle.kotlin.spec.ConstructorDelegation.Kind.SUPER) {
+            if (primaryDelegation != null && primaryDelegation.kind == ConstructorDelegation.Kind.SUPER) {
                 primaryDelegation.arguments.forEachIndexed { index, argument ->
                     if (index > 0) codeWriter.emit(", ")
                     codeWriter.emit(argument)

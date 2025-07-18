@@ -116,13 +116,13 @@ class KotlinValueParameterSpecTests {
     @Test
     fun testParameterPropertyConvenienceMethods() {
         val varParam = KotlinValueParameterSpec.builder("name", stringType)
-            .varProperty()
+            .mutableProperty()
             .build()
         assertNotNull(varParam.propertyization)
         assertTrue(varParam.propertyization!!.mutable)
 
         val valParam = KotlinValueParameterSpec.builder("name", stringType)
-            .valProperty()
+            .immutableProperty()
             .build()
         assertNotNull(valParam.propertyization)
         assertFalse(valParam.propertyization!!.mutable)
@@ -212,17 +212,17 @@ class KotlinValueParameterSpecTests {
     @Test
     fun testCodeGenerationWithProperties() {
         val valParam = KotlinValueParameterSpec.builder("name", stringType)
-            .valProperty()
+            .immutableProperty()
             .build()
         assertEquals("val name: String", valParam.writeToKotlinString())
 
         val varParam = KotlinValueParameterSpec.builder("name", stringType)
-            .varProperty()
+            .mutableProperty()
             .build()
         assertEquals("var name: String", varParam.writeToKotlinString())
 
         val valWithDefaultParam = KotlinValueParameterSpec.builder("name", stringType)
-            .valProperty()
+            .immutableProperty()
             .defaultValue("\"default\"")
             .build()
         assertEquals("val name: String = \"default\"", valWithDefaultParam.writeToKotlinString())
@@ -281,7 +281,7 @@ class KotlinValueParameterSpecTests {
         val param = KotlinValueParameterSpec.builder("complexParam", stringType)
             .addAnnotationRef(complexAnnotation)
             .addModifier(KotlinModifier.CROSSINLINE)
-            .valProperty()
+            .immutableProperty()
             .defaultValue("\"complex\"")
             .addKDoc("A parameter with all possible features")
             .build()
@@ -336,7 +336,7 @@ class KotlinValueParameterSpecTests {
         val param = KotlinValueParameterSpec.builder("param", stringType)
             .addModifier(KotlinModifier.CROSSINLINE)
             .addAnnotationRef(deprecatedAnnotation)
-            .valProperty()
+            .immutableProperty()
             .defaultValue("\"test\"")
             .addKDoc("Test parameter")
             .build()
@@ -377,10 +377,10 @@ class KotlinValueParameterSpecTests {
     @Test
     fun testParameterInConstructorContext() {
         val param1 = KotlinValueParameterSpec.builder("name", stringType)
-            .valProperty()
+            .immutableProperty()
             .build()
         val param2 = KotlinValueParameterSpec.builder("age", intType)
-            .varProperty()
+            .mutableProperty()
             .defaultValue("0")
             .build()
 
@@ -628,7 +628,7 @@ class KotlinValueParameterSpecTests {
         val param = KotlinValueParameterSpec.builder("complexParam", stringType)
             .addAnnotationRef(complexAnnotation)
             .addModifier(KotlinModifier.CROSSINLINE)
-            .valProperty()
+            .immutableProperty()
             .defaultValue("\"complex\"")
             .addKDoc("A parameter with all possible features")
             .build()
@@ -705,10 +705,10 @@ class KotlinValueParameterSpecTests {
     @Test
     fun testParameterInDataClassContext() {
         val param1 = KotlinValueParameterSpec.builder("id", intType)
-            .valProperty()
+            .immutableProperty()
             .build()
         val param2 = KotlinValueParameterSpec.builder("name", stringType)
-            .valProperty()
+            .immutableProperty()
             .build()
 
         val constructor = KotlinConstructorSpec.builder()

@@ -22,7 +22,7 @@ import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
+import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.java.JavaModifier
 import love.forte.codegentle.java.JavaModifierBuilderContainer
@@ -212,7 +212,7 @@ public sealed class JavaTypeSpecBuilder<B : JavaTypeSpecBuilder<B, T>, T : JavaT
     public val kind: JavaTypeSpec.Kind,
     public val name: String?,
 ) : JavaModifierBuilderContainer<B>,
-    AnnotationRefCollectable<B>,
+    AnnotationRefCollector<B>,
     BuilderDsl {
     init {
         check(name == null || name.isSourceName()) { "Invalid `name`: $name" }
