@@ -67,7 +67,7 @@ public interface KotlinAnnotationTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinAnnotationTypeSpec].
      */
-    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer {
+    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer<Builder> {
         /**
          * The annotation class name.
          */

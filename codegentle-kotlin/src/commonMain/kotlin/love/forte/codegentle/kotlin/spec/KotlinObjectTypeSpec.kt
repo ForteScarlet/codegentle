@@ -61,7 +61,7 @@ public interface KotlinObjectTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinObjectTypeSpec].
      */
-    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer {
+    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer<Builder> {
         /**
          * The object name.
          */

@@ -211,7 +211,7 @@ public val JavaTypeSpec.nestedTypesSimpleNames: Set<String>
 public sealed class JavaTypeSpecBuilder<B : JavaTypeSpecBuilder<B, T>, T : JavaTypeSpec>(
     public val kind: JavaTypeSpec.Kind,
     public val name: String?,
-) : JavaModifierBuilderContainer,
+) : JavaModifierBuilderContainer<B>,
     AnnotationRefCollectable<B>,
     BuilderDsl {
     init {

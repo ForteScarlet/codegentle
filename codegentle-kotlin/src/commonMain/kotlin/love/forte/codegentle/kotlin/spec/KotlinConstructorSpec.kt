@@ -34,6 +34,22 @@ public interface KotlinConstructorSpec : KotlinCallableSpec {
          */
         public fun constructorDelegation(delegation: ConstructorDelegation?): Builder
 
+
+        /**
+         * Add a parameter to the function.
+         */
+        public fun addParameter(parameter: KotlinValueParameterSpec): Builder
+
+        /**
+         * Add parameters to the function.
+         */
+        public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): Builder
+
+        /**
+         * Add parameters to the function.
+         */
+        public fun addParameters(vararg parameters: KotlinValueParameterSpec): Builder
+
         override fun build(): KotlinConstructorSpec
     }
 }

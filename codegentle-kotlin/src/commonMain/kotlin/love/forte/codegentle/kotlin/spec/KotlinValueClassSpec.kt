@@ -52,7 +52,7 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
      */
     public interface Builder :
         BuilderDsl,
-        KotlinModifierBuilderContainer,
+        KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollectable<Builder> {
         /**
          * The value class name.

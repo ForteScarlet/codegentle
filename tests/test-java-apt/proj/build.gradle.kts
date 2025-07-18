@@ -3,8 +3,11 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":tests:test-java-apt:proc"))
-    annotationProcessor(project(":tests:test-java-apt:proc"))
+    // 临时修复:
+    compileOnly(projects.codegentleCommon)
+
+    implementation(projects.tests.testJavaApt.proc)
+    annotationProcessor(projects.tests.testJavaApt.proc)
 }
 
 java {

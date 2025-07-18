@@ -50,7 +50,7 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinEnumTypeSpec].
      */
-    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer {
+    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer<Builder> {
         /**
          * The enum class name.
          */

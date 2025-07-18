@@ -110,7 +110,7 @@ public interface JavaModifierContainer {
     public fun hasModifier(modifier: JavaModifier): Boolean = modifier in modifiers
 }
 
-public inline val JavaModifierBuilderContainer.modifiers: JavaModifiers
+public inline val JavaModifierBuilderContainer<*>.modifiers: JavaModifiers
     get() = JavaModifiers(this)
 
 /**
@@ -124,6 +124,6 @@ public inline val JavaModifierBuilderContainer.modifiers: JavaModifiers
  * }
  * ```
  */
-public inline fun JavaModifierBuilderContainer.modifiers(block: JavaModifiers.() -> Unit) {
+public inline fun JavaModifierBuilderContainer<*>.modifiers(block: JavaModifiers.() -> Unit) {
     modifiers.block()
 }

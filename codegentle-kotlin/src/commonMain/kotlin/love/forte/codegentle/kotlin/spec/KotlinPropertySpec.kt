@@ -47,7 +47,7 @@ public interface KotlinPropertySpec : KotlinSpec, KotlinModifierContainer {
      * Builder for [KotlinPropertySpec].
      */
     public interface Builder : BuilderDsl,
-        KotlinModifierBuilderContainer,
+        KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollectable<Builder> {
 
         /**

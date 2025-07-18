@@ -87,7 +87,7 @@ public inline fun JavaFieldSpec(
 public class JavaFieldSpecBuilder @PublishedApi internal constructor(
     public val type: TypeRef<*>,
     public val name: String,
-) : JavaModifierBuilderContainer,
+) : JavaModifierBuilderContainer<JavaFieldSpecBuilder>,
     AnnotationRefCollectable<JavaFieldSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal val annotations = mutableListOf<AnnotationRef>()

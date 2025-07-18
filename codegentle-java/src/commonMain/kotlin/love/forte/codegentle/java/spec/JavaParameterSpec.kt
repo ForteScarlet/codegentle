@@ -64,7 +64,8 @@ public interface JavaParameterSpec : JavaSpec, NamedSpec {
 public class JavaParameterSpecBuilder internal constructor(
     public val type: TypeRef<*>,
     public val name: String
-) : JavaModifierBuilderContainer, AnnotationRefCollectable<JavaParameterSpecBuilder> {
+) : JavaModifierBuilderContainer<JavaParameterSpecBuilder>,
+    AnnotationRefCollectable<JavaParameterSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal val annotations = mutableListOf<AnnotationRef>()
     internal val modifiers = MutableJavaModifierSet.empty()

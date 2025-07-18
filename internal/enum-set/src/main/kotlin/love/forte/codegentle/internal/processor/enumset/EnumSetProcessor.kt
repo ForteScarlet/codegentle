@@ -369,17 +369,17 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
                 writer.write("\n/**\n")
                 writer.write(" * A builder container for $enumName modifiers.\n")
                 writer.write(" */\n")
-                writer.write("public interface $containerName : love.forte.codegentle.common.BuilderDsl {\n")
-                writer.write("    public fun $actualSingleAdder(modifier: $enumName): $containerName\n")
-                writer.write("    public fun $actualMultiAdder(vararg modifiers: $enumName): $containerName\n")
-                writer.write("    public fun $actualMultiAdder(modifiers: Iterable<$enumName>): $containerName\n")
+                writer.write("public interface $containerName<B : $containerName<B>> {\n")
+                writer.write("    public fun $actualSingleAdder(modifier: $enumName): B\n")
+                writer.write("    public fun $actualMultiAdder(vararg modifiers: $enumName): B\n")
+                writer.write("    public fun $actualMultiAdder(modifiers: Iterable<$enumName>): B\n")
                 writer.write("}\n")
 
                 // Generate value class if operatorsName is not empty
                 if (operatorsName.isNotEmpty()) {
                     writer.write("\n@kotlin.jvm.JvmInline\n")
                     writer.write("public value class $operatorsName\n")
-                    writer.write("@PublishedApi internal constructor(private val container: $containerName) {\n")
+                    writer.write("@PublishedApi internal constructor(private val container: $containerName<*>) {\n")
 
                     // Generate methods for each enum entry
                     for (entry in enumClass.declarations

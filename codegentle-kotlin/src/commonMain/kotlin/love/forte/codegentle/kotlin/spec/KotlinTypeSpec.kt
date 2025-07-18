@@ -184,7 +184,7 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
  * Base interface for all Kotlin type spec builders.
  */
 public interface KotlinTypeSpecBuilder<B : KotlinTypeSpecBuilder<B, T>, T : KotlinTypeSpec> :
-    KotlinModifierBuilderContainer,
+    KotlinModifierBuilderContainer<B>,
     AnnotationRefCollectable<B>,
     BuilderDsl {
 

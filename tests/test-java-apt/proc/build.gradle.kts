@@ -14,5 +14,6 @@ kotlin {
 }
 
 dependencies {
-    api(project(":codegentle-java"))
+    api(projects.codegentleCommon)
+    api(projects.codegentleJava)
 }

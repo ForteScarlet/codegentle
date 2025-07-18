@@ -71,7 +71,7 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
      * Builder for [KotlinValueParameterSpec].
      */
     public interface Builder : BuilderDsl,
-        KotlinModifierBuilderContainer,
+        KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollectable<Builder> {
         /**
          * Parameter name.

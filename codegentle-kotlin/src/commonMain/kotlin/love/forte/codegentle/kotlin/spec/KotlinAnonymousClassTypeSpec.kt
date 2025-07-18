@@ -68,7 +68,7 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
     /**
      * Builder for [KotlinAnonymousClassTypeSpec].
      */
-    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer {
+    public interface Builder : BuilderDsl, KotlinModifierBuilderContainer<Builder> {
         /**
          * Add KDoc.
          */

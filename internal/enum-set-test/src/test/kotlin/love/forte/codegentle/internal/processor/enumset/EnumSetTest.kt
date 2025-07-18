@@ -1,6 +1,5 @@
 package love.forte.codegentle.internal.processor.enumset
 
-import love.forte.codegentle.common.BuilderDsl
 import kotlin.test.*
 
 /**
@@ -87,55 +86,38 @@ class EnumSetTest {
 
     @Test
     fun testContainerEnumSet() {
-        // Test that the container interface is generated and implements BuilderDsl
-        val container: TestEnumBuilderContainer = object : TestEnumBuilderContainer {
-            private val modifiers = mutableSetOf<ContainerTestEnum>()
-
-            override fun addModifier(modifier: ContainerTestEnum): TestEnumBuilderContainer {
-                modifiers.add(modifier)
-                return this
-            }
-
-            override fun addModifiers(vararg modifiers: ContainerTestEnum): TestEnumBuilderContainer {
-                this.modifiers.addAll(modifiers)
-                return this
-            }
-
-            override fun addModifiers(modifiers: Iterable<ContainerTestEnum>): TestEnumBuilderContainer {
-                this.modifiers.addAll(modifiers)
-                return this
-            }
-        }
-
-        // Verify that the container implements BuilderDsl
-        assertIs<BuilderDsl>(container)
+        // Test that the container interface is generated with generic type
+        val container = TestEnumBuilderContainerImpl()
 
         // Test adding modifiers
         container.addModifier(ContainerTestEnum.ONE)
         container.addModifiers(ContainerTestEnum.TWO, ContainerTestEnum.THREE)
     }
 
+    // Helper implementation for the test
+    private class TestEnumBuilderContainerImpl : TestEnumBuilderContainer<TestEnumBuilderContainerImpl> {
+        private val modifiers = mutableSetOf<ContainerTestEnum>()
+
+        override fun addModifier(modifier: ContainerTestEnum): TestEnumBuilderContainerImpl {
+            modifiers.add(modifier)
+            return this
+        }
+
+        override fun addModifiers(vararg modifiers: ContainerTestEnum): TestEnumBuilderContainerImpl {
+            this.modifiers.addAll(modifiers)
+            return this
+        }
+
+        override fun addModifiers(modifiers: Iterable<ContainerTestEnum>): TestEnumBuilderContainerImpl {
+            this.modifiers.addAll(modifiers)
+            return this
+        }
+    }
+
     @Test
     fun testOperatorsEnumSet() {
         // Test that the value class is generated
-        val container: OperatorsTestEnumBuilderContainer = object : OperatorsTestEnumBuilderContainer {
-            private val modifiers = mutableSetOf<OperatorsTestEnum>()
-
-            override fun addModifier(modifier: OperatorsTestEnum): OperatorsTestEnumBuilderContainer {
-                modifiers.add(modifier)
-                return this
-            }
-
-            override fun addModifiers(vararg modifiers: OperatorsTestEnum): OperatorsTestEnumBuilderContainer {
-                this.modifiers.addAll(modifiers)
-                return this
-            }
-
-            override fun addModifiers(modifiers: Iterable<OperatorsTestEnum>): OperatorsTestEnumBuilderContainer {
-                this.modifiers.addAll(modifiers)
-                return this
-            }
-        }
+        val container = OperatorsTestEnumBuilderContainerImpl()
 
         // Test using the value class directly
         val operators = OperatorsTestEnumModifiers(container)
@@ -144,30 +126,30 @@ class EnumSetTest {
         operators.gamma()
     }
 
+    // Helper implementation for the test
+    private class OperatorsTestEnumBuilderContainerImpl : OperatorsTestEnumBuilderContainer<OperatorsTestEnumBuilderContainerImpl> {
+        private val modifiers = mutableSetOf<OperatorsTestEnum>()
+
+        override fun addModifier(modifier: OperatorsTestEnum): OperatorsTestEnumBuilderContainerImpl {
+            modifiers.add(modifier)
+            return this
+        }
+
+        override fun addModifiers(vararg modifiers: OperatorsTestEnum): OperatorsTestEnumBuilderContainerImpl {
+            this.modifiers.addAll(modifiers)
+            return this
+        }
+
+        override fun addModifiers(modifiers: Iterable<OperatorsTestEnum>): OperatorsTestEnumBuilderContainerImpl {
+            this.modifiers.addAll(modifiers)
+            return this
+        }
+    }
+
     @Test
     fun testCustomAdderEnumSet() {
         // Test that the container interface is generated with custom adder function names
-        val container: CustomAdderTestEnumBuilderContainer = object : CustomAdderTestEnumBuilderContainer {
-            private val elements = mutableSetOf<CustomAdderTestEnum>()
-
-            override fun addElement(modifier: CustomAdderTestEnum): CustomAdderTestEnumBuilderContainer {
-                elements.add(modifier)
-                return this
-            }
-
-            override fun addElements(vararg modifiers: CustomAdderTestEnum): CustomAdderTestEnumBuilderContainer {
-                this.elements.addAll(modifiers)
-                return this
-            }
-
-            override fun addElements(modifiers: Iterable<CustomAdderTestEnum>): CustomAdderTestEnumBuilderContainer {
-                this.elements.addAll(modifiers)
-                return this
-            }
-        }
-
-        // Verify that the container implements BuilderDsl
-        assertIs<BuilderDsl>(container)
+        val container = CustomAdderTestEnumBuilderContainerImpl()
 
         // Test adding elements using the custom adder functions
         container.addElement(CustomAdderTestEnum.ONE)
@@ -180,30 +162,30 @@ class EnumSetTest {
         operators.three()
     }
 
+    // Helper implementation for the test
+    private class CustomAdderTestEnumBuilderContainerImpl : CustomAdderTestEnumBuilderContainer<CustomAdderTestEnumBuilderContainerImpl> {
+        private val elements = mutableSetOf<CustomAdderTestEnum>()
+
+        override fun addElement(modifier: CustomAdderTestEnum): CustomAdderTestEnumBuilderContainerImpl {
+            elements.add(modifier)
+            return this
+        }
+
+        override fun addElements(vararg modifiers: CustomAdderTestEnum): CustomAdderTestEnumBuilderContainerImpl {
+            this.elements.addAll(modifiers)
+            return this
+        }
+
+        override fun addElements(modifiers: Iterable<CustomAdderTestEnum>): CustomAdderTestEnumBuilderContainerImpl {
+            this.elements.addAll(modifiers)
+            return this
+        }
+    }
+
     @Test
     fun testKeywordEnumSet() {
         // Test that the value class is generated with backticks for Kotlin keywords
-        val container: KeywordTestEnumBuilderContainer = object : KeywordTestEnumBuilderContainer {
-            private val modifiers = mutableSetOf<KeywordTestEnum>()
-
-            override fun addModifier(modifier: KeywordTestEnum): KeywordTestEnumBuilderContainer {
-                modifiers.add(modifier)
-                return this
-            }
-
-            override fun addModifiers(vararg modifiers: KeywordTestEnum): KeywordTestEnumBuilderContainer {
-                this.modifiers.addAll(modifiers)
-                return this
-            }
-
-            override fun addModifiers(modifiers: Iterable<KeywordTestEnum>): KeywordTestEnumBuilderContainer {
-                this.modifiers.addAll(modifiers)
-                return this
-            }
-        }
-
-        // Verify that the container implements BuilderDsl
-        assertIs<BuilderDsl>(container)
+        val container = KeywordTestEnumBuilderContainerImpl()
 
         // Test using the value class directly
         // These function calls would cause compilation errors if the keywords weren't properly escaped with backticks
@@ -223,5 +205,25 @@ class EnumSetTest {
         operators.`if`()
         operators.`else`()
         operators.`return`()
+    }
+
+    // Helper implementation for the test
+    private class KeywordTestEnumBuilderContainerImpl : KeywordTestEnumBuilderContainer<KeywordTestEnumBuilderContainerImpl> {
+        private val modifiers = mutableSetOf<KeywordTestEnum>()
+
+        override fun addModifier(modifier: KeywordTestEnum): KeywordTestEnumBuilderContainerImpl {
+            modifiers.add(modifier)
+            return this
+        }
+
+        override fun addModifiers(vararg modifiers: KeywordTestEnum): KeywordTestEnumBuilderContainerImpl {
+            this.modifiers.addAll(modifiers)
+            return this
+        }
+
+        override fun addModifiers(modifiers: Iterable<KeywordTestEnum>): KeywordTestEnumBuilderContainerImpl {
+            this.modifiers.addAll(modifiers)
+            return this
+        }
     }
 }

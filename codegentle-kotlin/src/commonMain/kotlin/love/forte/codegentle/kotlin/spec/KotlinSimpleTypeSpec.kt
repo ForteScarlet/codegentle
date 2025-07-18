@@ -52,7 +52,7 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
      */
     public interface Builder :
         BuilderDsl,
-        KotlinModifierBuilderContainer,
+        KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollectable<Builder> {
         /**
          * The kind of the type.

@@ -30,7 +30,7 @@ public sealed interface KotlinCallableSpec : KotlinSpec, KotlinModifierContainer
 
     public interface Builder<S : KotlinCallableSpec, B : Builder<S, B>> :
         BuilderDsl,
-        KotlinModifierBuilderContainer,
+        KotlinModifierBuilderContainer<B>,
         AnnotationRefCollectable<B> {
 
         /**

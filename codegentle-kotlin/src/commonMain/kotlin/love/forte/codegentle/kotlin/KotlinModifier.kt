@@ -107,7 +107,7 @@ public interface KotlinModifierContainer {
 }
 
 
-public inline val KotlinModifierBuilderContainer.modifiers: KotlinModifiers
+public inline val KotlinModifierBuilderContainer<*>.modifiers: KotlinModifiers
     get() = KotlinModifiers(this)
 
 /**
@@ -121,6 +121,6 @@ public inline val KotlinModifierBuilderContainer.modifiers: KotlinModifiers
  * }
  * ```
  */
-public inline fun KotlinModifierBuilderContainer.modifiers(block: KotlinModifiers.() -> Unit) {
+public inline fun KotlinModifierBuilderContainer<*>.modifiers(block: KotlinModifiers.() -> Unit) {
     modifiers.block()
 }

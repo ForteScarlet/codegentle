@@ -89,7 +89,7 @@ public inline fun JavaMethodSpec(block: JavaMethodSpecBuilder.() -> Unit = {}): 
 public class JavaMethodSpecBuilder internal constructor(
     public var name: String,
 ) : BuilderDsl,
-    JavaModifierBuilderContainer,
+    JavaModifierBuilderContainer<JavaMethodSpecBuilder>,
     AnnotationRefCollectable<JavaMethodSpecBuilder> {
     internal val javadoc = CodeValue.builder()
     internal var returnType: TypeRef<*>? = null
