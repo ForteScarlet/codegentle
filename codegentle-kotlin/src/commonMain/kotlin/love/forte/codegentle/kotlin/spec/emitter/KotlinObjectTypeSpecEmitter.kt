@@ -3,7 +3,6 @@ package love.forte.codegentle.kotlin.spec.emitter
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.spec.KotlinObjectTypeSpec
-import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 

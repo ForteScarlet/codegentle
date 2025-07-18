@@ -221,9 +221,7 @@ value class UserId(val value: String) {
         val code = valueClass.writeToKotlinString()
         val expectedCode = """value class UserId(val value: String) {
     val length: Int
-        get() {
-            return value.length
-        }
+        get() = value.length
 }"""
         assertEquals(expectedCode, code)
     }
@@ -387,9 +385,7 @@ value class UserId(val value: String) {
                     }
                 
                     val length: Int
-                        get() {
-                            return id.length
-                        }
+                        get() = id.length
                 
                     fun isValid(): Boolean = id.isNotEmpty() && id.length >= 3
                 }

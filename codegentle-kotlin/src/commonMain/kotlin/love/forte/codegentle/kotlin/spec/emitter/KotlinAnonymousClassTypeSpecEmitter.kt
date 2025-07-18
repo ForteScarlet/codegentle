@@ -3,7 +3,6 @@ package love.forte.codegentle.kotlin.spec.emitter
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.spec.KotlinAnonymousClassTypeSpec
-import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -17,7 +16,7 @@ internal fun KotlinAnonymousClassTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
 }
 
 private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
-    var blockLineRequired = false
+    val blankLineManager = BlankLineManager(codeWriter)
 
     // Emit KDoc
     if (!kDoc.isEmpty()) {
@@ -72,38 +71,31 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
     // Emit initializer block
     if (!initializerBlock.isEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
-        }
         codeWriter.emitNewLine("init {")
         codeWriter.withIndent {
             emit(initializerBlock)
         }
         codeWriter.emitNewLine("}")
-        blockLineRequired = true
+        blankLineManager.required()
     }
 
     // Emit properties
     if (properties.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (property in properties) {
+                property.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-
-        for (property in properties) {
-            property.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit functions
     if (functions.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
-        }
-        for (function in functions) {
-            function.emitTo(codeWriter)
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (function in functions) {
+                function.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
     }
 

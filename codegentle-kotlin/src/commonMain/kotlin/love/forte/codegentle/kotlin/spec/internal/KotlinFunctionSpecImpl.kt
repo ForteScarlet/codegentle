@@ -11,6 +11,7 @@ import love.forte.codegentle.kotlin.MutableKotlinModifierSet
 import love.forte.codegentle.kotlin.spec.KotlinContextParameterSpec
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec
+import love.forte.codegentle.kotlin.spec.emitter.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
 /**

@@ -1,4 +1,4 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec

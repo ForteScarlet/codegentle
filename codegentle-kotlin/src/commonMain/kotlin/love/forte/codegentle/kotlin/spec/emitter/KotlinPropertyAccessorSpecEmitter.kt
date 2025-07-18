@@ -1,6 +1,8 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.code.isNotEmpty
+import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.spec.KotlinGetterSpec
 import love.forte.codegentle.kotlin.spec.KotlinSetterSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
@@ -23,17 +25,22 @@ internal fun KotlinGetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emit("get")
 
     // If getter has code, emit it as a block
-    if (!code.isEmpty()) {
-        codeWriter.emit("() {")
-        codeWriter.indent()
-        codeWriter.emitNewLine()
-        codeWriter.emit(code)
-        codeWriter.unindent()
-        codeWriter.emitNewLine()
-        codeWriter.emit("}")
-    } else {
-        // Empty getter
-        codeWriter.emit("()")
+    if (code.isNotEmpty()) {
+        if (code.isStartWithReturn()) {
+            val replacedCode = code.removeFirstReturn()
+            codeWriter.emit("() = ")
+            codeWriter.withIndent {
+                codeWriter.emit(replacedCode)
+            }
+        } else {
+            codeWriter.emit("() {")
+            codeWriter.withIndent {
+                codeWriter.emitNewLine()
+                codeWriter.emit(code)
+            }
+            codeWriter.emitNewLine()
+            codeWriter.emit("}")
+        }
     }
 }
 
@@ -55,7 +62,7 @@ internal fun KotlinSetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emit("set")
 
     // If setter has code, emit it as a block with parameter
-    if (!code.isEmpty()) {
+    if (code.isNotEmpty()) {
         codeWriter.emit("(${parameterName}) {")
         codeWriter.indent()
         codeWriter.emitNewLine()
@@ -63,8 +70,5 @@ internal fun KotlinSetterSpec.emitTo(codeWriter: KotlinCodeWriter) {
         codeWriter.unindent()
         codeWriter.emitNewLine()
         codeWriter.emit("}")
-    } else {
-        // Empty setter
-        codeWriter.emit("(${parameterName})")
     }
 }

@@ -5,7 +5,6 @@ import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierSet
 import love.forte.codegentle.kotlin.spec.KotlinValueClassSpec
-import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -21,7 +20,7 @@ internal fun KotlinValueClassSpec.emitTo(codeWriter: KotlinCodeWriter) {
 }
 
 private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
-    var blockLineRequired = false
+    val blankLineManager = BlankLineManager(codeWriter)
 
     // Emit KDoc
     if (!kDoc.isEmpty()) {
@@ -70,7 +69,7 @@ private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     }
 
     // Emit the body
-    codeWriter.emit(" {\n")
+    codeWriter.emitNewLine(" {")
     codeWriter.indent()
 
     // Emit initializer block
@@ -81,29 +80,27 @@ private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
         }
         codeWriter.emitNewLine()
         codeWriter.emitNewLine("}")
-        blockLineRequired = true
+        blankLineManager.required()
     }
 
     // Emit properties
     if (properties.isNotEmpty()) {
-        for (property in properties) {
-            if (blockLineRequired) {
+        blankLineManager.withRequirement {
+            for (property in properties) {
+                property.emitTo(codeWriter)
                 codeWriter.emitNewLine()
             }
-            property.emitTo(codeWriter)
         }
-        blockLineRequired = true
     }
 
     // Emit functions
     if (functions.isNotEmpty()) {
-        for (function in functions) {
-            if (blockLineRequired) {
+        blankLineManager.withRequirement {
+            for (function in functions) {
+                function.emitTo(codeWriter)
                 codeWriter.emitNewLine()
             }
-            function.emitTo(codeWriter)
         }
-        codeWriter.emitNewLine()
     }
 
     codeWriter.unindent()

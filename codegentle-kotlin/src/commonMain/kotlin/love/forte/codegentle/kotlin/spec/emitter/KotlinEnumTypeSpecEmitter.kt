@@ -4,7 +4,6 @@ import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinEnumTypeSpec
-import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -22,7 +21,7 @@ internal fun KotlinEnumTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
 }
 
 private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
-    var blockLineRequired = false
+    val blankLineManager = BlankLineManager(codeWriter)
 
     // Emit KDoc
     if (!kDoc.isEmpty()) {
@@ -62,7 +61,7 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     if (enumConstants.isNotEmpty()) {
         val constantEntries = enumConstants.entries.toList()
         constantEntries.forEachIndexed { index, (constantName, anonymousClass) ->
-            if (blockLineRequired) {
+            if (blankLineManager.blankLineRequired) {
                 codeWriter.emitNewLine()
             }
 
@@ -84,7 +83,7 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
                 codeWriter.emit(" {")
                 codeWriter.indent()
 
-                var anonymousBlockLineRequired = false
+                val anonymousBlankLineManager = BlankLineManager(codeWriter)
 
                 // Emit initializer block
                 if (!anonymousClass.initializerBlock.isEmpty()) {
@@ -93,29 +92,26 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
                         emit(anonymousClass.initializerBlock)
                     }
                     codeWriter.emitNewLine("}")
-                    anonymousBlockLineRequired = true
+                    anonymousBlankLineManager.required()
                 }
 
                 // Emit properties
                 if (anonymousClass.properties.isNotEmpty()) {
-                    if (anonymousBlockLineRequired) {
-                        codeWriter.emitNewLine()
+                    anonymousBlankLineManager.withRequirement {
+                        for (property in anonymousClass.properties) {
+                            property.emitTo(codeWriter)
+                            codeWriter.emitNewLine()
+                        }
                     }
-                    for (property in anonymousClass.properties) {
-                        property.emitTo(codeWriter)
-                        codeWriter.emitNewLine()
-                    }
-                    anonymousBlockLineRequired = true
                 }
 
                 // Emit functions
                 if (anonymousClass.functions.isNotEmpty()) {
-                    if (anonymousBlockLineRequired) {
-                        codeWriter.emitNewLine()
-                    }
-                    for (function in anonymousClass.functions) {
-                        function.emitTo(codeWriter)
-                        codeWriter.emitNewLine()
+                    anonymousBlankLineManager.withRequirement {
+                        for (function in anonymousClass.functions) {
+                            function.emitTo(codeWriter)
+                            codeWriter.emitNewLine()
+                        }
                     }
                 }
 
@@ -128,7 +124,7 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
                 codeWriter.emit(",")
             }
             codeWriter.emitNewLine()
-            blockLineRequired = true
+            blankLineManager.required()
         }
 
         // Add semicolon after enum constants if there are other members
@@ -142,49 +138,42 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
     // Emit initializer block
     if (!initializerBlock.isEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            codeWriter.emitNewLine("init {")
+            codeWriter.withIndent {
+                emit(initializerBlock)
+            }
+            codeWriter.emitNewLine("}")
         }
-        codeWriter.emitNewLine("init {")
-        codeWriter.withIndent {
-            emit(initializerBlock)
-        }
-        codeWriter.emitNewLine("}")
-        blockLineRequired = true
     }
 
     // Emit properties
     if (properties.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (property in properties) {
+                property.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-        for (property in properties) {
-            property.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit functions
     if (functions.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (function in functions) {
+                function.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-        for (function in functions) {
-            function.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit subtypes
     if (subtypes.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
-        }
-        for (subtype in subtypes) {
-            subtype.emitTo(codeWriter)
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (subtype in subtypes) {
+                subtype.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
     }
 

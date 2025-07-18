@@ -3,7 +3,6 @@ package love.forte.codegentle.kotlin.spec.emitter
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinAnnotationTypeSpec
-import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -21,7 +20,7 @@ internal fun KotlinAnnotationTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
 }
 
 private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
-    var blockLineRequired = false
+    val blankLineManager = BlankLineManager(codeWriter)
 
     // Emit KDoc
     if (!kDoc.isEmpty()) {
@@ -31,7 +30,7 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     // Emit annotations
     codeWriter.emitAnnotationRefs(annotations, false)
 
-    // Emit modifiers (modifiers must contains ANNOTATIONS)
+    // Emit modifiers
     codeWriter.emitModifiers(modifiers)
 
     // Emit the annotation class keyword
@@ -51,13 +50,11 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
     // Emit properties (annotation classes can only have properties, no functions or subtypes)
     if (properties.isNotEmpty()) {
-        for (property in properties) {
-            if (blockLineRequired) {
+        blankLineManager.withRequirement {
+            for (property in properties) {
+                property.emitTo(codeWriter)
                 codeWriter.emitNewLine()
             }
-            property.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-            blockLineRequired = true
         }
     }
 

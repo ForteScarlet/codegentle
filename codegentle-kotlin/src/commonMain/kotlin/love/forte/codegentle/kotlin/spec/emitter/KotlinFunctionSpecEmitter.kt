@@ -1,6 +1,8 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
-import love.forte.codegentle.common.code.*
+import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.code.isNotEmpty
+import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
@@ -79,24 +81,15 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emit(returnType)
 
     if (!code.isEmpty()) {
-        val parts = code.parts
-        val firstPart = parts.first()
-        if (firstPart is CodeSimplePart && firstPart.value.trimStart().startsWith("return ")) {
-            // { return ... } -> = ...
-            val replacedCode = CodeValue(buildList {
-                add(CodePart.simple(firstPart.value.replaceFirst("return ", "")))
-                addAll(parts.subList(1, parts.size))
-            })
+        if (code.isStartWithReturn()) {
+            val replacedCode = code.removeFirstReturn()
             codeWriter.emit(" = ")
-            codeWriter.indent()
-            codeWriter.emit(replacedCode)
-            codeWriter.unindent()
+            codeWriter.withIndent { emit(replacedCode) }
         } else {
-            codeWriter.emit(" {\n")
-            codeWriter.indent()
-            codeWriter.emit(code)
-            codeWriter.unindent()
-            codeWriter.emit("\n}")
+            codeWriter.emitNewLine(" {")
+            codeWriter.withIndent { emit(code) }
+            codeWriter.emitNewLine()
+            codeWriter.emit("}")
         }
     }
 }

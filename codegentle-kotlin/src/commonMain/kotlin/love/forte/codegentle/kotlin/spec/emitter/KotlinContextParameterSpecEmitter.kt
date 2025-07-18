@@ -1,4 +1,4 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.kotlin.spec.KotlinContextParameterSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter

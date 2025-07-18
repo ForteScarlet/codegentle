@@ -6,7 +6,6 @@ import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.VISIBILITY_MODIFIERS
 import love.forte.codegentle.kotlin.spec.ConstructorDelegation
 import love.forte.codegentle.kotlin.spec.KotlinSimpleTypeSpec
-import love.forte.codegentle.kotlin.spec.internal.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -20,7 +19,7 @@ internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitM
 }
 
 private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitModifiers: Set<KotlinModifier>) {
-    var blockLineRequired = false
+    val blankLineManager = BlankLineManager(codeWriter)
 
     // Emit KDoc
     if (!kDoc.isEmpty()) {
@@ -101,56 +100,46 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
             emit(initializerBlock)
         }
         codeWriter.emitNewLine("}")
-        blockLineRequired = true
+        blankLineManager.required()
     }
 
     // Emit secondary constructors
     if (secondaryConstructors.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (constructor in secondaryConstructors) {
+                constructor.emitTo(codeWriter, false)
+                codeWriter.emitNewLine()
+            }
         }
-
-        for (constructor in secondaryConstructors) {
-            constructor.emitTo(codeWriter, false)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit properties
     if (properties.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (property in properties) {
+                property.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-
-        for (property in properties) {
-            property.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
-
 
     // Emit functions
     if (functions.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (function in functions) {
+                function.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
-        for (function in functions) {
-            function.emitTo(codeWriter)
-            codeWriter.emitNewLine()
-        }
-        blockLineRequired = true
     }
 
     // Emit subtypes
     if (subtypes.isNotEmpty()) {
-        if (blockLineRequired) {
-            codeWriter.emitNewLine()
-        }
-        for (subtype in subtypes) {
-            subtype.emitTo(codeWriter)
-            codeWriter.emitNewLine()
+        blankLineManager.withRequirement {
+            for (subtype in subtypes) {
+                subtype.emitTo(codeWriter)
+                codeWriter.emitNewLine()
+            }
         }
     }
 

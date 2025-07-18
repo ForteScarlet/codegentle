@@ -10,6 +10,7 @@ import love.forte.codegentle.kotlin.spec.CodeGentleKotlinSpecImplementation
 import love.forte.codegentle.kotlin.spec.ConstructorDelegation
 import love.forte.codegentle.kotlin.spec.KotlinConstructorSpec
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec
+import love.forte.codegentle.kotlin.spec.emitter.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
 /**

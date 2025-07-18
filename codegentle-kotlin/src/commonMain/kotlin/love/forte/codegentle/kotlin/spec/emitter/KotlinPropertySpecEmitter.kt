@@ -1,6 +1,7 @@
-package love.forte.codegentle.kotlin.spec.internal
+package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.spec.KotlinPropertySpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
@@ -44,21 +45,18 @@ internal fun KotlinPropertySpec.emitTo(codeWriter: KotlinCodeWriter) {
     val hasCustomAccessors = getter != null || setter != null
 
     if (hasCustomAccessors) {
-        codeWriter.indent()
+        codeWriter.withIndent {
+            // Emit getter if present
+            getter?.let { get ->
+                codeWriter.emitNewLine()
+                get.emitTo(codeWriter)
+            }
 
-        // Emit getter if present
-        getter?.let { get ->
-            codeWriter.emitNewLine()
-            get.emitTo(codeWriter)
+            // Emit setter if present
+            setter?.let { set ->
+                codeWriter.emitNewLine()
+                set.emitTo(codeWriter)
+            }
         }
-
-        // Emit setter if present
-        setter?.let { set ->
-            codeWriter.emitNewLine()
-            set.emitTo(codeWriter)
-        }
-
-        codeWriter.unindent()
-        codeWriter.emitNewLine()
     }
 }
