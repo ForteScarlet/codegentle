@@ -1,5 +1,6 @@
 package love.forte.codegentle.kotlin.writer
 
+import love.forte.codegentle.common.code.addCode
 import love.forte.codegentle.common.code.emitName
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.kotlin.KotlinModifier

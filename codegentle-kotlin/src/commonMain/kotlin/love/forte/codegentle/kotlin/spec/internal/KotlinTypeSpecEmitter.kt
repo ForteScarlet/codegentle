@@ -10,10 +10,9 @@ internal fun KotlinTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
     when (this) {
         is KotlinSimpleTypeSpec -> emitTo(codeWriter)
         is KotlinValueClassSpec -> emitTo(codeWriter)
-        // TODO Add other type spec implementations as they are created
-        is KotlinAnnotationTypeSpec -> TODO()
-        is KotlinAnonymousClassTypeSpec -> TODO()
-        is KotlinEnumTypeSpec -> TODO()
-        is KotlinObjectTypeSpec -> TODO()
+        is KotlinAnnotationTypeSpec -> emitTo(codeWriter)
+        is KotlinAnonymousClassTypeSpec -> emitTo(codeWriter)
+        is KotlinEnumTypeSpec -> emitTo(codeWriter)
+        is KotlinObjectTypeSpec -> emitTo(codeWriter)
     }
 }

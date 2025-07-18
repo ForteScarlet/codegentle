@@ -167,6 +167,7 @@ public class KotlinCodeWriter private constructor(
                     }
                 }
             }
+
             else -> {
                 // For non-primitive types, use Array<T>
                 emit("Array<")
@@ -213,6 +214,7 @@ public class KotlinCodeWriter private constructor(
                 // Star projection in Kotlin
                 emit("*")
             }
+
             is LowerWildcardTypeName -> {
                 // Covariance: out T (equivalent to Java's ? extends T)
                 emit("out ")
@@ -220,6 +222,7 @@ public class KotlinCodeWriter private constructor(
                     emit(wildcardTypeName.bounds.first())
                 }
             }
+
             is UpperWildcardTypeName -> {
                 // Contravariance: in T (equivalent to Java's ? super T)
                 emit("in ")
@@ -227,6 +230,7 @@ public class KotlinCodeWriter private constructor(
                     emit(wildcardTypeName.bounds.first())
                 }
             }
+
             else -> {
                 // Fallback for unknown wildcard types
                 emit("*")
@@ -482,10 +486,22 @@ internal class Multiset<T> {
     }
 }
 
+internal inline fun KotlinCodeWriter.inType(type: KotlinTypeSpec, block: KotlinCodeWriter.() -> Unit) {
+    pushType(type)
+    try {
+        block()
+    } finally {
+        popType()
+    }
+}
+
 internal inline fun KotlinCodeWriter.inPackage(packageName: PackageName, block: () -> Unit) {
     pushPackage(packageName)
-    block()
-    popPackage()
+    try {
+        block()
+    } finally {
+        popPackage()
+    }
 }
 
 internal inline fun KotlinCodeWriter.emit(

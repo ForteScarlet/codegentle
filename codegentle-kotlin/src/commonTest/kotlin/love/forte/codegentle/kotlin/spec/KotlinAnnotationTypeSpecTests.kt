@@ -1,6 +1,7 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.code.CodeValue
+import love.forte.codegentle.common.code.addKDoc
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.annotationRef
