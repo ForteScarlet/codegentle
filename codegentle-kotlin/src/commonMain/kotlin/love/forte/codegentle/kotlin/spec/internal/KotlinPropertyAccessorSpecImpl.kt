@@ -82,9 +82,10 @@ internal class KotlinGetterSpecBuilderImpl : KotlinGetterSpec.Builder {
         code.add(format, *argumentParts)
     }
 
-    override fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): KotlinGetterSpec.Builder = apply {
-        code.addStatement(format, *argumentParts)
-    }
+    override fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): KotlinGetterSpec.Builder =
+        apply {
+            code.addStatement(format, *argumentParts)
+        }
 
     override fun addStatement(codeValue: CodeValue): KotlinGetterSpec.Builder = apply {
         code.addStatement(codeValue)
@@ -172,9 +173,10 @@ internal class KotlinSetterSpecBuilderImpl(
         code.add(format, *argumentParts)
     }
 
-    override fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): KotlinSetterSpec.Builder = apply {
-        code.addStatement(format, *argumentParts)
-    }
+    override fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): KotlinSetterSpec.Builder =
+        apply {
+            code.addStatement(format, *argumentParts)
+        }
 
     override fun addStatement(codeValue: CodeValue): KotlinSetterSpec.Builder = apply {
         code.addStatement(codeValue)

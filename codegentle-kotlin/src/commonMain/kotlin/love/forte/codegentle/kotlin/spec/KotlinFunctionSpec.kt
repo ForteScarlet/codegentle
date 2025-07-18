@@ -1,15 +1,11 @@
 package love.forte.codegentle.kotlin.spec
 
-import love.forte.codegentle.common.BuilderDsl
-import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.naming.KotlinNames
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec.Companion.DEFAULT_REF
@@ -39,10 +35,7 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
      * Builder for [KotlinFunctionSpec].
      */
     public interface Builder :
-        BuilderDsl,
-        KotlinCallableSpec.Builder<KotlinFunctionSpec>,
-        KotlinModifierBuilderContainer,
-        AnnotationRefCollectable<Builder> {
+        KotlinCallableSpec.Builder<KotlinFunctionSpec, Builder> {
 
         /**
          * Function name.
@@ -53,16 +46,6 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
          * Function return type.
          */
         public val returnType: TypeRef<*>
-
-        /**
-         * Add KDoc to the function.
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc to the function.
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
 
         /**
          * Add a type variable to the function.
@@ -78,21 +61,6 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
          * Add type variables to the function.
          */
         public fun addTypeVariables(typeVariables: Iterable<TypeRef<TypeVariableName>>): Builder
-
-        /**
-         * Add a parameter to the function.
-         */
-        public fun addParameter(parameter: KotlinValueParameterSpec): Builder
-
-        /**
-         * Add parameters to the function.
-         */
-        public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): Builder
-
-        /**
-         * Add parameters to the function.
-         */
-        public fun addParameters(vararg parameters: KotlinValueParameterSpec): Builder
 
         /**
          * Set the receiver type for this function.
@@ -129,30 +97,19 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
         public fun returns(type: TypeRef<*>): Builder
 
         /**
-         * Add code to the function.
+         * Add a parameter to the function.
          */
-        public fun addCode(codeValue: CodeValue): Builder
+        public fun addParameter(parameter: KotlinValueParameterSpec): Builder
 
         /**
-         * Add code to the function.
+         * Add parameters to the function.
          */
-        public fun addCode(format: String, vararg argumentParts: CodeArgumentPart): Builder
+        public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): Builder
 
         /**
-         * Add a statement to the function.
+         * Add parameters to the function.
          */
-        public fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add a statement to the function.
-         */
-        public fun addStatement(codeValue: CodeValue): Builder
-
-        override fun addModifier(modifier: KotlinModifier): Builder
-
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
+        public fun addParameters(vararg parameters: KotlinValueParameterSpec): Builder
 
         /**
          * Build a [KotlinFunctionSpec] instance.

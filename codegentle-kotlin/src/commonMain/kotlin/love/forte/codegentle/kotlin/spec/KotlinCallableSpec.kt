@@ -34,72 +34,57 @@ public sealed interface KotlinCallableSpec : KotlinSpec, KotlinModifierContainer
         AnnotationRefCollectable<B> {
 
         /**
-         * Add KDoc to the constructor.
+         * Add KDoc to the callable.
          */
-        public fun addKDoc(codeValue: CodeValue): KotlinConstructorSpec.Builder
+        public fun addKDoc(codeValue: CodeValue): B
 
         /**
-         * Add KDoc to the constructor.
+         * Add KDoc to the callable.
          */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): KotlinConstructorSpec.Builder
+        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): B
 
         /**
-         * Add a parameter to the constructor.
+         * Add code to the callable.
          */
-        public fun addParameter(parameter: KotlinValueParameterSpec): KotlinConstructorSpec.Builder
+        public fun addCode(codeValue: CodeValue): B
 
         /**
-         * Add parameters to the constructor.
+         * Add code to the callable.
          */
-        public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): KotlinConstructorSpec.Builder
+        public fun addCode(format: String, vararg argumentParts: CodeArgumentPart): B
 
         /**
-         * Add parameters to the constructor.
+         * Add a statement to the callable.
          */
-        public fun addParameters(vararg parameters: KotlinValueParameterSpec): KotlinConstructorSpec.Builder
+        public fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): B
 
         /**
-         * Add code to the constructor.
-         */
-        public fun addCode(codeValue: CodeValue): KotlinConstructorSpec.Builder
-
-        /**
-         * Add code to the constructor.
-         */
-        public fun addCode(format: String, vararg argumentParts: CodeArgumentPart): KotlinConstructorSpec.Builder
-
-        /**
-         * Add a statement to the constructor.
-         */
-        public fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): KotlinConstructorSpec.Builder
-
-        /**
-         * Add a statement to the constructor.
+         * Add a statement to the callable.
          */
         public fun addStatement(codeValue: CodeValue): B
 
         /**
-         * Add a modifier to the constructor.
+         * Add a modifier to the callable.
          */
         override fun addModifier(modifier: KotlinModifier): B
 
         /**
-         * Add modifiers to the constructor.
+         * Add modifiers to the callable.
          */
         override fun addModifiers(modifiers: Iterable<KotlinModifier>): B
 
         /**
-         * Add modifiers to the constructor.
+         * Add modifiers to the callable.
          */
         override fun addModifiers(vararg modifiers: KotlinModifier): B
 
         /**
-         * Add an annotation reference to the constructor.
+         * Add an annotation reference to the callable.
          */
         override fun addAnnotationRef(ref: AnnotationRef): B
 
         /**
-         * Add annotation references to the constructor.
+         * Add annotation references to the callable.
          */
         override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): B
 
