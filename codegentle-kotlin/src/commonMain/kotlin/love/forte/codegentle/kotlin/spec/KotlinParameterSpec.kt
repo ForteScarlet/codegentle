@@ -1,19 +1,35 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.BuilderDsl
+import love.forte.codegentle.common.ref.TypeRef
+
 /**
+ * A Kotlin parameter.
+ *
+ * @see KotlinContextParameterSpec
+ * @see KotlinValueParameterSpec
  *
  * @author ForteScarlet
  */
 public sealed interface KotlinParameterSpec : KotlinSpec {
-    // TODO context parameter 和 value parameter 的基类
+    /**
+     * Parameter name.
+     */
+    public val name: String?
+    public val typeRef: TypeRef<*>
 
+    public sealed interface Builder<S : KotlinParameterSpec> : BuilderDsl {
+        /**
+         * Parameter name.
+         * `null` if it's `_`, e.g., `context(_: ParameterType)`.
+         */
+        public val name: String?
+
+        /**
+         * Parameter type.
+         */
+        public val type: TypeRef<*>
+
+        public fun build(): S
+    }
 }
-
-
-// TODO 考虑提供二者互相转化的扩展函数
-// public fun KotlinParameterSpec.toContextParameter(): KotlinContextParameterSpec =
-//     this as? KotlinContextParameterSpec ?: TODO()
-//
-//
-// public fun KotlinParameterSpec.toValueParameter(): KotlinValueParameterSpec =
-//     this as? KotlinValueParameterSpec ?: TODO()

@@ -1,6 +1,5 @@
 package love.forte.codegentle.kotlin.spec
 
-import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
@@ -10,6 +9,7 @@ import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.KotlinModifierContainer
+import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec.Companion.propertyizationBuilder
 import love.forte.codegentle.kotlin.spec.internal.KotlinValueParameterSpecBuilderImpl
 import love.forte.codegentle.kotlin.spec.internal.PropertyizationBuilderImpl
 
@@ -17,12 +17,12 @@ import love.forte.codegentle.kotlin.spec.internal.PropertyizationBuilderImpl
  * A Kotlin value parameter.
  */
 @SubclassOptInRequired(CodeGentleKotlinSpecImplementation::class)
-public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer {
+public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierContainer {
     /**
      * Parameter name.
      */
-    public val name: String
-    public val typeRef: TypeRef<*>
+    override val name: String
+    override val typeRef: TypeRef<*>
 
     public val annotations: List<AnnotationRef>
     override val modifiers: Set<KotlinModifier>
@@ -34,6 +34,8 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
     /**
      * Represents the propertyization configuration for a value parameter.
      * When a parameter is propertyized, it becomes a property in the constructor.
+     *
+     * @see PropertyizationBuilder
      */
     public interface Propertyization {
         /**
@@ -44,6 +46,8 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
 
     /**
      * Builder for [Propertyization].
+     *
+     * @see propertyizationBuilder
      */
     public interface PropertyizationBuilder {
         /**
@@ -70,18 +74,19 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
     /**
      * Builder for [KotlinValueParameterSpec].
      */
-    public interface Builder : BuilderDsl,
+    public interface Builder :
+        KotlinParameterSpec.Builder<KotlinValueParameterSpec>,
         KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollectable<Builder> {
         /**
          * Parameter name.
          */
-        public val name: String
+        override val name: String
 
         /**
          * Parameter type.
          */
-        public val type: TypeRef<*>
+        override val type: TypeRef<*>
 
         /**
          * Set the default value for the parameter.
@@ -137,7 +142,7 @@ public interface KotlinValueParameterSpec : KotlinSpec, KotlinModifierContainer 
          *
          * @return a new [KotlinValueParameterSpec] instance
          */
-        public fun build(): KotlinValueParameterSpec
+        override fun build(): KotlinValueParameterSpec
     }
 
     public companion object {
@@ -185,7 +190,7 @@ public inline fun KotlinValueParameterSpec(
  */
 public inline fun propertyization(
     block: KotlinValueParameterSpec.PropertyizationBuilder.() -> Unit = {}
-): KotlinValueParameterSpec.Propertyization = 
+): KotlinValueParameterSpec.Propertyization =
     KotlinValueParameterSpec.propertyizationBuilder().apply(block).build()
 
 public inline fun KotlinValueParameterSpec.Builder.defaultValue(
@@ -214,7 +219,7 @@ public inline fun KotlinValueParameterSpec.Builder.propertyize(
  *
  * @return this builder
  */
-public fun KotlinValueParameterSpec.Builder.mutableProperty(): KotlinValueParameterSpec.Builder = 
+public fun KotlinValueParameterSpec.Builder.mutableProperty(): KotlinValueParameterSpec.Builder =
     propertyize { mutable = true }
 
 /**
@@ -222,7 +227,7 @@ public fun KotlinValueParameterSpec.Builder.mutableProperty(): KotlinValueParame
  *
  * @return this builder
  */
-public fun KotlinValueParameterSpec.Builder.immutableProperty(): KotlinValueParameterSpec.Builder = 
+public fun KotlinValueParameterSpec.Builder.immutableProperty(): KotlinValueParameterSpec.Builder =
     propertyize { mutable = false }
 
 /**
@@ -231,7 +236,7 @@ public fun KotlinValueParameterSpec.Builder.immutableProperty(): KotlinValuePara
  *
  * @return this builder
  */
-public fun KotlinValueParameterSpec.Builder.varProperty(): KotlinValueParameterSpec.Builder = 
+public fun KotlinValueParameterSpec.Builder.varProperty(): KotlinValueParameterSpec.Builder =
     mutableProperty()
 
 /**
@@ -240,5 +245,5 @@ public fun KotlinValueParameterSpec.Builder.varProperty(): KotlinValueParameterS
  *
  * @return this builder
  */
-public fun KotlinValueParameterSpec.Builder.valProperty(): KotlinValueParameterSpec.Builder = 
+public fun KotlinValueParameterSpec.Builder.valProperty(): KotlinValueParameterSpec.Builder =
     immutableProperty()

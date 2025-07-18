@@ -115,8 +115,8 @@ kotlin {
 }
 
 dependencies {
-    kspCommonMainMetadata(projects.internal.codeValueExtensions)
-    kspCommonMainMetadata(projects.internal.enumSet)
+    kspCommonMainMetadata(project(":internal:code-value-extensions"))
+    kspCommonMainMetadata(project(":internal:enum-set"))
 }
 
 // https://github.com/google/ksp/issues/963#issuecomment-2919262595

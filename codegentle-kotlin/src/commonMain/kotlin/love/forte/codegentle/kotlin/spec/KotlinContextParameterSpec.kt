@@ -1,6 +1,5 @@
 package love.forte.codegentle.kotlin.spec
 
-import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecBuilderImpl
 import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecImpl
@@ -9,33 +8,33 @@ import love.forte.codegentle.kotlin.spec.internal.KotlinContextParameterSpecImpl
  * A Kotlin context parameter.
  */
 @SubclassOptInRequired(CodeGentleKotlinSpecImplementation::class)
-public interface KotlinContextParameterSpec : KotlinSpec {
+public interface KotlinContextParameterSpec : KotlinParameterSpec {
     /**
      * Parameter name.
      * `null` if it's `_`, e.g., `context(_: ParameterType)`.
      */
-    public val name: String?
-    public val typeRef: TypeRef<*>
+    override val name: String?
+    override val typeRef: TypeRef<*>
 
     /**
      * Builder for [KotlinContextParameterSpec].
      */
-    public interface Builder : BuilderDsl {
+    public interface Builder : KotlinParameterSpec.Builder<KotlinContextParameterSpec> {
         /**
          * Parameter name.
          * `null` if it's `_`, e.g., `context(_: ParameterType)`.
          */
-        public val name: String?
+        override val name: String?
 
         /**
          * Parameter type.
          */
-        public val type: TypeRef<*>
+        override val type: TypeRef<*>
 
         /**
          * Build [KotlinContextParameterSpec].
          */
-        public fun build(): KotlinContextParameterSpec
+        override fun build(): KotlinContextParameterSpec
     }
 
     public companion object {

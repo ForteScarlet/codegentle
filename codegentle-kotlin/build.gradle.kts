@@ -10,7 +10,7 @@ plugins {
 }
 
 dependencies {
-    kspCommonMainMetadata(projects.internal.enumSet)
+    kspCommonMainMetadata(project(":internal:enum-set"))
 }
 
 kotlin {
@@ -70,7 +70,7 @@ kotlin {
         commonMain {
             kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
             dependencies {
-                api(projects.codegentleCommon)
+                api(project(":codegentle-common"))
             }
 
             tasks.withType<KspTaskMetadata> {

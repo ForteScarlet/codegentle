@@ -11,7 +11,7 @@ plugins {
 }
 
 dependencies {
-    kspCommonMainMetadata(projects.internal.enumSet)
+    kspCommonMainMetadata(project(":internal:enum-set"))
 }
 
 tasks.sourcesJar.configure {
@@ -116,7 +116,7 @@ kotlin {
             }
 
             dependencies {
-                api(projects.codegentleCommon)
+                api(project(":codegentle-common"))
             }
         }
 

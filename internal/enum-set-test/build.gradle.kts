@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    testImplementation(projects.codegentleCommon)
-    kspTest(projects.internal.enumSet)
+    testImplementation(project(":codegentle-common"))
+    kspTest(project(":internal:enum-set"))
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
 }

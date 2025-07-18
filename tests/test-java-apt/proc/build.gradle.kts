@@ -9,11 +9,12 @@ kotlin {
         freeCompilerArgs.addAll(
             "-Xjvm-default=all",
             "-Xjsr305=strict",
+            "-Xcontext-parameter"
         )
     }
 }
 
 dependencies {
-    api(projects.codegentleCommon)
-    api(projects.codegentleJava)
+    api(project(":codegentle-common"))
+    api(project(":codegentle-java"))
 }
