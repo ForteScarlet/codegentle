@@ -106,17 +106,17 @@ internal class KotlinObjectTypeSpecBuilderImpl(
         this.modifierSet.add(modifier)
     }
 
-    override fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): KotlinObjectTypeSpec.Builder =
+    override fun addTypeVariables(vararg typeVariables: TypeRef<TypeVariableName>): KotlinObjectTypeSpec.Builder =
         apply {
             this.typeVariableRefs.addAll(typeVariables)
         }
 
-    override fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinObjectTypeSpec.Builder =
+    override fun addTypeVariables(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinObjectTypeSpec.Builder =
         apply {
             this.typeVariableRefs.addAll(typeVariables)
         }
 
-    override fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): KotlinObjectTypeSpec.Builder = apply {
+    override fun addTypeVariable(typeVariable: TypeRef<TypeVariableName>): KotlinObjectTypeSpec.Builder = apply {
         this.typeVariableRefs.add(typeVariable)
     }
 

@@ -45,7 +45,7 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     }
 
     // Emit the body
-    codeWriter.emit(" {\n")
+    codeWriter.emitNewLine(" {")
     codeWriter.indent()
 
     // Emit properties (annotation classes can only have properties, no functions or subtypes)

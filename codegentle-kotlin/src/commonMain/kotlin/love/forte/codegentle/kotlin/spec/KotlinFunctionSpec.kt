@@ -4,6 +4,7 @@ import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.naming.KotlinNames
 import love.forte.codegentle.kotlin.ref.kotlinRef
@@ -35,7 +36,8 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
      */
     public interface Builder :
         KotlinCallableSpec.Builder<KotlinFunctionSpec, Builder>,
-        KotlinValueParameterCollector<Builder> {
+        KotlinValueParameterCollector<Builder>,
+        TypeVariableCollector<Builder> {
 
         /**
          * Function name.
@@ -46,21 +48,6 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
          * Function return type.
          */
         public val returnType: TypeRef<*>
-
-        /**
-         * Add a type variable to the function.
-         */
-        public fun addTypeVariable(typeVariable: TypeRef<TypeVariableName>): Builder
-
-        /**
-         * Add type variables to the function.
-         */
-        public fun addTypeVariables(vararg typeVariables: TypeRef<TypeVariableName>): Builder
-
-        /**
-         * Add type variables to the function.
-         */
-        public fun addTypeVariables(typeVariables: Iterable<TypeRef<TypeVariableName>>): Builder
 
         /**
          * Set the receiver type for this function.

@@ -128,7 +128,7 @@ class KotlinAnnotationTypeSpecTests {
         val typeVariableName = TypeVariableName("T")
         val typeVariable = typeVariableName.kotlinRef()
         val annotationSpec = KotlinAnnotationTypeSpec.builder("TestAnnotation")
-            .addTypeVariableRef(typeVariable)
+            .addTypeVariable(typeVariable)
             .build()
 
         assertEquals(1, annotationSpec.typeVariables.size)
@@ -140,7 +140,7 @@ class KotlinAnnotationTypeSpecTests {
         val typeVar1 = TypeVariableName("T").kotlinRef()
         val typeVar2 = TypeVariableName("R").kotlinRef()
         val annotationSpec = KotlinAnnotationTypeSpec.builder("TestAnnotation")
-            .addTypeVariableRefs(typeVar1, typeVar2)
+            .addTypeVariables(typeVar1, typeVar2)
             .build()
 
         assertEquals(2, annotationSpec.typeVariables.size)
@@ -153,7 +153,7 @@ class KotlinAnnotationTypeSpecTests {
             TypeVariableName("R").kotlinRef()
         )
         val annotationSpec = KotlinAnnotationTypeSpec.builder("TestAnnotation")
-            .addTypeVariableRefs(typeVariables)
+            .addTypeVariables(typeVariables)
             .build()
 
         assertEquals(2, annotationSpec.typeVariables.size)
@@ -236,7 +236,7 @@ class KotlinAnnotationTypeSpecTests {
             addModifier(KotlinModifier.PUBLIC)
             addKDoc("A complex annotation with all features.")
             addAnnotationRef(ClassName("kotlin.annotation", "Target").annotationRef())
-            addTypeVariableRef(TypeVariableName("T").kotlinRef())
+            addTypeVariable(TypeVariableName("T").kotlinRef())
             addProperty("value", stringType) {
                 initializer("\"default\"")
             }

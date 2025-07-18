@@ -3,6 +3,7 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
+import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
@@ -77,7 +78,8 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
     public interface Builder :
         KotlinParameterSpec.Builder<KotlinValueParameterSpec>,
         KotlinModifierBuilderContainer<Builder>,
-        AnnotationRefCollector<Builder> {
+        AnnotationRefCollector<Builder>,
+        KDocCollector<Builder> {
         /**
          * Parameter name.
          */
@@ -104,29 +106,6 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
          * @return this builder
          */
         public fun defaultValue(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add KDoc to the parameter.
-         *
-         * @param codeValue the KDoc code
-         * @return this builder
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc to the parameter.
-         *
-         * @param format the KDoc format string
-         * @param argumentParts the KDoc arguments
-         * @return this builder
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        override fun addModifier(modifier: KotlinModifier): Builder
-
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
 
         /**
          * Set the propertyization for this parameter.
@@ -198,13 +177,6 @@ public inline fun KotlinValueParameterSpec.Builder.defaultValue(
     block: CodeValueSingleFormatBuilderDsl = {}
 ): KotlinValueParameterSpec.Builder = apply {
     defaultValue(CodeValue(format, block))
-}
-
-public inline fun KotlinValueParameterSpec.Builder.addKDoc(
-    format: String,
-    block: CodeValueSingleFormatBuilderDsl = {}
-): KotlinValueParameterSpec.Builder = apply {
-    addKDoc(CodeValue(format, block))
 }
 
 public fun KotlinValueParameterSpec.Builder.propertyize(mutable: Boolean): KotlinValueParameterSpec.Builder =

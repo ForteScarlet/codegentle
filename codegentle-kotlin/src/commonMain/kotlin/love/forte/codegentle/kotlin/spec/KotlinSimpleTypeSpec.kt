@@ -4,9 +4,9 @@ import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.InitializerBlockCollector
 import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.naming.TypeName
-import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinSimpleTypeSpecBuilderImpl
@@ -52,7 +52,9 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
         BuilderDsl,
         KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollector<Builder>,
-        KDocCollector<Builder>, InitializerBlockCollector<Builder> {
+        KDocCollector<Builder>,
+        InitializerBlockCollector<Builder>,
+        TypeVariableCollector<Builder> {
         /**
          * The kind of the type.
          */
@@ -67,21 +69,6 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
          * Set superclass.
          */
         public fun superclass(superclass: TypeName): Builder
-
-        /**
-         * Add multiple type variable references.
-         */
-        public fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): Builder
-
-        /**
-         * Add multiple type variable references.
-         */
-        public fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): Builder
-
-        /**
-         * Add type variable reference.
-         */
-        public fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): Builder
 
         /**
          * Add multiple superinterfaces.

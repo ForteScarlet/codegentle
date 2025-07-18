@@ -98,15 +98,15 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
         this.modifierSet.add(modifier)
     }
 
-    override fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): KotlinAnonymousClassTypeSpec.Builder = apply {
+    override fun addTypeVariables(vararg typeVariables: TypeRef<TypeVariableName>): KotlinAnonymousClassTypeSpec.Builder = apply {
         this.typeVariableRefs.addAll(typeVariables)
     }
 
-    override fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinAnonymousClassTypeSpec.Builder = apply {
+    override fun addTypeVariables(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinAnonymousClassTypeSpec.Builder = apply {
         this.typeVariableRefs.addAll(typeVariables)
     }
 
-    override fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): KotlinAnonymousClassTypeSpec.Builder = apply {
+    override fun addTypeVariable(typeVariable: TypeRef<TypeVariableName>): KotlinAnonymousClassTypeSpec.Builder = apply {
         this.typeVariableRefs.add(typeVariable)
     }
 

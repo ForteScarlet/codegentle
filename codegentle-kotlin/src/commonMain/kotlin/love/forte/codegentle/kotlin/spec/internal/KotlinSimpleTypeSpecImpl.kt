@@ -121,17 +121,17 @@ internal class KotlinSimpleTypeSpecBuilderImpl(
         this.modifierSet.add(modifier)
     }
 
-    override fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): KotlinSimpleTypeSpec.Builder =
+    override fun addTypeVariables(vararg typeVariables: TypeRef<TypeVariableName>): KotlinSimpleTypeSpec.Builder =
         apply {
             this.typeVariableRefs.addAll(typeVariables)
         }
 
-    override fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinSimpleTypeSpec.Builder =
+    override fun addTypeVariables(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinSimpleTypeSpec.Builder =
         apply {
             this.typeVariableRefs.addAll(typeVariables)
         }
 
-    override fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): KotlinSimpleTypeSpec.Builder = apply {
+    override fun addTypeVariable(typeVariable: TypeRef<TypeVariableName>): KotlinSimpleTypeSpec.Builder = apply {
         this.typeVariableRefs.add(typeVariable)
     }
 

@@ -147,7 +147,7 @@ value class UserId(val value: String) {
             .build()
 
         val valueClass = KotlinValueClassSpec.builder("Wrapper", parameter)
-            .addTypeVariableRef(tRef)
+            .addTypeVariable(tRef)
             .build()
 
 
@@ -169,8 +169,8 @@ value class UserId(val value: String) {
             .build()
 
         val valueClass = KotlinValueClassSpec.builder("Wrapper", parameter)
-            .addTypeVariableRef(tRef)
-            .addTypeVariableRef(uRef)
+            .addTypeVariable(tRef)
+            .addTypeVariable(uRef)
             .build()
 
         val code = valueClass.writeToKotlinString()

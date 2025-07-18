@@ -9,7 +9,6 @@ import love.forte.codegentle.kotlin.spec.internal.ConstructorDelegationBuilderIm
 public interface ConstructorDelegation {
     public enum class Kind { THIS, SUPER }
 
-    // TODO primary 如果有，必须是 SUPER
     public val kind: Kind
 
     public val arguments: List<CodeValue>

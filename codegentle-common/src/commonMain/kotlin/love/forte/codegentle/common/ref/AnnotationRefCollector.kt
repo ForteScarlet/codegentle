@@ -1,6 +1,5 @@
 package love.forte.codegentle.common.ref
 
-import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.naming.ClassName
 import kotlin.jvm.JvmInline
 
@@ -17,9 +16,7 @@ import kotlin.jvm.JvmInline
  * @author ForteScarlet
  */
 @SubclassOptInRequired(CodeGentleRefImplementation::class)
-public interface AnnotationRefCollector<B : AnnotationRefCollector<B>> : BuilderDsl {
-    // private val annotations: MutableList<AnnotationRef> = mutableListOf()
-
+public interface AnnotationRefCollector<B : AnnotationRefCollector<B>> {
     public fun addAnnotationRef(ref: AnnotationRef): B
 
     public fun addAnnotationRefs(refs: Iterable<AnnotationRef>): B

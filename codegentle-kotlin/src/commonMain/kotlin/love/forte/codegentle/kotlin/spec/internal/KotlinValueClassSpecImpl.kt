@@ -106,17 +106,17 @@ internal class KotlinValueClassSpecBuilderImpl(
         this.modifierSet.add(modifier)
     }
 
-    override fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): KotlinValueClassSpec.Builder =
+    override fun addTypeVariables(vararg typeVariables: TypeRef<TypeVariableName>): KotlinValueClassSpec.Builder =
         apply {
             this.typeVariableRefs.addAll(typeVariables)
         }
 
-    override fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinValueClassSpec.Builder =
+    override fun addTypeVariables(typeVariables: Iterable<TypeRef<TypeVariableName>>): KotlinValueClassSpec.Builder =
         apply {
             this.typeVariableRefs.addAll(typeVariables)
         }
 
-    override fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): KotlinValueClassSpec.Builder = apply {
+    override fun addTypeVariable(typeVariable: TypeRef<TypeVariableName>): KotlinValueClassSpec.Builder = apply {
         this.typeVariableRefs.add(typeVariable)
     }
 

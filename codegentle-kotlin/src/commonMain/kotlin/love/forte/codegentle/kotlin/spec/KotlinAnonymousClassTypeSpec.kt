@@ -3,9 +3,9 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.*
 import love.forte.codegentle.common.naming.TypeName
-import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinAnonymousClassTypeSpecBuilderImpl
 
@@ -70,22 +70,8 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
         KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollector<Builder>,
         KDocCollector<Builder>,
-        InitializerBlockCollector<Builder> {
-        /**
-         * Add type variable references.
-         */
-        public fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): Builder
-
-        /**
-         * Add type variable references.
-         */
-        public fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): Builder
-
-        /**
-         * Add type variable reference.
-         */
-        public fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): Builder
-
+        InitializerBlockCollector<Builder>,
+        TypeVariableCollector<Builder> {
         /**
          * Set superclass.
          */

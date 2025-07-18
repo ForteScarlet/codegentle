@@ -3,19 +3,14 @@ package love.forte.codegentle.kotlin.spec
 import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.KDocCollector
 import love.forte.codegentle.common.naming.TypeName
-import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.KotlinAnnotationTypeSpecBuilderImpl
 
 /**
- * A generated Kotlin annotation class.
- *
- * ```kotlin
- * annotation class AnnotationType {
- * }
- * ```
+ * A Kotlin annotation class.
  *
  * @author ForteScarlet
  */
@@ -68,26 +63,12 @@ public interface KotlinAnnotationTypeSpec : KotlinTypeSpec {
         BuilderDsl,
         KotlinModifierBuilderContainer<Builder>,
         AnnotationRefCollector<Builder>,
-        KDocCollector<Builder> {
+        KDocCollector<Builder>,
+        TypeVariableCollector<Builder> {
         /**
          * The annotation class name.
          */
         public val name: String
-
-        /**
-         * Add type variable references.
-         */
-        public fun addTypeVariableRefs(vararg typeVariables: TypeRef<TypeVariableName>): Builder
-
-        /**
-         * Add type variable references.
-         */
-        public fun addTypeVariableRefs(typeVariables: Iterable<TypeRef<TypeVariableName>>): Builder
-
-        /**
-         * Add type variable reference.
-         */
-        public fun addTypeVariableRef(typeVariable: TypeRef<TypeVariableName>): Builder
 
         /**
          * Add properties.
