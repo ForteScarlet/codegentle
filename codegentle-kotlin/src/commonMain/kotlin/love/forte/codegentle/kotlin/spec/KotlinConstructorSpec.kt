@@ -1,14 +1,9 @@
 package love.forte.codegentle.kotlin.spec
 
-import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
-import love.forte.codegentle.common.ref.AnnotationRef
-import love.forte.codegentle.common.ref.AnnotationRefCollectable
 import love.forte.codegentle.common.ref.TypeRef
-import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierBuilderContainer
 import love.forte.codegentle.kotlin.spec.internal.ConstructorDelegationBuilderImpl
 import love.forte.codegentle.kotlin.spec.internal.KotlinConstructorSpecBuilderImpl
 
@@ -32,85 +27,12 @@ public interface KotlinConstructorSpec : KotlinCallableSpec {
     }
 
     public interface Builder :
-        BuilderDsl,
-        KotlinCallableSpec.Builder<KotlinConstructorSpec>,
-        KotlinModifierBuilderContainer,
-        AnnotationRefCollectable<Builder> {
-
-        /**
-         * Add a parameter to the constructor.
-         */
-        public fun addParameter(parameter: KotlinValueParameterSpec): Builder
-
-        /**
-         * Add parameters to the constructor.
-         */
-        public fun addParameters(parameters: Iterable<KotlinValueParameterSpec>): Builder
-
-        /**
-         * Add parameters to the constructor.
-         */
-        public fun addParameters(vararg parameters: KotlinValueParameterSpec): Builder
-
-        /**
-         * Add KDoc to the constructor.
-         */
-        public fun addKDoc(codeValue: CodeValue): Builder
-
-        /**
-         * Add KDoc to the constructor.
-         */
-        public fun addKDoc(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add code to the constructor.
-         */
-        public fun addCode(codeValue: CodeValue): Builder
-
-        /**
-         * Add code to the constructor.
-         */
-        public fun addCode(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add a statement to the constructor.
-         */
-        public fun addStatement(format: String, vararg argumentParts: CodeArgumentPart): Builder
-
-        /**
-         * Add a statement to the constructor.
-         */
-        public fun addStatement(codeValue: CodeValue): Builder
+        KotlinCallableSpec.Builder<KotlinConstructorSpec, Builder> {
 
         /**
          * Set the constructor delegation.
          */
         public fun constructorDelegation(delegation: ConstructorDelegation?): Builder
-
-        /**
-         * Add a modifier to the constructor.
-         */
-        override fun addModifier(modifier: KotlinModifier): Builder
-
-        /**
-         * Add modifiers to the constructor.
-         */
-        override fun addModifiers(modifiers: Iterable<KotlinModifier>): Builder
-
-        /**
-         * Add modifiers to the constructor.
-         */
-        override fun addModifiers(vararg modifiers: KotlinModifier): Builder
-
-        /**
-         * Add an annotation reference to the constructor.
-         */
-        override fun addAnnotationRef(ref: AnnotationRef): Builder
-
-        /**
-         * Add annotation references to the constructor.
-         */
-        override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): Builder
 
         override fun build(): KotlinConstructorSpec
     }
