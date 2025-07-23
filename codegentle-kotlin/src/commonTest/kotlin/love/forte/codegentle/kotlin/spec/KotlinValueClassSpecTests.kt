@@ -71,10 +71,12 @@ value class UserId(val value: String) {
         val code = valueClass.writeToKotlinString()
         println("[DEBUG_LOG] Generated code for testValueClassWithAnnotations:")
         println("[DEBUG_LOG] $code")
-        val expectedCode = """@kotlinx.serialization.Serializable
-@kotlin.jvm.JvmInline
-value class UserId(val value: String) {
-}"""
+        val expectedCode = """
+                @kotlinx.serialization.Serializable
+                @JvmInline
+                value class UserId(val value: String) {
+                }
+                """.trimIndent()
         assertEquals(expectedCode, code)
     }
 
@@ -96,11 +98,13 @@ value class UserId(val value: String) {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        val expectedCode = """@kotlinx.serialization.Serializable
-@kotlin.jvm.JvmInline
-@Deprecated(message = "Use NewUserId instead")
-value class UserId(val value: String) {
-}"""
+        val expectedCode = """
+                @kotlinx.serialization.Serializable
+                @JvmInline
+                @Deprecated(message = "Use NewUserId instead")
+                value class UserId(val value: String) {
+                }
+                """.trimIndent()
         assertEquals(expectedCode, code)
     }
 

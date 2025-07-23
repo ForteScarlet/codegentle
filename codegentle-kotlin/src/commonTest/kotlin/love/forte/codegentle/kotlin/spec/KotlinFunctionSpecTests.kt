@@ -306,7 +306,6 @@ class KotlinFunctionSpecTests {
             .addStatement("println(x + y)")
             .build()
 
-        // TODO 不应该有分号
         val expected = "val x = 1\nval y = 2\nprintln(x + y)\n"
         assertEquals(expected, functionSpec.code.writeToKotlinString())
     }

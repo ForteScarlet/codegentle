@@ -92,7 +92,12 @@ public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
  * A [KotlinWriteStrategy] for generating code as a string.
  */
 public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
-    private val defaultStrategy = DefaultKotlinWriteStrategy()
+    private val defaultImportPackages = setOf(
+        PackageNames.kotlin,
+        PackageNames.kotlinJvm,
+        PackageNames.kotlinJs,
+        PackageNames.kotlinAnnotation,
+    )
 
     override fun isIdentifier(value: String): Boolean = true
 
@@ -100,8 +105,11 @@ public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
 
     override fun isValidSourceName(name: String): Boolean = true
 
+    /**
+     * ToString only omit `kotlin` package.
+     */
     override fun omitPackage(packageName: PackageName): Boolean =
-        defaultStrategy.omitPackage(packageName)
+        packageName in defaultImportPackages
 }
 
 /**

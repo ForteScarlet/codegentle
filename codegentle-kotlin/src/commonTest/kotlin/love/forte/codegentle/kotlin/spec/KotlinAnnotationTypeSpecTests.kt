@@ -47,7 +47,10 @@ class KotlinAnnotationTypeSpecTests {
             .addModifiers(KotlinModifier.PUBLIC, KotlinModifier.INTERNAL)
             .build()
 
-        assertEquals(setOf(KotlinModifier.PUBLIC, KotlinModifier.INTERNAL, KotlinModifier.ANNOTATION), annotationSpec.modifiers)
+        assertEquals(
+            setOf(KotlinModifier.PUBLIC, KotlinModifier.INTERNAL, KotlinModifier.ANNOTATION),
+            annotationSpec.modifiers
+        )
     }
 
     @Test
@@ -57,7 +60,10 @@ class KotlinAnnotationTypeSpecTests {
             .addModifiers(modifiers)
             .build()
 
-        assertEquals(setOf(KotlinModifier.PUBLIC, KotlinModifier.INTERNAL, KotlinModifier.ANNOTATION), annotationSpec.modifiers)
+        assertEquals(
+            setOf(KotlinModifier.PUBLIC, KotlinModifier.INTERNAL, KotlinModifier.ANNOTATION),
+            annotationSpec.modifiers
+        )
     }
 
     @Test
@@ -279,9 +285,6 @@ class KotlinAnnotationTypeSpecTests {
         assertEquals(1, annotation2.properties.size)
     }
 
-    // Code generation tests are commented out because KotlinAnnotationTypeSpec emitter is not yet implemented
-    // TODO: Uncomment these tests once the emitter is implemented
-    
     @Test
     fun testBasicAnnotationCodeGeneration() {
         val annotationSpec = KotlinAnnotationTypeSpec("TestAnnotation")
@@ -368,13 +371,14 @@ annotation class TestAnnotation"""
         }
 
         val generatedCode = annotationSpec.writeToKotlinString()
-        val expectedCode = """/**
- * A complex test annotation.
- */
-@Target(value = AnnotationTarget.CLASS)
-public annotation class ComplexAnnotation(
-    val value: String = "default"
-)"""
+        val expectedCode = """
+            /**
+             * A complex test annotation.
+             */
+            @Target(value = AnnotationTarget.CLASS)
+            public annotation class ComplexAnnotation(
+                val value: String = "default"
+            )""".trimIndent()
 
         assertEquals(expectedCode, generatedCode.trim())
     }

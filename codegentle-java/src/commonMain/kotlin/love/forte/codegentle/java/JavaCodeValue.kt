@@ -4,6 +4,7 @@ import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodePart
 import love.forte.codegentle.common.code.CodeSimplePart
 import love.forte.codegentle.common.code.CodeValue
+import love.forte.codegentle.common.literalWithDoubleQuotes
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.canonicalName
 import love.forte.codegentle.common.writer.InternalWriterApi
@@ -107,19 +108,25 @@ internal fun CodeValue.emitTo(codeWriter: JavaCodeWriter, ensureTrailingNewline:
 
             is CodeArgumentPart.StatementBegin -> {
                 check(codeWriter.statementLine == -1) {
-                    "statement enter $[ followed by statement enter $["
+                    "statement begin followed by statement begin"
                 }
                 codeWriter.statementLine = 0
+                codeWriter.out.startRecordLastNonBlankChar()
             }
 
             is CodeArgumentPart.StatementEnd -> {
                 check(codeWriter.statementLine != -1) {
-                    "statement exit $] has no matching statement enter $["
+                    "statement end has no matching statement begin"
                 }
                 if (codeWriter.statementLine > 0) {
                     codeWriter.unindent(2) // End a multi-line statement. Decrease the indentation level.
                 }
                 codeWriter.statementLine = -1
+                if (codeWriter.out.lastNonBlankChar != ';') {
+                    codeWriter.out.append(";")
+                }
+                codeWriter.emitNewLine()
+                codeWriter.out.stopRecordLastNonBlankChar()
             }
 
             is CodeArgumentPart.WrappingSpace -> {
@@ -140,4 +147,6 @@ internal fun CodeValue.emitTo(codeWriter: JavaCodeWriter, ensureTrailingNewline:
     if (ensureTrailingNewline && codeWriter.out.lastChar != '\n') {
         codeWriter.emitNewLine()
     }
+
+    codeWriter.out.stopRecordLastNonBlankChar()
 }

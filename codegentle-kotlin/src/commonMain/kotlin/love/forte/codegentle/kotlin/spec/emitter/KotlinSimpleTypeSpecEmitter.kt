@@ -100,7 +100,8 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
         codeWriter.withIndent {
             emit(initializerBlock)
         }
-        codeWriter.emitNewLine("}")
+        codeWriter.emitNewLine()
+        codeWriter.emit("}")
         blankLineManager.required()
     }
 

@@ -102,7 +102,11 @@ class KotlinCodeValueTests {
             writer.emit(codeValue)
         }
         
-        assertEquals("special: \"tab\\there\\nline\\rcarriage\\\\backslash\"", result)
+        assertEquals(
+            """
+                special: "tab\there\n"
+                        + "line\rcarriage\\backslash"
+                """.trimIndent(), result)
     }
 
     @Test
@@ -178,7 +182,7 @@ class KotlinCodeValueTests {
             writer.emit(codeValue)
         }
         
-        assertEquals("before  after", result)
+        assertEquals("before %V after", result)
     }
 
     @Test

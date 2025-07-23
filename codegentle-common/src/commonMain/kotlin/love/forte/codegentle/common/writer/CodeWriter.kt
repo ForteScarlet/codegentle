@@ -67,10 +67,36 @@ public inline fun <C : CodeWriter> C.withIndent(
     block: C.() -> Unit
 ) {
     indent(levels)
-    block()
-    unindent(levels)
+    try {
+        block()
+    } finally {
+        unindent(levels)
+    }
 }
 
+public inline fun <C : CodeWriter> C.withIndentBlock(
+    levels: Int = 1,
+    prefix: String = "",
+    newLine: Boolean = true,
+    block: C.() -> Unit
+) {
+    if (prefix.isNotEmpty()) {
+        emit(prefix)
+        emit(" ")
+    }
+    emit("{")
+    if (newLine) {
+        emitNewLine()
+    }
+    indent(levels)
+    try {
+        block()
+    } finally {
+        unindent(levels)
+        emitNewLine()
+        emit("}")
+    }
+}
 
 public interface Import {
     // TODO

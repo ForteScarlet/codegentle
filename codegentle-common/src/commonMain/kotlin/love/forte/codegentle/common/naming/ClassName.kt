@@ -138,7 +138,6 @@ public val ClassName.simpleNames: List<String>
 public fun ClassName(packageName: String?, simpleName: String, vararg simpleNames: String): ClassName =
     ClassName(packageName?.parseToPackageName(), simpleName, *simpleNames)
 
-
 /**
  * Returns a class name created from the given parts. For example, calling this with package name `"java.util"`
  * and simple names `"Map"`, `"Entry"` yields [Map.Entry].
@@ -150,6 +149,13 @@ public fun ClassName(packageName: PackageName?, simpleName: String, vararg simpl
     }
     return className
 }
+
+/**
+ * Returns a class name created from the given parts. For example, calling this with package name `"java.util"`
+ * and simple names `"Map"`, `"Entry"` yields [Map.Entry].
+ */
+public fun PackageName.className(simpleName: String, vararg simpleNames: String): ClassName =
+    ClassName(this, simpleName, *simpleNames)
 
 /**
  * Returns a new [ClassName] instance for the given fully-qualified class name string. This

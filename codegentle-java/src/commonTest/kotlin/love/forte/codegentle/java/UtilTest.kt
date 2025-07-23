@@ -15,6 +15,7 @@
  */
 package love.forte.codegentle.java
 
+import love.forte.codegentle.common.literalWithDoubleQuotes
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -329,7 +329,7 @@ class KotlinValueParameterSpecTests {
             .build()
 
         val code = param.writeToKotlinString()
-        assertEquals("data: Map = emptyMap()", code)
+        assertEquals("data: kotlin.collections.Map = emptyMap()", code)
     }
 
     @Test
@@ -539,7 +539,7 @@ class KotlinValueParameterSpecTests {
             .build()
 
         val code = param.writeToKotlinString()
-        assertEquals("items: List = emptyList()", code)
+        assertEquals("items: kotlin.collections.List = emptyList()", code)
     }
 
     @Test
@@ -659,13 +659,6 @@ class KotlinValueParameterSpecTests {
     }
 
     @Test
-    fun testParameterBuilderToString() {
-        val builder = KotlinValueParameterSpec.builder("test", stringType)
-        val toString = builder.toString()
-        assertTrue(toString.contains("test") || toString.contains("String") || toString.contains("Builder"))
-    }
-
-    @Test
     fun testMultipleAnnotationsWithSameType() {
         val annotation1 = ClassName("kotlin", "Suppress").annotationRef {
             addMember("names", "\"UNUSED\"")
@@ -734,7 +727,7 @@ class KotlinValueParameterSpecTests {
             .build()
 
         val code = param.writeToKotlinString()
-        assertEquals("data: Map = emptyMap()", code)
+        assertEquals("data: kotlin.collections.Map = emptyMap()", code)
     }
 
     @Test

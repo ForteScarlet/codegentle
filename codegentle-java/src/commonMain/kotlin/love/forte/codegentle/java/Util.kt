@@ -63,7 +63,7 @@ private fun Char.isIdentifierIgnorable(): Boolean {
         ) || this in CharCategory.FORMAT
 }
 
-internal fun String.literalWithDoubleQuotes(indent: String): String {
+internal fun String.literalWithDoubleQuotes1(indent: String): String {
     val value = this
     return buildString(length + 2) {
         append('"')

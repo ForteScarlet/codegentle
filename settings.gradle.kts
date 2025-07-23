@@ -51,3 +51,5 @@ include("tests:test-ksp:proj")
 include("internal:code-value-extensions")
 include("internal:enum-set")
 include("internal:enum-set-test")
+
+include(":tests:simple")

@@ -72,8 +72,7 @@ class ParameterizedTypeNameToStringTest {
         val stringTypeRef = stringClassName.mockRef()
 
         val outerParameterized = ParameterizedTypeName(outerClassName, listOf(stringTypeRef))
-        val innerParameterized =
-            ParameterizedTypeName(outerClassName.nestedClass("Inner"), listOf(stringTypeRef))
+        val innerParameterized = outerParameterized.nestedClass("Inner", listOf(stringTypeRef))
 
         assertEquals("com.example.Outer<kotlin.String>.Inner<kotlin.String>", innerParameterized.toString())
     }

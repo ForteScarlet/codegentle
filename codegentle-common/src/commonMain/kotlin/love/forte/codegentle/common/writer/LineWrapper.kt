@@ -43,8 +43,20 @@ public class LineWrapper private constructor(
      */
     private var nextFlush: FlushType? = null
 
-    public val lastChar: Char
+    public val lastChar: Char?
         get() = out.lastChar
+
+    public val lastNonBlankChar: Char?
+        get() = out.lastNonBlankChar
+
+    public fun startRecordLastNonBlankChar() {
+        out.recordingLastNonBlankChar = true
+    }
+
+    public fun stopRecordLastNonBlankChar() {
+        out.recordingLastNonBlankChar = false
+        out.lastNonBlankChar = null
+    }
 
     private fun checkClose() {
         check(!closed) { "closed" }
@@ -167,10 +179,15 @@ private enum class FlushType {
 private class RecordingAppendable(
     private val delegate: Appendable,
 ) : Appendable {
-    var lastChar: Char = Char.MIN_VALUE
+    var lastChar: Char? = null
+    var lastNonBlankChar: Char? = null
+    var recordingLastNonBlankChar: Boolean = false
 
     override fun append(value: Char): Appendable {
         lastChar = value
+        if (recordingLastNonBlankChar && !value.isWhitespace()) {
+            lastNonBlankChar = value
+        }
         delegate.append(value)
         return this
     }
@@ -178,6 +195,9 @@ private class RecordingAppendable(
     private fun appendNull(): Appendable {
         // "null"
         lastChar = 'l'
+        if (recordingLastNonBlankChar) {
+            lastNonBlankChar = lastChar
+        }
         delegate.append("null")
         return this
     }
@@ -188,16 +208,25 @@ private class RecordingAppendable(
         if (value.isEmpty()) return this
 
         lastChar = value[value.lastIndex]
+        if (recordingLastNonBlankChar) {
+            value.lastOrNull { !it.isWhitespace() }?.also { lastNonBlankChar = it }
+        }
 
         return delegate.append(value)
     }
 
     override fun append(value: CharSequence?, startIndex: Int, endIndex: Int): Appendable {
-        if (value == null) return appendNull()
+        if (value == null) {
+            return append("null", startIndex, endIndex)
+        }
 
         if (startIndex == endIndex) {
             // empty, return
             return this
+        }
+
+        require(startIndex >= 0) {
+            "Start index cannot be negative: $startIndex"
         }
 
         require(startIndex <= endIndex) {
@@ -210,6 +239,15 @@ private class RecordingAppendable(
         }
 
         lastChar = value[endIndex - 1]
+        if (recordingLastNonBlankChar) {
+            for (index in endIndex - 1 downTo startIndex) {
+                val char = value[index]
+                if (!char.isWhitespace()) {
+                    lastNonBlankChar = char
+                    break
+                }
+            }
+        }
 
         delegate.append(value, startIndex, endIndex)
 

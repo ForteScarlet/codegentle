@@ -4,6 +4,7 @@ import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodePart
 import love.forte.codegentle.common.code.CodeSimplePart
 import love.forte.codegentle.common.code.CodeValue
+import love.forte.codegentle.common.literalWithDoubleQuotes
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.canonicalName
 import love.forte.codegentle.common.writer.InternalWriterApi
@@ -101,19 +102,20 @@ internal fun CodeValue.emitTo(codeWriter: KotlinCodeWriter, ensureTrailingNewlin
 
             is CodeArgumentPart.StatementBegin -> {
                 check(codeWriter.statementLine == -1) {
-                    "statement enter $[ followed by statement enter $["
+                    "statement begin followed by statement begin"
                 }
                 codeWriter.statementLine = 0
             }
 
             is CodeArgumentPart.StatementEnd -> {
                 check(codeWriter.statementLine != -1) {
-                    "statement exit $] has no matching statement enter $["
+                    "statement end has no matching statement begin"
                 }
                 if (codeWriter.statementLine > 0) {
                     codeWriter.unindent(2) // End a multi-line statement. Decrease the indentation level.
                 }
                 codeWriter.statementLine = -1
+                codeWriter.emitNewLine()
             }
 
             is CodeArgumentPart.WrappingSpace -> {
@@ -135,22 +137,4 @@ internal fun CodeValue.emitTo(codeWriter: KotlinCodeWriter, ensureTrailingNewlin
     if (ensureTrailingNewline && codeWriter.out.lastChar != '\n') {
         codeWriter.emitNewLine()
     }
-}
-
-private fun String?.literalWithDoubleQuotes(indent: String): String {
-    if (this == null) return "null"
-    val result = StringBuilder(this.length + 2)
-    result.append('"')
-    for (c in this) {
-        when (c) {
-            '"' -> result.append("\\\"")
-            '\\' -> result.append("\\\\")
-            '\n' -> result.append("\\n\"\n$indent+ \"")
-            '\r' -> result.append("\\r")
-            '\t' -> result.append("\\t")
-            else -> result.append(c)
-        }
-    }
-    result.append('"')
-    return result.toString()
 }

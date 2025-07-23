@@ -6,7 +6,6 @@ import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.writer.writeToKotlinString
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  * Tests for [KotlinAnonymousClassTypeSpec].
@@ -35,7 +34,7 @@ class KotlinAnonymousClassTypeSpecTests {
             .build()
 
         val code = typeSpec.writeToKotlinString()
-        assertEquals("object : test.MySuperClass {\n}", code)
+        assertEquals("object : test.MySuperClass() {\n}", code)
     }
 
     @Test
@@ -51,7 +50,7 @@ class KotlinAnonymousClassTypeSpecTests {
             .build()
 
         val code = typeSpec.writeToKotlinString()
-        assertEquals("object : test.MySuperClass, test.Interface1, test.Interface2 {\n}", code)
+        assertEquals("object : test.MySuperClass(), test.Interface1, test.Interface2 {\n}", code)
     }
 
     @Test
@@ -79,6 +78,7 @@ class KotlinAnonymousClassTypeSpecTests {
             """
             object : test.MyInterface {
                 val name: String = "John"
+
                 val age: Int = 30
             }
             """.trimIndent(),
@@ -115,6 +115,7 @@ class KotlinAnonymousClassTypeSpecTests {
                 override fun sayHello(): Unit {
                     println("Hello, World!")
                 }
+
                 override fun getName(): String = "John"
             }
             """.trimIndent(),
@@ -136,7 +137,8 @@ class KotlinAnonymousClassTypeSpecTests {
             """
             object : test.MyInterface {
                 init {
-                    println("Initializing anonymous class")}
+                    println("Initializing anonymous class")
+                }
             }
             """.trimIndent(),
             code
@@ -194,15 +196,22 @@ class KotlinAnonymousClassTypeSpecTests {
             .build()
 
         val code = typeSpec.writeToKotlinString()
-        println("[DEBUG_LOG] Actual output for testComplexAnonymousClass: $code")
 
-        // Use assertTrue instead of assertEquals to avoid whitespace/formatting issues
-        assertTrue(code.contains("object : test.MySuperClass, test.Interface1"))
-        assertTrue(code.contains("init {"))
-        assertTrue(code.contains("println(\"Initializing anonymous class\")"))
-        assertTrue(code.contains("val name: String = \"John\""))
-        assertTrue(code.contains("val age: Int = 30"))
-        assertTrue(code.contains("override fun sayHello(): Unit {"))
-        assertTrue(code.contains("println(\"Hello, \$name!\")"))
+        assertEquals(
+            $$"""
+            object : test.MySuperClass(), test.Interface1 {
+                init {
+                    println("Initializing anonymous class")
+                }
+
+                val name: String = "John"
+
+                val age: Int = 30
+
+                override fun sayHello(): Unit {
+                    println("Hello, $name!")
+                }
+            }
+        """.trimIndent(), code)
     }
 }

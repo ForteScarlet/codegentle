@@ -1,7 +1,7 @@
 package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
-import love.forte.codegentle.common.writer.withIndent
+import love.forte.codegentle.common.writer.withIndentBlock
 import love.forte.codegentle.kotlin.spec.KotlinAnonymousClassTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
@@ -41,14 +41,12 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
             // Emit super constructor arguments if any
             // This allows anonymous classes to call superclass constructors with arguments
-            if (constructorDelegation.arguments.isNotEmpty()) {
-                codeWriter.emit("(")
-                constructorDelegation.arguments.forEachIndexed { index, argument ->
-                    if (index > 0) codeWriter.emit(", ")
-                    codeWriter.emit(argument)
-                }
-                codeWriter.emit(")")
+            codeWriter.emit("(")
+            constructorDelegation.arguments.forEachIndexed { index, argument ->
+                if (index > 0) codeWriter.emit(", ")
+                codeWriter.emit(argument)
             }
+            codeWriter.emit(")")
 
             if (hasImplements) {
                 codeWriter.emit(", ")
@@ -71,18 +69,17 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
     // Emit initializer block
     if (!initializerBlock.isEmpty()) {
-        codeWriter.emitNewLine("init {")
-        codeWriter.withIndent {
+        codeWriter.withIndentBlock(prefix = "init") {
             emit(initializerBlock)
         }
-        codeWriter.emitNewLine("}")
+        codeWriter.emitNewLine()
         blankLineManager.required()
     }
 
     // Emit properties
     if (properties.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (property in properties) {
+        for ((index, property) in properties.withIndex()) {
+            blankLineManager.withRequirement {
                 property.emitTo(codeWriter)
                 codeWriter.emitNewLine()
             }
@@ -91,8 +88,8 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
     // Emit functions
     if (functions.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (function in functions) {
+        for ((index, function) in functions.withIndex()) {
+            blankLineManager.withRequirement {
                 function.emitTo(codeWriter)
                 codeWriter.emitNewLine()
             }
@@ -101,4 +98,5 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
     codeWriter.unindent()
     codeWriter.emit("}")
+
 }

@@ -13,8 +13,3 @@ kotlin {
         )
     }
 }
-
-dependencies {
-    api(project(":codegentle-common"))
-    api(project(":codegentle-java"))
-}
