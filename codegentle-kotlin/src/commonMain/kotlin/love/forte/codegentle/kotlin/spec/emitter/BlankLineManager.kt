@@ -1,8 +1,8 @@
 package love.forte.codegentle.kotlin.spec.emitter
 
-import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
+import love.forte.codegentle.common.writer.CodeWriter
 
-internal class BlankLineManager(val codeWriter: KotlinCodeWriter) {
+internal class BlankLineManager(val codeWriter: CodeWriter) {
     var blankLineRequired = false
 
     fun required() {
