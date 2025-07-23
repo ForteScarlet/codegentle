@@ -1,12 +1,14 @@
 package love.forte.codegentle.kotlin.naming
 
 import love.forte.codegentle.common.naming.*
+import love.forte.codegentle.common.utils.InternalMultisetApi
 import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
 /**
  * Extension function to emit a [ClassName] to a [KotlinCodeWriter].
  */
+@OptIn(InternalMultisetApi::class)
 internal fun ClassName.emitTo(codeWriter: KotlinCodeWriter) {
     // Check if the class is already imported, in the same package, or in kotlin.* packages
     var omitPackage = codeWriter.isInSamePackage(this)
@@ -23,8 +25,7 @@ internal fun ClassName.emitTo(codeWriter: KotlinCodeWriter) {
 
     while (true) {
         importSimpleNames.add(className.simpleName)
-        val imported = codeWriter.isImported(className)
-        if (imported) {
+        if (codeWriter.isImported(className)) {
             // Check for conflicts with type variables
             if (codeWriter.currentTypeVariables.contains(className.simpleName)) {
                 // If there's a name conflict, still use the fully qualified name
@@ -83,6 +84,7 @@ private fun KotlinCodeWriter.isInSamePackage(className: ClassName): Boolean {
 /**
  * Returns the best name to identify `className` with in the current context.
  */
+@OptIn(InternalMultisetApi::class)
 private fun KotlinCodeWriter.lookupName(className: ClassName): String {
     // If the top level simple name is masked by a current type variable, use the canonical name
     val topLevelSimpleName: String = className.topLevelClassName.simpleName
@@ -134,6 +136,7 @@ private fun KotlinCodeWriter.lookupName(className: ClassName): String {
     return className.canonicalName
 }
 
+@OptIn(InternalMultisetApi::class)
 private fun KotlinCodeWriter.importableType(className: ClassName) {
     val packageName = className.packageName
     if (packageName == null || packageName.isEmpty) {

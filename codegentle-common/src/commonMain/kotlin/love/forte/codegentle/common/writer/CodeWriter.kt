@@ -7,13 +7,13 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 
 /**
+ * A code writer.
  *
  * @author ForteScarlet
  */
 @SubclassOptInRequired(CodeGentleCodeWriterImplementation::class)
 public interface CodeWriter {
     public val strategy: Strategy
-
     public val indentValue: String
 
     // out?
@@ -22,9 +22,8 @@ public interface CodeWriter {
     public val alwaysQualify: Set<String>
 
     public fun indent(levels: Int = 1)
-    public fun unindent(levels: Int = 1)
 
-    // TODO push/pop packageName?
+    public fun unindent(levels: Int = 1)
 
     // comments and javadocs
 

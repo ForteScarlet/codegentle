@@ -3,10 +3,11 @@ package love.forte.codegentle.kotlin.writer
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.code.isEmpty
-import love.forte.codegentle.common.computeValue
 import love.forte.codegentle.common.naming.*
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.utils.InternalMultisetApi
+import love.forte.codegentle.common.utils.Multiset
 import love.forte.codegentle.common.writer.*
 import love.forte.codegentle.common.writer.CodeWriter.Companion.DEFAULT_COLUMN_LIMIT
 import love.forte.codegentle.common.writer.CodeWriter.Companion.DEFAULT_INDENT
@@ -25,7 +26,7 @@ import love.forte.codegentle.kotlin.strategy.ToStringKotlinWriteStrategy
  *
  * @author ForteScarlet
  */
-@OptIn(InternalWriterApi::class)
+@OptIn(InternalWriterApi::class, InternalMultisetApi::class)
 public class KotlinCodeWriter private constructor(
     override val strategy: KotlinWriteStrategy,
     override val indentValue: String,
@@ -134,9 +135,6 @@ public class KotlinCodeWriter private constructor(
             is WildcardTypeName -> {
                 emitWildcardTypeName(typeName)
             }
-
-            else -> throw IllegalArgumentException("Unsupported TypeName for Kotlin code writer $typeName (${typeName::class})")
-
         }
     }
 
@@ -236,11 +234,6 @@ public class KotlinCodeWriter private constructor(
                     emit(wildcardTypeName.bounds.first())
                 }
             }
-
-            else -> {
-                // Fallback for unknown wildcard types
-                emit("*")
-            }
         }
     }
 
@@ -275,11 +268,8 @@ public class KotlinCodeWriter private constructor(
         vararg options: AnnotationRefEmitOption
     ) {
         val inline = options.contains(CommonAnnotationRefEmitOption.Inline)
-
-        emit("@")
-        emit(annotationRef.typeName)
-
-        // In a more complete implementation, we would handle annotation parameters
+        // TODO inline?
+        annotationRef.emitTo(this)
     }
 
     override fun emit(s: String) {
@@ -395,8 +385,8 @@ public class KotlinCodeWriter private constructor(
         emit(">")
     }
 
-    internal fun popTypeVariableRefs(typeVariableRefs: List<TypeRef<TypeVariableName>>) {
-        typeVariableRefs.forEach { typeVariableRef -> currentTypeVariables.remove(typeVariableRef.typeName.name) }
+    internal fun popTypeVariableRefs(typeVariables: List<TypeRef<TypeVariableName>>) {
+        typeVariables.forEach { typeVariableRef -> currentTypeVariables.remove(typeVariableRef.typeName.name) }
     }
 
     internal fun emitModifiers(modifiers: Set<KotlinModifier>, implicitModifiers: Set<KotlinModifier> = emptySet()) {
@@ -468,27 +458,6 @@ public class KotlinCodeWriter private constructor(
                 alwaysQualify = alwaysQualify,
             )
         }
-    }
-}
-
-internal class Multiset<T> {
-    private val map = linkedMapOf<T, Int>()
-
-    fun add(t: T) {
-        map.computeValue(t) { _, old ->
-            old?.plus(1) ?: 1
-        }
-    }
-
-    fun remove(t: T) {
-        map.computeValue(t) { _, old ->
-            // 如果-1后小于等于0，移除，否则保存计算结果
-            old?.minus(1)?.takeIf { value -> value > 0 }
-        }
-    }
-
-    fun contains(t: T): Boolean {
-        return (map[t] ?: 0) > 0
     }
 }
 

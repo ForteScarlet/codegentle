@@ -4,11 +4,13 @@ import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.canonicalName
 import love.forte.codegentle.common.naming.isEmpty
 import love.forte.codegentle.common.naming.simpleNames
+import love.forte.codegentle.common.utils.InternalMultisetApi
 import love.forte.codegentle.java.spec.JavaTypeSpec
 import love.forte.codegentle.java.spec.nestedTypesSimpleNames
 import love.forte.codegentle.java.writer.JavaCodeWriter
 
 
+@OptIn(InternalMultisetApi::class)
 internal fun ClassName.emitTo(codeWriter: JavaCodeWriter) {
     // 优先查看当前类是否已经被导入,
     // 如果当前类没有被导入，向上查找，并记录names到缓存列表 [currentName, enclosing1Name, ...]
@@ -135,6 +137,7 @@ internal fun ClassName.emitTo1(codeWriter: JavaCodeWriter) {
  * available imports and the current scope to find the shortest name available. It does not honor
  * names visible due to inheritance.
  */
+@OptIn(InternalMultisetApi::class)
 private fun JavaCodeWriter.lookupName(className: ClassName): String {
     /*
      * Copyright (C) 2015 Square, Inc.
@@ -205,6 +208,7 @@ private fun JavaCodeWriter.lookupName(className: ClassName): String {
 
 }
 
+@OptIn(InternalMultisetApi::class)
 private fun JavaCodeWriter.importableType(className: ClassName) {
     /*
      * Copyright (C) 2015 Square, Inc.
@@ -262,7 +266,6 @@ private fun JavaCodeWriter.importableType(className: ClassName) {
  * Returns the class referenced by `simpleName`, using the current nesting context and
  * imports.
  */
-// TODO also honor superclass members when resolving names.
 private fun JavaCodeWriter.resolve(simpleName: String): ClassName? {
     /*
      * Copyright (C) 2015 Square, Inc.

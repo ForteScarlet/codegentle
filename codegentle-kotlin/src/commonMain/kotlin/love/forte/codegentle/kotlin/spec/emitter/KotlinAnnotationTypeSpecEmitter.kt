@@ -40,9 +40,7 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     codeWriter.emit(name)
 
     // Emit type variables
-    if (typeVariables.isNotEmpty()) {
-        codeWriter.emitTypeVariableRefs(typeVariables)
-    }
+    codeWriter.emitTypeVariableRefs(typeVariables)
 
     // Emit the body
     codeWriter.emitNewLine(" {")
@@ -57,6 +55,9 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
             }
         }
     }
+
+    // Pop type variables from scope
+    codeWriter.popTypeVariableRefs(typeVariables)
 
     codeWriter.unindent()
     codeWriter.emit("}")

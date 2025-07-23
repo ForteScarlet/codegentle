@@ -12,7 +12,10 @@ import love.forte.codegentle.kotlin.writer.inType
 /**
  * Extension function to emit a [KotlinSimpleTypeSpec] to a [KotlinCodeWriter].
  */
-internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter, implicitModifiers: Set<KotlinModifier> = emptySet()) {
+internal fun KotlinSimpleTypeSpec.emitTo(
+    codeWriter: KotlinCodeWriter,
+    implicitModifiers: Set<KotlinModifier> = emptySet()
+) {
     codeWriter.inType(this) {
         emitTo0(codeWriter, implicitModifiers)
     }
@@ -40,9 +43,7 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
     codeWriter.emit(name)
 
     // Emit type variables
-    if (typeVariables.isNotEmpty()) {
-        codeWriter.emitTypeVariableRefs(typeVariables)
-    }
+    codeWriter.emitTypeVariableRefs(typeVariables)
 
     // Emit primary constructor if present
     val primary = primaryConstructor
@@ -142,6 +143,9 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
             }
         }
     }
+
+    // Pop type variables from scope
+    codeWriter.popTypeVariableRefs(typeVariables)
 
     codeWriter.unindent()
     codeWriter.emit("}")

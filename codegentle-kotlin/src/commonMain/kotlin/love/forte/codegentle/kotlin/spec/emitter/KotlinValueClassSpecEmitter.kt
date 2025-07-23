@@ -40,9 +40,7 @@ private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     codeWriter.emit(name)
 
     // Emit type variables
-    if (typeVariables.isNotEmpty()) {
-        codeWriter.emitTypeVariableRefs(typeVariables)
-    }
+    codeWriter.emitTypeVariableRefs(typeVariables)
 
     val hasKDoc = !primaryParameter.kDoc.isEmpty()
 
@@ -102,6 +100,9 @@ private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
             }
         }
     }
+
+    // Pop type variables from scope
+    codeWriter.popTypeVariableRefs(typeVariables)
 
     codeWriter.unindent()
     codeWriter.emit("}")

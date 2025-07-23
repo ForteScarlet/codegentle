@@ -19,10 +19,11 @@ import love.forte.codegentle.common.code.CodePart.Companion.type
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.CodeValueSingleFormatBuilderDsl
 import love.forte.codegentle.common.code.isEmpty
-import love.forte.codegentle.common.computeValue
 import love.forte.codegentle.common.naming.*
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.utils.InternalMultisetApi
+import love.forte.codegentle.common.utils.Multiset
 import love.forte.codegentle.common.writer.*
 import love.forte.codegentle.common.writer.CodeWriter.Companion.DEFAULT_COLUMN_LIMIT
 import love.forte.codegentle.common.writer.CodeWriter.Companion.DEFAULT_INDENT
@@ -43,7 +44,7 @@ import love.forte.codegentle.java.writer.JavaTypeRefEmitOption.AnnotationOptions
 import love.forte.codegentle.java.writer.JavaTypeRefEmitOption.TypeNameOptions
 
 
-@OptIn(InternalWriterApi::class)
+@OptIn(InternalWriterApi::class, InternalMultisetApi::class)
 @InternalJavaCodeGentleApi
 public class JavaCodeWriter private constructor(
     override val strategy: JavaWriteStrategy,
@@ -66,8 +67,6 @@ public class JavaCodeWriter private constructor(
 
     internal var commentType: CommentType? = null
 
-    // internal var javadoc = false
-    // private var comment = false
     internal var packageName: PackageName? = null
 
     // simple name -> class name
@@ -173,8 +172,8 @@ public class JavaCodeWriter private constructor(
         emit(">")
     }
 
-    internal fun popTypeVariableRefs(typeVariableRefs: List<TypeRef<TypeVariableName>>) {
-        typeVariableRefs.forEach { typeVariableRef -> currentTypeVariables.remove(typeVariableRef.typeName.name) }
+    internal fun popTypeVariableRefs(typeVariables: List<TypeRef<TypeVariableName>>) {
+        typeVariables.forEach { typeVariableRef -> currentTypeVariables.remove(typeVariableRef.typeName.name) }
     }
 
     internal fun emitWrappingSpace() {
@@ -388,44 +387,13 @@ public class JavaCodeWriter private constructor(
     }
 }
 
-private data class IntWrapper(var value: Int = 0)
-
-internal class Multiset<T> {
-    private val map = linkedMapOf<T, IntWrapper>()
-
-    fun add(t: T) {
-        map.computeValue(t) { _, v ->
-            if (v != null) {
-                v.value += 1
-                v
-            } else {
-                IntWrapper(1)
-            }
-        }
-    }
-
-    fun remove(t: T) {
-        map.computeValue(t) { _, v ->
-            if (v != null) {
-                v.value -= 1
-                if (v.value == 0) null else v
-            } else {
-                // not in the multiset
-                null
-            }
-        }
-    }
-
-    fun contains(t: T): Boolean {
-        return (map[t]?.value ?: 0) > 0
-    }
-}
-
-
 internal inline fun JavaCodeWriter.inPackage(packageName: PackageName, block: () -> Unit) {
     pushPackage(packageName)
-    block()
-    popPackage()
+    try {
+        block()
+    } finally {
+        popPackage()
+    }
 }
 
 internal inline fun JavaCodeWriter.emit(

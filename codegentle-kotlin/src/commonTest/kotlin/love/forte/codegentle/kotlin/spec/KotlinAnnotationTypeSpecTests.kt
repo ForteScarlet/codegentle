@@ -282,6 +282,7 @@ class KotlinAnnotationTypeSpecTests {
     // TODO: Uncomment these tests once the emitter is implemented
     
     /*
+    TODO tests
     @Test
     fun testBasicAnnotationCodeGeneration() {
         val annotationSpec = KotlinAnnotationTypeSpec("TestAnnotation")

@@ -92,4 +92,7 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
             codeWriter.emit("}")
         }
     }
+
+    // Pop type variables from scope
+    codeWriter.popTypeVariableRefs(typeVariables)
 }

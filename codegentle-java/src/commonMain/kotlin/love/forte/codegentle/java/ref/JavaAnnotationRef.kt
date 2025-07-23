@@ -15,7 +15,7 @@ internal fun AnnotationRef.emitTo(codeWriter: JavaCodeWriter) {
 }
 
 
-internal fun JavaCodeWriter.emitJavaAnnotation(
+private fun JavaCodeWriter.emitJavaAnnotation(
     type: TypeName,
     members: Map<String, List<CodeValue>>
 ) {
