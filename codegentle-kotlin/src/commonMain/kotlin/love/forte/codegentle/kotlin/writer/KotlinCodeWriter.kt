@@ -13,6 +13,7 @@ import love.forte.codegentle.common.writer.CodeWriter.Companion.DEFAULT_COLUMN_L
 import love.forte.codegentle.common.writer.CodeWriter.Companion.DEFAULT_INDENT
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.emitTo
+import love.forte.codegentle.kotlin.naming.KotlinLambdaTypeName
 import love.forte.codegentle.kotlin.naming.emitTo
 import love.forte.codegentle.kotlin.ref.emitTo
 import love.forte.codegentle.kotlin.ref.kotlinOrNull
@@ -117,6 +118,11 @@ public class KotlinCodeWriter private constructor(
         when (typeName) {
             is ClassName -> {
                 // Use the emitTo extension function to handle imports and qualified names
+                typeName.emitTo(this)
+            }
+
+            is KotlinLambdaTypeName -> {
+                // Use the emitTo extension function to handle lambda type emission
                 typeName.emitTo(this)
             }
 
