@@ -34,7 +34,7 @@ import kotlin.js.JsName
  * @author ForteScarlet
  */
 @SubclassOptInRequired(CodeGentleNamingImplementation::class)
-public interface PackageName {
+public interface PackageName : Named {
     /**
      * The previous package name.
      * For example, the `love.forte` is previous of `love.forte.codegentle`.
@@ -49,7 +49,7 @@ public interface PackageName {
      * For example, the `"codegentle"` of `love.forte.codegentle`.
      *
      */
-    public val name: String
+    override val name: String
 
     public companion object {
         /**

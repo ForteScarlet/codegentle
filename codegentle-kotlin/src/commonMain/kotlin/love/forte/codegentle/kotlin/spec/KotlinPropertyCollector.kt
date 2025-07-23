@@ -14,7 +14,8 @@ public interface KotlinPropertyCollector<B : KotlinPropertyCollector<B>> {
     /**
      * Add properties.
      */
-    public fun addProperties(vararg properties: KotlinPropertySpec): B
+    public fun addProperties(vararg properties: KotlinPropertySpec): B =
+        addProperties(properties.asList())
 
     /**
      * Add properties.

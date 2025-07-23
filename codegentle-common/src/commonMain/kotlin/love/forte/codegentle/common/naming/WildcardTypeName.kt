@@ -14,10 +14,11 @@ public sealed interface WildcardTypeName : TypeName {
     public val bounds: List<TypeRef<*>>
 
     // Java:
-    //  uppers: `? extends T1 & T2`; Kotlin: `out A`, `out B`
-    //  lowers: `? super T1 & T2`; Kotlin: `in A`, `in B`
+    //  uppers: `? extends T1 & T2`
+    //  lowers: `? super T1 & T2`
     // Kotlin:
-    //  `outs`, `ins`
+    //  `out A`, `out B`
+    //  `in A`, `in B`
 }
 
 
@@ -28,6 +29,7 @@ public sealed interface WildcardTypeName : TypeName {
  */
 public data object EmptyWildcardTypeName : WildcardTypeName {
     override val bounds: List<TypeRef<*>> = emptyList()
+    override fun toString(): String = "*"
 }
 
 public val WildcardTypeName.isEmpty: Boolean
@@ -57,6 +59,12 @@ public interface LowerWildcardTypeName : WildcardTypeName
 
 @JsName("emptyWildcardTypeName")
 public fun WildcardTypeName(): WildcardTypeName = EmptyWildcardTypeName
+
+public fun WildcardTypeName.toLower(bounds: List<TypeRef<*>> = this.bounds): LowerWildcardTypeName =
+    this as? LowerWildcardTypeName ?: LowerWildcardTypeNameImpl(bounds)
+
+public fun WildcardTypeName.toUpper(bounds: List<TypeRef<*>> = this.bounds): UpperWildcardTypeName =
+    this as? UpperWildcardTypeName ?: UpperWildcardTypeNameImpl(bounds)
 
 public fun LowerWildcardTypeName(upperBound: TypeRef<*>): LowerWildcardTypeName =
     LowerWildcardTypeNameImpl(listOf(upperBound))

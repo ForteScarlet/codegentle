@@ -12,8 +12,6 @@ internal data class PackageNameImpl(
     override val previous: PackageName?,
     override val name: String
 ) : PackageName {
-
-
     override fun toString(): String {
         if (previous?.isEmpty != false) {
             return name

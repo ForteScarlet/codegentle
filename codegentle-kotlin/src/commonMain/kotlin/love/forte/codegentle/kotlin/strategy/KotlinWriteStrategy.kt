@@ -21,8 +21,6 @@ public interface KotlinWriteStrategy : Strategy {
  * Default implementation of [KotlinWriteStrategy].
  */
 public object DefaultKotlinWriteStrategy : KotlinWriteStrategy {
-    override fun newline(): String = "\n"
-
     override fun isIdentifier(value: String): Boolean {
         if (value.isEmpty()) return false
 
@@ -54,8 +52,6 @@ public object DefaultKotlinWriteStrategy : KotlinWriteStrategy {
  * A [KotlinWriteStrategy] for generating code as a string.
  */
 public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
-    override fun newline(): String = "\n"
-
     override fun isIdentifier(value: String): Boolean = true
 
     override fun isValidSourceName(name: TypeName): Boolean = true

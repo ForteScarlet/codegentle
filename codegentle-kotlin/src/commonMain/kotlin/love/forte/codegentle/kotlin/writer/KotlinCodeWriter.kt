@@ -190,8 +190,14 @@ public class KotlinCodeWriter private constructor(
      * Parameterized types in Kotlin follow the pattern: RawType<TypeArg1, TypeArg2, ...>
      */
     private fun emitParameterizedTypeName(parameterizedTypeName: ParameterizedTypeName) {
-        // Emit the raw type
-        emit(parameterizedTypeName.rawType)
+        val enclosingType = parameterizedTypeName.enclosingType
+        if (enclosingType != null) {
+            emit(enclosingType)
+            emit(".")
+            emit(parameterizedTypeName.rawType.simpleName)
+        } else {
+            emit(parameterizedTypeName.rawType)
+        }
 
         // Emit type arguments if any
         if (parameterizedTypeName.typeArguments.isNotEmpty()) {

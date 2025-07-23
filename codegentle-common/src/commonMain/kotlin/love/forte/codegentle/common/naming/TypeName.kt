@@ -18,4 +18,4 @@ import kotlin.jvm.JvmName
  * @author ForteScarlet
  */
 @SubclassOptInRequired(CodeGentleNamingImplementation::class)
-public interface TypeName : Naming
+public interface TypeName

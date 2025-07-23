@@ -9,6 +9,12 @@ import love.forte.codegentle.common.ref.TypeRef
  */
 @SubclassOptInRequired(CodeGentleNamingImplementation::class)
 public interface ParameterizedTypeName : TypeName, Named {
+    // `enclosingType` e.g.,
+    // ```Java
+    // Outer<String> outer = new Outer<>();
+    // Outer<String>.Inner<Integer> inner = outer.new Inner<>();
+    // ```
+
     public val enclosingType: ParameterizedTypeName?
     public val rawType: ClassName
     public val typeArguments: List<TypeRef<*>>

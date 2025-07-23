@@ -7,6 +7,7 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
+import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.naming.KotlinNames
 import love.forte.codegentle.kotlin.ref.KotlinTypeRefBuilderDsl
 import love.forte.codegentle.kotlin.ref.kotlinRef
@@ -38,6 +39,7 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
      */
     public interface Builder :
         KotlinCallableSpec.Builder<KotlinFunctionSpec, Builder>,
+        KotlinModifierCollector<Builder>,
         KotlinValueParameterCollector<Builder>,
         TypeVariableCollector<Builder> {
 

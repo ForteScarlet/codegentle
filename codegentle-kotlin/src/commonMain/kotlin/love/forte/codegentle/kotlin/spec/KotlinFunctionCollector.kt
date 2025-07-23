@@ -21,7 +21,8 @@ public interface KotlinFunctionCollector<B : KotlinFunctionCollector<B>> {
     /**
      * Add functions.
      */
-    public fun addFunctions(vararg functions: KotlinFunctionSpec): B
+    public fun addFunctions(vararg functions: KotlinFunctionSpec): B =
+        addFunctions(functions.asList())
 
     /**
      * Add function.

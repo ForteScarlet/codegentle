@@ -12,7 +12,8 @@ public interface SuperinterfaceCollector<B : SuperinterfaceCollector<B>> {
     /**
      * Add superinterfaces.
      */
-    public fun addSuperinterfaces(vararg superinterfaces: TypeName): B
+    public fun addSuperinterfaces(vararg superinterfaces: TypeName): B =
+        addSuperinterfaces(superinterfaces.asList())
 
     /**
      * Add superinterfaces.

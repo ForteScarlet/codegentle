@@ -22,4 +22,8 @@ internal class ArrayTypeNameImpl(
     override fun hashCode(): Int {
         return contentHashCode()
     }
+
+    override fun toString(): String {
+        return "$componentType[]"
+    }
 }

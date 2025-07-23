@@ -9,7 +9,7 @@ package love.forte.codegentle.common.naming
  *
  * @author ForteScarlet
  */
-public interface MemberName : Naming, Named {
+public interface MemberName : Named {
     /**
      * Member's name.
      */
@@ -26,4 +26,3 @@ public interface MemberName : Naming, Named {
      */
     public val enclosingClassName: ClassName?
 }
-// TODO MemberName? or Kotlin Only?

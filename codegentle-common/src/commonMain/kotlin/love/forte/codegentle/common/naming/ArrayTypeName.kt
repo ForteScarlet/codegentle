@@ -9,7 +9,6 @@ import love.forte.codegentle.common.ref.TypeRef
  */
 public interface ArrayTypeName : TypeName {
     public val componentType: TypeRef<*>
-    // TODO emit?
 }
 
 public fun ArrayTypeName.contentHashCode(): Int {
