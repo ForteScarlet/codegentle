@@ -26,7 +26,6 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  * @author ForteScarlet
  */
 public interface KotlinLambdaTypeName : TypeName, KotlinModifierContainer {
-
     /**
      * The receiver type for extension lambdas, or null if this is not an extension lambda.
      * For example, in `String.() -> Unit`, the receiver type is `String`.
