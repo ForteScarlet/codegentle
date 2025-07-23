@@ -298,14 +298,6 @@ public class KotlinFileBuilder internal constructor(
     public fun build(): KotlinFile {
         val alwaysQualify = linkedSetOf<String>()
 
-        // TODO: Collect types that should always use fully qualified names
-        // for (typeSpec in types) {
-        //     alwaysQualify.addAll(typeSpec.alwaysQualifiedNames)
-        //     for (nested in typeSpec.subtypes) {
-        //         fillAlwaysQualifiedNames(nested, alwaysQualify)
-        //     }
-        // }
-
         // Ensure there is at least one element (type, function, or property)
         if (types.isEmpty() && functions.isEmpty() && properties.isEmpty()) {
             throw IllegalStateException("At least one type, function, or property must be added to the file")

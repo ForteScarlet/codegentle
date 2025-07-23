@@ -81,7 +81,7 @@ class KotlinContextParameterSpecTests {
     @Test
     fun testContextParameterBuilderReuse() {
         val builder = KotlinContextParameterSpec.builder("context", stringType)
-        
+
         val param1 = builder.build()
         val param2 = builder.build()
 
@@ -124,7 +124,7 @@ class KotlinContextParameterSpecTests {
         assertEquals("context", param2.name)
         assertEquals("other", param3.name)
         assertEquals("context", param4.name)
-        
+
         assertEquals(stringType, param1.typeRef)
         assertEquals(stringType, param2.typeRef)
         assertEquals(stringType, param3.typeRef)
@@ -140,7 +140,7 @@ class KotlinContextParameterSpecTests {
         assertNull(param1.name)
         assertNull(param2.name)
         assertNull(param3.name)
-        
+
         assertEquals(stringType, param1.typeRef)
         assertEquals(stringType, param2.typeRef)
         assertEquals(intType, param3.typeRef)
@@ -149,7 +149,7 @@ class KotlinContextParameterSpecTests {
     @Test
     fun testContextParameterBuilderProperties() {
         val builder = KotlinContextParameterSpec.builder("test", stringType)
-        
+
         assertEquals("test", builder.name)
         assertEquals(stringType, builder.type)
     }
@@ -157,7 +157,7 @@ class KotlinContextParameterSpecTests {
     @Test
     fun testContextParameterBuilderPropertiesWithNullName() {
         val builder = KotlinContextParameterSpec.builder(null, intType)
-        
+
         assertNull(builder.name)
         assertEquals(intType, builder.type)
     }
@@ -198,7 +198,7 @@ class KotlinContextParameterSpecTests {
     fun testContextParameterFactoryMethodsConsistency() {
         val name = "testContext"
         val type = stringType
-        
+
         val builderParam = KotlinContextParameterSpec.builder(name, type).build()
         val ofParam = KotlinContextParameterSpec.of(name, type)
         val dslParam = KotlinContextParameterSpec(name, type)
@@ -206,7 +206,7 @@ class KotlinContextParameterSpecTests {
         assertEquals(name, builderParam.name)
         assertEquals(name, ofParam.name)
         assertEquals(name, dslParam.name)
-        
+
         assertEquals(type, builderParam.typeRef)
         assertEquals(type, ofParam.typeRef)
         assertEquals(type, dslParam.typeRef)
@@ -215,7 +215,7 @@ class KotlinContextParameterSpecTests {
     @Test
     fun testContextParameterFactoryMethodsConsistencyWithNullName() {
         val type = intType
-        
+
         val builderParam = KotlinContextParameterSpec.builder(null, type).build()
         val ofParam = KotlinContextParameterSpec.of(null, type)
         val dslParam = KotlinContextParameterSpec(null, type)
@@ -223,7 +223,7 @@ class KotlinContextParameterSpecTests {
         assertNull(builderParam.name)
         assertNull(ofParam.name)
         assertNull(dslParam.name)
-        
+
         assertEquals(type, builderParam.typeRef)
         assertEquals(type, ofParam.typeRef)
         assertEquals(type, dslParam.typeRef)
@@ -231,8 +231,7 @@ class KotlinContextParameterSpecTests {
 
     // Code generation tests are commented out because context parameter emitter may not be implemented
     // TODO: Uncomment these tests once the emitter is implemented
-    
-    /*
+
     @Test
     fun testContextParameterCodeGeneration() {
         val contextParam = KotlinContextParameterSpec("context", stringType)
@@ -262,5 +261,4 @@ class KotlinContextParameterSpecTests {
 
         assertEquals(generatedCode1, generatedCode2)
     }
-    */
 }

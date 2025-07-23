@@ -11,8 +11,6 @@ import kotlin.test.assertEquals
  * Tests for [KotlinAnonymousClassTypeSpec].
  */
 class KotlinAnonymousClassTypeSpecTests {
-    // TODO 修正不对的测试
-
     @Test
     fun testBasicAnonymousClass() {
         val interfaceType = ClassName("test", "MyInterface")
