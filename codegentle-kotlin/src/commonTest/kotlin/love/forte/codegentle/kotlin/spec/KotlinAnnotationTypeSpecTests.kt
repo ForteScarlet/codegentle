@@ -4,6 +4,7 @@ import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.addKDoc
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.TypeVariableName
+import love.forte.codegentle.common.ref.addAnnotationRef
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.ref.kotlinRef
@@ -281,8 +282,6 @@ class KotlinAnnotationTypeSpecTests {
     // Code generation tests are commented out because KotlinAnnotationTypeSpec emitter is not yet implemented
     // TODO: Uncomment these tests once the emitter is implemented
     
-    /*
-    TODO tests
     @Test
     fun testBasicAnnotationCodeGeneration() {
         val annotationSpec = KotlinAnnotationTypeSpec("TestAnnotation")
@@ -329,7 +328,7 @@ annotation class TestAnnotation"""
         }
 
         val generatedCode = annotationSpec.writeToKotlinString()
-        val expectedCode = """@Target(AnnotationTarget.CLASS)
+        val expectedCode = """@Target(value = AnnotationTarget.CLASS)
 annotation class TestAnnotation"""
 
         assertEquals(expectedCode, generatedCode.trim())
@@ -349,7 +348,7 @@ annotation class TestAnnotation"""
         val generatedCode = annotationSpec.writeToKotlinString()
         val expectedCode = """annotation class TestAnnotation(
     val value: String = "default",
-    val count: Int = 1,
+    val count: Int = 1
 )"""
 
         assertEquals(expectedCode, generatedCode.trim())
@@ -360,9 +359,9 @@ annotation class TestAnnotation"""
         val annotationSpec = KotlinAnnotationTypeSpec("ComplexAnnotation") {
             addModifier(KotlinModifier.PUBLIC)
             addKDoc("A complex test annotation.")
-            addAnnotationRef(ClassName("kotlin.annotation", "Target").annotationRef {
+            addAnnotationRef(ClassName("kotlin.annotation", "Target")) {
                 addMember("value", "AnnotationTarget.CLASS")
-            })
+            }
             addProperty("value", stringType) {
                 initializer("\"default\"")
             }
@@ -372,9 +371,9 @@ annotation class TestAnnotation"""
         val expectedCode = """/**
  * A complex test annotation.
  */
-@Target(AnnotationTarget.CLASS)
+@Target(value = AnnotationTarget.CLASS)
 public annotation class ComplexAnnotation(
-    val value: String = "default",
+    val value: String = "default"
 )"""
 
         assertEquals(expectedCode, generatedCode.trim())
@@ -391,7 +390,6 @@ public annotation class ComplexAnnotation(
 
         assertEquals(generatedCode1, generatedCode2)
     }
-    */
 
     @Test
     fun testAnnotationSuperclassAlwaysNull() {

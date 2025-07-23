@@ -69,8 +69,8 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
             if (anonymousClass != null) {
                 codeWriter.emit("(")
                 // Emit super constructor arguments if any
-                if (anonymousClass.superConstructorArguments.isNotEmpty()) {
-                    anonymousClass.superConstructorArguments.forEachIndexed { argIndex, argument ->
+                if (anonymousClass.constructorDelegation.arguments.isNotEmpty()) {
+                    anonymousClass.constructorDelegation.arguments.forEachIndexed { argIndex, argument ->
                         if (argIndex > 0) codeWriter.emit(", ")
                         codeWriter.emit(argument)
                     }

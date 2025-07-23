@@ -44,15 +44,12 @@ public interface KotlinAnonymousClassTypeSpec : KotlinTypeSpec {
     override val kind: KotlinTypeSpec.Kind
         get() = KotlinTypeSpec.Kind.CLASS
 
-
     /**
-     * Arguments to pass to the superclass constructor when creating the anonymous class.
-     * These arguments will be used in the superclass constructor call.
+     * Defines the delegation information for the constructor within an anonymous class type specification.
+     *
+     * [ConstructorDelegation.kind] is always [SUPER][ConstructorDelegation.Kind.SUPER].
      */
-    public val superConstructorArguments: List<CodeValue>
-
-    // TODO 把 superConstructorArguments 换成 constructorDelegation
-    // public val constructorDelegation: ConstructorDelegation
+    public val constructorDelegation: ConstructorDelegation
 
     public companion object {
         /**

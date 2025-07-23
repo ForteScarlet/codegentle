@@ -18,7 +18,7 @@ import love.forte.codegentle.kotlin.spec.internal.KotlinSimpleTypeSpecBuilderImp
  */
 @SubclassOptInRequired(CodeGentleKotlinSpecImplementation::class)
 public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
-    // simple, data class, sealed class, interface, sealed interface
+    // simple, data class, sealed class, interface, sealed interface, fun interface
 
     override val kind: KotlinTypeSpec.Kind
 

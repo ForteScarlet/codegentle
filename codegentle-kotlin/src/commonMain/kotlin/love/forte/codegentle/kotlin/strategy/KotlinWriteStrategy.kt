@@ -1,5 +1,7 @@
 package love.forte.codegentle.kotlin.strategy
 
+import love.forte.codegentle.common.naming.PackageName
+import love.forte.codegentle.common.naming.PackageNames
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.writer.Strategy
 
@@ -10,17 +12,38 @@ import love.forte.codegentle.common.writer.Strategy
  */
 public interface KotlinWriteStrategy : Strategy {
     /**
-     * Whether to omit reference to `kotlin` packages.
+     * A number of packages are imported into every Kotlin file by default:
+     *
+     * - `kotlin.*`
+     * - `kotlin.annotation.*`
+     * - `kotlin.collections.*`
+     * - `kotlin.comparisons.*`
+     * - `kotlin.io.*`
+     * - `kotlin.ranges.*`
+     * - `kotlin.sequences.*`
+     * - `kotlin.text.*`
+     *
+     * Additional packages are imported depending on the target platform:
+     *
+     * JVM:
+     *
+     * - `java.lang.*`
+     * - `kotlin.jvm.*`
+     *
+     * JS:
+     *
+     * - `kotlin.js.*`
+     *
+     * see [Kotlin Documentation](https://kotlinlang.org/docs/packages.html#default-imports)
      */
-    public fun omitKotlinPackage(): Boolean
-
+    public fun omitPackage(packageName: PackageName): Boolean
     // No need to declare methods that are already in Strategy
 }
 
 /**
  * Default implementation of [KotlinWriteStrategy].
  */
-public object DefaultKotlinWriteStrategy : KotlinWriteStrategy {
+public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
     override fun isIdentifier(value: String): Boolean {
         if (value.isEmpty()) return false
 
@@ -45,20 +68,40 @@ public object DefaultKotlinWriteStrategy : KotlinWriteStrategy {
         return isIdentifier(name)
     }
 
-    override fun omitKotlinPackage(): Boolean = true
+    override fun omitPackage(packageName: PackageName): Boolean =
+        packageName in defaultImports
+
+    public companion object {
+        public val defaultImports: Set<PackageName> = setOf(
+            PackageNames.kotlin,
+            PackageNames.kotlinJvm,
+            PackageNames.kotlinJs,
+            PackageNames.javaLang,
+            PackageNames.kotlinAnnotation,
+            PackageNames.kotlinCollections,
+            PackageNames.kotlinComparisons,
+            PackageNames.kotlinIo,
+            PackageNames.kotlinRanges,
+            PackageNames.kotlinSequences,
+            PackageNames.kotlinText,
+        )
+    }
 }
 
 /**
  * A [KotlinWriteStrategy] for generating code as a string.
  */
 public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
+    private val defaultStrategy = DefaultKotlinWriteStrategy()
+
     override fun isIdentifier(value: String): Boolean = true
 
     override fun isValidSourceName(name: TypeName): Boolean = true
 
     override fun isValidSourceName(name: String): Boolean = true
 
-    override fun omitKotlinPackage(): Boolean = true
+    override fun omitPackage(packageName: PackageName): Boolean =
+        defaultStrategy.omitPackage(packageName)
 }
 
 /**
@@ -74,3 +117,6 @@ private fun Char.isKotlinIdentifierStart(): Boolean {
 private fun Char.isKotlinIdentifierPart(): Boolean {
     return this == '_' || this.isLetterOrDigit()
 }
+
+public fun KotlinWriteStrategy.omitPackageNullable(packageName: PackageName?): Boolean =
+    packageName != null && omitPackage(packageName)

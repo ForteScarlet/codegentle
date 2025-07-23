@@ -413,7 +413,7 @@ public class KotlinCodeWriter private constructor(
     public companion object {
         internal fun create(
             out: Appendable,
-            strategy: KotlinWriteStrategy = DefaultKotlinWriteStrategy
+            strategy: KotlinWriteStrategy = DefaultKotlinWriteStrategy()
         ): KotlinCodeWriter {
             return create(
                 strategy = strategy,

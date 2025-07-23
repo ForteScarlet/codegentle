@@ -29,7 +29,7 @@ internal data class KotlinAnonymousClassTypeSpecImpl(
     override val initializerBlock: CodeValue,
     override val functions: List<KotlinFunctionSpec>,
     override val subtypes: List<KotlinTypeSpec>,
-    override val superConstructorArguments: List<CodeValue>
+    override val constructorDelegation: ConstructorDelegation
 ) : KotlinAnonymousClassTypeSpec {
 
     override fun emit(codeWriter: KotlinCodeWriter) {
@@ -164,6 +164,8 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
     }
 
     override fun build(): KotlinAnonymousClassTypeSpec {
+        val superConstructorArguments = this.superConstructorArguments
+
         return KotlinAnonymousClassTypeSpecImpl(
             kDoc = kDoc.build(),
             annotations = annotationRefs.toList(),
@@ -175,7 +177,9 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
             initializerBlock = initializerBlock.build(),
             functions = functions.toList(),
             subtypes = emptyList(),
-            superConstructorArguments = superConstructorArguments.toList()
+            constructorDelegation = ConstructorDelegation(ConstructorDelegation.Kind.SUPER) {
+                addArguments(superConstructorArguments)
+            }
         )
     }
 }

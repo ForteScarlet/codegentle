@@ -29,7 +29,7 @@ public interface AnnotationRefCollector<B : AnnotationRefCollector<B>> {
 public inline fun <B : AnnotationRefCollector<B>> B.addAnnotationRef(
     className: ClassName,
     block: AnnotationRefBuilder.() -> Unit = {}
-): B = addAnnotationRef(AnnotationRefBuilder(className).apply(block).build())
+): B = addAnnotationRef(className.annotationRef(block))
 
 /**
  * Some operations for [AnnotationRefCollector].

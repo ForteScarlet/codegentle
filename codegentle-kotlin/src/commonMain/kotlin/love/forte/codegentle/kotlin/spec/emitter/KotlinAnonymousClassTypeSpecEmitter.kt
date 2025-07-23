@@ -41,9 +41,9 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
 
             // Emit super constructor arguments if any
             // This allows anonymous classes to call superclass constructors with arguments
-            if (superConstructorArguments.isNotEmpty()) {
+            if (constructorDelegation.arguments.isNotEmpty()) {
                 codeWriter.emit("(")
-                superConstructorArguments.forEachIndexed { index, argument ->
+                constructorDelegation.arguments.forEachIndexed { index, argument ->
                     if (index > 0) codeWriter.emit(", ")
                     codeWriter.emit(argument)
                 }

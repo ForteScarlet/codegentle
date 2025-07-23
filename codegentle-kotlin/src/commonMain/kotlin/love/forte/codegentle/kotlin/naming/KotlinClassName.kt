@@ -3,6 +3,7 @@ package love.forte.codegentle.kotlin.naming
 import love.forte.codegentle.common.naming.*
 import love.forte.codegentle.common.utils.InternalMultisetApi
 import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
+import love.forte.codegentle.kotlin.strategy.omitPackageNullable
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
 /**
@@ -13,10 +14,7 @@ internal fun ClassName.emitTo(codeWriter: KotlinCodeWriter) {
     // Check if the class is already imported, in the same package, or in kotlin.* packages
     var omitPackage = codeWriter.isInSamePackage(this)
 
-    // If kotlin.* packages need to be handled or in the same package
-    if ((codeWriter.strategy.omitKotlinPackage()
-            && packageName?.isKotlinPackage == true)
-    ) {
+    if (codeWriter.strategy.omitPackageNullable(packageName)) {
         omitPackage = true
     }
 
@@ -121,8 +119,7 @@ private fun KotlinCodeWriter.lookupName(className: ClassName): String {
     }
 
     // Handle kotlin.* packages based on strategy
-    if (strategy.omitKotlinPackage()
-        && className.packageName?.isKotlinPackage == true
+    if (strategy.omitPackageNullable(className.packageName)
         && !alwaysQualify.contains(className.simpleName)
     ) {
         referencedNames.add(topLevelSimpleName)
@@ -145,8 +142,7 @@ private fun KotlinCodeWriter.importableType(className: ClassName) {
     }
 
     // Skip kotlin.* imports based on strategy, unless always qualified
-    if (packageName.isKotlinPackage
-        && strategy.omitKotlinPackage()
+    if (strategy.omitPackage(packageName)
         && !alwaysQualify.contains(className.simpleName)
     ) {
         return
@@ -196,7 +192,7 @@ private fun KotlinCodeWriter.resolve(simpleName: String): ClassName? {
     if (importedType != null) return importedType
 
     // Match kotlin.* types implicitly if strategy allows omitting kotlin.*
-    if (strategy.omitKotlinPackage() && isCommonKotlinType(simpleName)) {
+    if (strategy.omitPackage(PackageNames.kotlin) && isCommonKotlinType(simpleName)) {
         return ClassName(KotlinNames.Packages.KOTLIN, simpleName)
     }
 

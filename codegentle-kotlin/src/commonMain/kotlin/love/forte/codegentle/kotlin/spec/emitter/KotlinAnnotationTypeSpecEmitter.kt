@@ -43,22 +43,28 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     codeWriter.emitTypeVariableRefs(typeVariables)
 
     // Emit the body
-    codeWriter.emitNewLine(" {")
-    codeWriter.indent()
-
     // Emit properties (annotation classes can only have properties, no functions or subtypes)
     if (properties.isNotEmpty()) {
+        codeWriter.emitNewLine("(")
+        codeWriter.indent()
+
         blankLineManager.withRequirement {
+            var first = true
             for (property in properties) {
+                if (!first) {
+                    codeWriter.emit(",")
+                    codeWriter.emitNewLine()
+                }
                 property.emitTo(codeWriter)
-                codeWriter.emitNewLine()
+                first = false
             }
+            codeWriter.emitNewLine()
         }
+
+        codeWriter.unindent()
+        codeWriter.emit(")")
     }
 
     // Pop type variables from scope
     codeWriter.popTypeVariableRefs(typeVariables)
-
-    codeWriter.unindent()
-    codeWriter.emit("}")
 }
