@@ -11,8 +11,6 @@ import kotlin.test.assertEquals
  * Tests for constructor-related functionality in [KotlinSimpleTypeSpec].
  */
 class KotlinSimpleTypeSpecConstructorTests {
-    // TODO 有错误待修正
-
     @Test
     fun testClassWithPrimaryConstructor() {
         val stringType = ClassName("kotlin", "String").kotlinRef()

@@ -8,7 +8,7 @@ import love.forte.codegentle.common.ref.internal.AnnotationRefImpl
 /**
  * A reference to an annotation.
  *
- * Should be emitted as [love.forte.codegentle.common.code.CodeArgumentPart.Literal]
+ * Could be emitted as [love.forte.codegentle.common.code.CodeArgumentPart.Literal]
  *
  * @author ForteScarlet
  */

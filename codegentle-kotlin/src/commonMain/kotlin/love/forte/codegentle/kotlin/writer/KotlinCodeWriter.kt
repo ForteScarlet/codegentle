@@ -15,8 +15,8 @@ import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.emitTo
 import love.forte.codegentle.kotlin.naming.KotlinLambdaTypeName
 import love.forte.codegentle.kotlin.naming.emitTo
+import love.forte.codegentle.kotlin.ref.emitKotlinTo
 import love.forte.codegentle.kotlin.ref.emitTo
-import love.forte.codegentle.kotlin.ref.kotlinOrNull
 import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
 import love.forte.codegentle.kotlin.strategy.DefaultKotlinWriteStrategy
 import love.forte.codegentle.kotlin.strategy.KotlinWriteStrategy
@@ -249,10 +249,12 @@ public class KotlinCodeWriter private constructor(
         typeRef: TypeRef<*>,
         vararg options: TypeRefEmitOption
     ) {
-        val typeNameOptions = mutableListOf<TypeNameEmitOption>()
-        val annotationOptions = mutableListOf<AnnotationRefEmitOption>()
-
-        // TODO KotlinTypeRefEmitOption?
+        // Use the new emitKotlinTo function which properly handles annotations and nullable
+        typeRef.emitKotlinTo(this)
+        
+        // TODO: Handle TypeRefEmitOption if needed in the future
+        // val typeNameOptions = mutableListOf<TypeNameEmitOption>()
+        // val annotationOptions = mutableListOf<AnnotationRefEmitOption>()
         // for (option in options) {
         //     when (option) {
         //         is KotlinTypeRefEmitOption.TypeNameOptions -> typeNameOptions.addAll(option.options)
@@ -260,15 +262,6 @@ public class KotlinCodeWriter private constructor(
         //         else -> {} // Ignore unknown options
         //     }
         // }
-
-        // Emit annotations if any
-        typeRef.status.kotlinOrNull?.annotations?.forEach { annotation ->
-            emit(annotation, *annotationOptions.toTypedArray())
-            emit(" ")
-        }
-
-        // Emit the type name
-        emit(typeRef.typeName, *typeNameOptions.toTypedArray())
     }
 
     override fun emit(
