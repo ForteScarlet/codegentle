@@ -194,6 +194,27 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
             writer.write("@OptIn(InternalEnumSetApi::class)\n")
             writer.write("$visibilityModifier interface $actualImmutableName : Set<$enumName> {\n")
             writer.write("    fun mutable(): $actualMutableName\n\n")
+            
+            // Add the new functions
+            writer.write("    /**\n")
+            writer.write("     * Checks if this set contains any of the elements in the specified collection.\n")
+            writer.write("     */\n")
+            writer.write("    fun containsAny(elements: Collection<$enumName>): Boolean\n\n")
+            
+            writer.write("    /**\n")
+            writer.write("     * Returns a new set containing elements present in both this set and [other].\n")
+            writer.write("     */\n")
+            writer.write("    fun intersect(other: Set<$enumName>): Set<$enumName>\n\n")
+            
+            writer.write("    /**\n")
+            writer.write("     * Returns a new set containing elements present in either this set or [other].\n")
+            writer.write("     */\n")
+            writer.write("    fun union(other: Set<$enumName>): Set<$enumName>\n\n")
+            
+            writer.write("    /**\n")
+            writer.write("     * Returns a new set containing elements present in this set but not in [other].\n")
+            writer.write("     */\n")
+            writer.write("    fun difference(other: Set<$enumName>): Set<$enumName>\n\n")
 
             writer.write("    companion object {\n")
             writer.write("        fun empty(): $actualImmutableName = $immutableImplName()\n")
@@ -267,6 +288,27 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
             writer.write("@OptIn(InternalEnumSetApi::class)\n")
             writer.write("$visibilityModifier interface $actualMutableName : MutableSet<$enumName> {\n")
             writer.write("    fun immutable(): $actualImmutableName\n\n")
+            
+            // Add the new functions
+            writer.write("    /**\n")
+            writer.write("     * Checks if this set contains any of the elements in the specified collection.\n")
+            writer.write("     */\n")
+            writer.write("    fun containsAny(elements: Collection<$enumName>): Boolean\n\n")
+            
+            writer.write("    /**\n")
+            writer.write("     * Returns a new set containing elements present in both this set and [other].\n")
+            writer.write("     */\n")
+            writer.write("    fun intersect(other: Set<$enumName>): Set<$enumName>\n\n")
+            
+            writer.write("    /**\n")
+            writer.write("     * Returns a new set containing elements present in either this set or [other].\n")
+            writer.write("     */\n")
+            writer.write("    fun union(other: Set<$enumName>): Set<$enumName>\n\n")
+            
+            writer.write("    /**\n")
+            writer.write("     * Returns a new set containing elements present in this set but not in [other].\n")
+            writer.write("     */\n")
+            writer.write("    fun difference(other: Set<$enumName>): Set<$enumName>\n\n")
 
             writer.write("    companion object {\n")
             writer.write("        fun empty(): $actualMutableName = $mutableImplName()\n")
@@ -315,6 +357,31 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
             writer.write("    override val entries: List<$enumName>\n")
             writer.write("        get() = $enumName.entries\n\n")
 
+            when (baseClass) {
+                "I32EnumSet" -> {
+                    writer.write("    override fun newBy(bitset: UInt): $immutableImplName = $immutableImplName(bitset)\n\n")
+                }
+                "I64EnumSet" -> {
+                    writer.write("    override fun newBy(bitset: ULong): $immutableImplName = $immutableImplName(bitset)\n\n")
+                }
+                "BigEnumSet" -> {
+                    writer.write("    override fun newBy(bitset: LongArray): $immutableImplName = $immutableImplName(bitset.copyOf())\n\n")
+                }
+            }
+            
+            // Add overrides for the four methods
+            writer.write("    override fun containsAny(elements: Collection<$enumName>): Boolean =\n")
+            writer.write("        super.containsAny(elements)\n\n")
+            
+            writer.write("    override fun intersect(other: Set<$enumName>): Set<$enumName> =\n")
+            writer.write("        super.intersect(other)\n\n")
+            
+            writer.write("    override fun union(other: Set<$enumName>): Set<$enumName> =\n")
+            writer.write("        super.union(other)\n\n")
+            
+            writer.write("    override fun difference(other: Set<$enumName>): Set<$enumName> =\n")
+            writer.write("        super.difference(other)\n\n")
+
             writer.write("    override fun mutable(): $mutableImplName =\n")
 
             when (baseClass) {
@@ -346,6 +413,31 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
 
             writer.write("    override val entries: List<$enumName>\n")
             writer.write("        get() = $enumName.entries\n\n")
+
+            when (baseClass) {
+                "I32EnumSet" -> {
+                    writer.write("    override fun newBy(bitset: UInt): $mutableImplName = $mutableImplName(bitset)\n\n")
+                }
+                "I64EnumSet" -> {
+                    writer.write("    override fun newBy(bitset: ULong): $mutableImplName = $mutableImplName(bitset)\n\n")
+                }
+                "BigEnumSet" -> {
+                    writer.write("    override fun newBy(bitset: LongArray): $mutableImplName = $mutableImplName(bitset.copyOf())\n\n")
+                }
+            }
+
+            // Add overrides for the four methods
+            writer.write("    override fun containsAny(elements: Collection<$enumName>): Boolean =\n")
+            writer.write("        super.containsAny(elements)\n\n")
+
+            writer.write("    override fun intersect(other: Set<$enumName>): Set<$enumName> =\n")
+            writer.write("        super.intersect(other)\n\n")
+
+            writer.write("    override fun union(other: Set<$enumName>): Set<$enumName> =\n")
+            writer.write("        super.union(other)\n\n")
+
+            writer.write("    override fun difference(other: Set<$enumName>): Set<$enumName> =\n")
+            writer.write("        super.difference(other)\n\n")
 
             writer.write("    override fun immutable(): $immutableImplName =\n")
 

@@ -16,6 +16,23 @@ public interface EnumSet<E : Enum<E>> : Set<E> {
 
     override fun containsAll(elements: Collection<E>): Boolean
 
+    public fun containsAny(elements: Collection<E>): Boolean
+
+    /**
+     * Returns a new set containing elements present in both this set and [other].
+     */
+    public fun intersect(other: Set<E>): Set<E>
+
+    /**
+     * Returns a new set containing elements present in either this set or [other].
+     */
+    public fun union(other: Set<E>): Set<E>
+
+    /**
+     * Returns a new set containing elements present in this set but not in [other].
+     */
+    public fun difference(other: Set<E>): Set<E>
+
     override fun isEmpty(): Boolean
 
     override fun iterator(): Iterator<E>
@@ -37,6 +54,8 @@ public interface MutableEnumSet<E : Enum<E>> : EnumSet<E>, MutableSet<E>
 public abstract class I32EnumSet<E : Enum<E>>(protected open var bitset: UInt = 0u) : MutableEnumSet<E> {
     protected abstract val entries: List<E>
 
+    protected abstract fun newBy(bitset: UInt): I32EnumSet<E>
+
     /**
      * Checks if the given enum element is present in the set.
      */
@@ -48,6 +67,48 @@ public abstract class I32EnumSet<E : Enum<E>>(protected open var bitset: UInt = 
             return (bitset and elements.bitset) == elements.bitset
         }
         return elements.all { contains(it) }
+    }
+
+    override fun containsAny(elements: Collection<E>): Boolean {
+        // Optimize when source is also a bitset-based enum set
+        if (elements is I32EnumSet<*>) {
+            return (bitset and elements.bitset) != 0u
+        }
+        return elements.any { contains(it) }
+    }
+
+    override fun intersect(other: Set<E>): Set<E> {
+        if (other is I32EnumSet<*>) {
+            return newBy(bitset and other.bitset)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(0u)
+        forEach { e ->
+            if (other.contains(e)) {
+                result.add(e)
+            }
+        }
+        return result
+    }
+
+    override fun union(other: Set<E>): Set<E> {
+        if (other is I32EnumSet<*>) {
+            return newBy(bitset or other.bitset)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(bitset)
+        other.forEach { result.add(it) }
+        return result
+    }
+
+    override fun difference(other: Set<E>): Set<E> {
+        if (other is I32EnumSet<*>) {
+            return newBy(bitset and other.bitset.inv())
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(bitset)
+        other.forEach { result.remove(it) }
+        return result
     }
 
     override fun isEmpty(): Boolean = bitset == 0u
@@ -171,6 +232,8 @@ public abstract class I32EnumSet<E : Enum<E>>(protected open var bitset: UInt = 
 public abstract class I64EnumSet<E : Enum<E>>(protected open var bitset: ULong = 0u) : MutableEnumSet<E> {
     protected abstract val entries: List<E>
 
+    protected abstract fun newBy(bitset: ULong): I64EnumSet<E>
+
     /**
      * Checks if the given enum element is present in the set.
      */
@@ -184,6 +247,48 @@ public abstract class I64EnumSet<E : Enum<E>>(protected open var bitset: ULong =
             }
         }
         return elements.all { contains(it) }
+    }
+
+    override fun containsAny(elements: Collection<E>): Boolean {
+        // Optimize when source is also a bitset-based enum set
+        if (elements is I64EnumSet<*>) {
+            return (bitset and elements.bitset) != 0uL
+        }
+        return elements.any { contains(it) }
+    }
+
+    override fun intersect(other: Set<E>): Set<E> {
+        if (other is I64EnumSet<*>) {
+            return newBy(bitset and other.bitset)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(0uL)
+        forEach { e ->
+            if (other.contains(e)) {
+                result.add(e)
+            }
+        }
+        return result
+    }
+
+    override fun union(other: Set<E>): Set<E> {
+        if (other is I64EnumSet<*>) {
+            return newBy(bitset or other.bitset)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(bitset)
+        other.forEach { result.add(it) }
+        return result
+    }
+
+    override fun difference(other: Set<E>): Set<E> {
+        if (other is I64EnumSet<*>) {
+            return newBy(bitset and other.bitset.inv())
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(bitset)
+        other.forEach { result.remove(it) }
+        return result
     }
 
     override fun isEmpty(): Boolean = bitset == 0uL
@@ -309,6 +414,8 @@ public abstract class BigEnumSet<E : Enum<E>>(
 ) : MutableEnumSet<E> {
     protected abstract val entries: List<E>
 
+    protected abstract fun newBy(bitset: LongArray): BigEnumSet<E>
+
     /**
      * Gets array index and bit position for an enum ordinal
      */
@@ -337,6 +444,91 @@ public abstract class BigEnumSet<E : Enum<E>>(
             return true
         }
         return elements.all { contains(it) }
+    }
+
+    override fun containsAny(elements: Collection<E>): Boolean {
+        // Optimize when source is also a bitset-based enum set
+        if (elements is BigEnumSet<*>) {
+            val eb = elements.bitset
+            val size = minOf(bitset.size, eb.size)
+            for (i in 0 until size) {
+                if ((bitset[i] and eb[i]) != 0L) return true
+            }
+            return false
+        }
+        return elements.any { contains(it) }
+    }
+
+    override fun intersect(other: Set<E>): Set<E> {
+        if (other is BigEnumSet<*>) {
+            val eb = other.bitset
+            val size = minOf(bitset.size, eb.size)
+            val result = LongArray(size)
+            for (i in 0 until size) {
+                result[i] = bitset[i] and eb[i]
+            }
+            return newBy(result)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(LongArray(bitset.size))
+        forEach { e ->
+            if (other.contains(e)) {
+                val (index, bit) = getIndexAndBit(e.ordinal)
+                if (index < result.size) {
+                    result.bitset[index] = result.bitset[index] or (1L shl bit)
+                }
+            }
+        }
+        return result
+    }
+
+    override fun union(other: Set<E>): Set<E> {
+        if (other is BigEnumSet<*>) {
+            val eb = other.bitset
+            val size = maxOf(bitset.size, eb.size)
+            val result = LongArray(size)
+            
+            // Copy this bitset
+            for (i in bitset.indices) {
+                result[i] = bitset[i]
+            }
+            
+            // OR with other bitset
+            for (i in eb.indices) {
+                result[i] = result[i] or eb[i]
+            }
+            
+            return newBy(result)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(bitset.copyOf())
+        other.forEach { result.add(it) }
+        return result
+    }
+
+    override fun difference(other: Set<E>): Set<E> {
+        if (other is BigEnumSet<*>) {
+            val eb = other.bitset
+            val size = bitset.size
+            val result = LongArray(size)
+            
+            // Copy this bitset
+            for (i in bitset.indices) {
+                result[i] = bitset[i]
+            }
+            
+            // Remove bits from other bitset
+            val minSize = minOf(size, eb.size)
+            for (i in 0 until minSize) {
+                result[i] = result[i] and eb[i].inv()
+            }
+            
+            return newBy(result)
+        }
+        // Fallback for other EnumSet implementations
+        val result = newBy(bitset.copyOf())
+        other.forEach { result.remove(it) }
+        return result
     }
 
     override fun isEmpty(): Boolean = bitset.all { it == 0L }

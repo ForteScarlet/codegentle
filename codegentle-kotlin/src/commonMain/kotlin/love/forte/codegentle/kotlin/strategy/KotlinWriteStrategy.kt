@@ -41,7 +41,7 @@ public interface KotlinWriteStrategy : Strategy {
 
     // TODO 返回值 Unit 时省略 (不是单行 return 的时候)
     // TODO 单行 return 替换
-    // TODO 无访问修饰符时默认填充 PUBLIC
+    // TODO 无访问修饰符时默认填充 PUBLIC, 或者选择一个默认填充
 }
 
 /**
