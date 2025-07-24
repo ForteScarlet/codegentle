@@ -12,7 +12,7 @@ import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec.Companion.propertyizationBuilder
 import love.forte.codegentle.kotlin.spec.internal.KotlinValueParameterSpecBuilderImpl
-import love.forte.codegentle.kotlin.spec.internal.PropertyizationBuilderImpl
+import love.forte.codegentle.kotlin.spec.internal.PropertyficationBuilderImpl
 
 /**
  * A Kotlin value parameter.
@@ -30,15 +30,15 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
     public val kDoc: CodeValue
     public val defaultValue: CodeValue?
 
-    public val propertyization: Propertyization?
+    public val propertyfication: Propertyfication?
 
     /**
-     * Represents the propertyization configuration for a value parameter.
-     * When a parameter is propertyized, it becomes a property in the constructor.
+     * Represents the propertyfication configuration for a value parameter.
+     * When a parameter is propertyfied, it becomes a property in the constructor.
      *
-     * @see PropertyizationBuilder
+     * @see PropertyficationBuilder
      */
-    public interface Propertyization {
+    public interface Propertyfication {
         /**
          * Whether the property should be mutable (var) or immutable (val).
          */
@@ -46,11 +46,11 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
     }
 
     /**
-     * Builder for [Propertyization].
+     * Builder for [Propertyfication].
      *
      * @see propertyizationBuilder
      */
-    public interface PropertyizationBuilder {
+    public interface PropertyficationBuilder {
         /**
          * Whether the property should be mutable (var) or immutable (val).
          */
@@ -62,14 +62,14 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
          * @param mutable true for mutable property (var), false for immutable property (val)
          * @return this builder
          */
-        public fun mutable(mutable: Boolean): PropertyizationBuilder
+        public fun mutable(mutable: Boolean = true): PropertyficationBuilder
 
         /**
-         * Build a [Propertyization] instance.
+         * Build a [Propertyfication] instance.
          *
-         * @return a new [Propertyization] instance
+         * @return a new [Propertyfication] instance
          */
-        public fun build(): Propertyization
+        public fun build(): Propertyfication
     }
 
     /**
@@ -111,10 +111,10 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
          * Set the propertyization for this parameter.
          * When propertyized, the parameter becomes a property in the constructor.
          *
-         * @param propertyization the propertyization configuration
+         * @param propertyfication the propertyization configuration
          * @return this builder
          */
-        public fun propertyize(propertyization: Propertyization): Builder
+        public fun propertyfy(propertyfication: Propertyfication): Builder
 
         /**
          * Build a [KotlinValueParameterSpec] instance.
@@ -136,12 +136,12 @@ public interface KotlinValueParameterSpec : KotlinParameterSpec, KotlinModifierC
             KotlinValueParameterSpecBuilderImpl(name, type)
 
         /**
-         * Create a [PropertyizationBuilder] instance.
+         * Create a [PropertyficationBuilder] instance.
          *
-         * @return a new [PropertyizationBuilder] instance
+         * @return a new [PropertyficationBuilder] instance
          */
-        public fun propertyizationBuilder(): PropertyizationBuilder {
-            return PropertyizationBuilderImpl()
+        public fun propertyizationBuilder(): PropertyficationBuilder {
+            return PropertyficationBuilderImpl()
         }
     }
 }
@@ -162,14 +162,14 @@ public inline fun KotlinValueParameterSpec(
     KotlinValueParameterSpec.builder(name, type).apply(block).build()
 
 /**
- * Create a [KotlinValueParameterSpec.Propertyization] instance using a configuration block.
+ * Create a [KotlinValueParameterSpec.Propertyfication] instance using a configuration block.
  *
  * @param block the configuration block for the propertyization
- * @return a new [KotlinValueParameterSpec.Propertyization] instance
+ * @return a new [KotlinValueParameterSpec.Propertyfication] instance
  */
-public inline fun propertyization(
-    block: KotlinValueParameterSpec.PropertyizationBuilder.() -> Unit = {}
-): KotlinValueParameterSpec.Propertyization =
+public inline fun propertyficationn(
+    block: KotlinValueParameterSpec.PropertyficationBuilder.() -> Unit = {}
+): KotlinValueParameterSpec.Propertyfication =
     propertyizationBuilder().apply(block).build()
 
 public inline fun KotlinValueParameterSpec.Builder.defaultValue(
@@ -179,12 +179,12 @@ public inline fun KotlinValueParameterSpec.Builder.defaultValue(
     defaultValue(CodeValue(format, block))
 }
 
-public fun KotlinValueParameterSpec.Builder.propertyize(mutable: Boolean): KotlinValueParameterSpec.Builder =
-    propertyize { this.mutable = mutable }
+public fun KotlinValueParameterSpec.Builder.propertyfy(mutable: Boolean): KotlinValueParameterSpec.Builder =
+    propertyfy { this.mutable = mutable }
 
-public inline fun KotlinValueParameterSpec.Builder.propertyize(
-    block: KotlinValueParameterSpec.PropertyizationBuilder.() -> Unit = {}
-): KotlinValueParameterSpec.Builder = propertyize(propertyization(block))
+public inline fun KotlinValueParameterSpec.Builder.propertyfy(
+    block: KotlinValueParameterSpec.PropertyficationBuilder.() -> Unit = {}
+): KotlinValueParameterSpec.Builder = propertyfy(propertyficationn(block))
 
 /**
  * Set this parameter as a mutable property (var) in the constructor.
@@ -192,7 +192,7 @@ public inline fun KotlinValueParameterSpec.Builder.propertyize(
  * @return this builder
  */
 public fun KotlinValueParameterSpec.Builder.mutableProperty(): KotlinValueParameterSpec.Builder =
-    propertyize { mutable = true }
+    propertyfy { mutable = true }
 
 /**
  * Set this parameter as an immutable property (val) in the constructor.
@@ -200,5 +200,5 @@ public fun KotlinValueParameterSpec.Builder.mutableProperty(): KotlinValueParame
  * @return this builder
  */
 public fun KotlinValueParameterSpec.Builder.immutableProperty(): KotlinValueParameterSpec.Builder =
-    propertyize { mutable = false }
+    propertyfy { mutable = false }
 

@@ -49,7 +49,7 @@ internal class KotlinValueClassSpecBuilderImpl(
     override val primaryParameter: KotlinValueParameterSpec
 ) : KotlinValueClassSpec.Builder {
     init {
-        val propertyization = primaryParameter.propertyization
+        val propertyization = primaryParameter.propertyfication
         require(propertyization?.mutable == false) {
             "The primary parameter property of value class must be immutable " +
                 "(`propertyization.mutable` must be `false`), " +

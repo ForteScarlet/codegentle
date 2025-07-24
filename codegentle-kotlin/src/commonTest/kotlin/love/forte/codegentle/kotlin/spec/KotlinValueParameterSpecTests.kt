@@ -40,7 +40,7 @@ class KotlinValueParameterSpecTests {
         assertEquals(emptySet(), param.modifiers)
         assertTrue(param.kDoc.writeToKotlinString().isEmpty())
         assertNull(param.defaultValue)
-        assertNull(param.propertyization)
+        assertNull(param.propertyfication)
     }
 
     @Test
@@ -92,26 +92,26 @@ class KotlinValueParameterSpecTests {
 
     @Test
     fun testPropertyizationDSL() {
-        val mutableProp = propertyization { mutable = true }
+        val mutableProp = propertyficationn { mutable = true }
         assertTrue(mutableProp.mutable)
 
-        val immutableProp = propertyization { }
+        val immutableProp = propertyficationn { }
         assertFalse(immutableProp.mutable) // Default should be false
     }
 
     @Test
     fun testParameterPropertyization() {
         val mutableParam = KotlinValueParameterSpec.builder("name", stringType)
-            .propertyize(propertyization { mutable = true })
+            .propertyfy(propertyficationn { mutable = true })
             .build()
-        assertNotNull(mutableParam.propertyization)
-        assertTrue(mutableParam.propertyization!!.mutable)
+        assertNotNull(mutableParam.propertyfication)
+        assertTrue(mutableParam.propertyfication!!.mutable)
 
         val immutableParam = KotlinValueParameterSpec.builder("name", stringType)
-            .propertyize(propertyization { mutable = false })
+            .propertyfy(propertyficationn { mutable = false })
             .build()
-        assertNotNull(immutableParam.propertyization)
-        assertFalse(immutableParam.propertyization!!.mutable)
+        assertNotNull(immutableParam.propertyfication)
+        assertFalse(immutableParam.propertyfication!!.mutable)
     }
 
     @Test
@@ -119,14 +119,14 @@ class KotlinValueParameterSpecTests {
         val varParam = KotlinValueParameterSpec.builder("name", stringType)
             .mutableProperty()
             .build()
-        assertNotNull(varParam.propertyization)
-        assertTrue(varParam.propertyization!!.mutable)
+        assertNotNull(varParam.propertyfication)
+        assertTrue(varParam.propertyfication!!.mutable)
 
         val valParam = KotlinValueParameterSpec.builder("name", stringType)
             .immutableProperty()
             .build()
-        assertNotNull(valParam.propertyization)
-        assertFalse(valParam.propertyization!!.mutable)
+        assertNotNull(valParam.propertyfication)
+        assertFalse(valParam.propertyfication!!.mutable)
     }
 
     @Test
@@ -346,8 +346,8 @@ class KotlinValueParameterSpecTests {
         assertEquals(stringType, param.typeRef)
         assertEquals(setOf(KotlinModifier.CROSSINLINE), param.modifiers)
         assertEquals(listOf(deprecatedAnnotation), param.annotations)
-        assertNotNull(param.propertyization)
-        assertFalse(param.propertyization!!.mutable)
+        assertNotNull(param.propertyfication)
+        assertFalse(param.propertyfication!!.mutable)
         assertNotNull(param.defaultValue)
         assertEquals("\"test\"", param.defaultValue!!.writeToKotlinString())
         assertEquals("Test parameter", param.kDoc.writeToKotlinString())
@@ -422,28 +422,28 @@ class KotlinValueParameterSpecTests {
     @Test
     fun testPropertyizeWithBooleanExtensionFunction() {
         val param1 = KotlinValueParameterSpec.builder("name", stringType)
-            .propertyize(true)
+            .propertyfy(true)
             .build()
 
         val param2 = KotlinValueParameterSpec.builder("age", intType)
-            .propertyize(false)
+            .propertyfy(false)
             .build()
 
-        assertNotNull(param1.propertyization)
-        assertTrue(param1.propertyization!!.mutable)
+        assertNotNull(param1.propertyfication)
+        assertTrue(param1.propertyfication!!.mutable)
 
-        assertNotNull(param2.propertyization)
-        assertFalse(param2.propertyization!!.mutable)
+        assertNotNull(param2.propertyfication)
+        assertFalse(param2.propertyfication!!.mutable)
     }
 
     @Test
     fun testPropertyizeWithBlockExtensionFunction() {
         val param = KotlinValueParameterSpec.builder("name", stringType)
-            .propertyize { mutable = true }
+            .propertyfy { mutable = true }
             .build()
 
-        assertNotNull(param.propertyization)
-        assertTrue(param.propertyization!!.mutable)
+        assertNotNull(param.propertyfication)
+        assertTrue(param.propertyfication!!.mutable)
     }
 
     // ===== ADDITIONAL COMPREHENSIVE TESTS =====
@@ -647,13 +647,13 @@ class KotlinValueParameterSpecTests {
 
     @Test
     fun testEmptyPropertyizationDSL() {
-        val propertyization = propertyization { }
+        val propertyization = propertyficationn { }
         assertFalse(propertyization.mutable) // Default should be false
     }
 
     @Test
     fun testPropertyizationToString() {
-        val propertyization = propertyization { mutable = true }
+        val propertyization = propertyficationn { mutable = true }
         val toString = propertyization.toString()
         assertTrue(toString.contains("mutable") || toString.contains("true"))
     }

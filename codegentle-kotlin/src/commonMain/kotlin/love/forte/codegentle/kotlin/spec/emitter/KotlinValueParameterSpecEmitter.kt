@@ -20,7 +20,7 @@ internal fun KotlinValueParameterSpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emitModifiers(modifiers)
 
     // Emit propertyization (val/var) if present
-    propertyization?.let { prop ->
+    propertyfication?.let { prop ->
         if (prop.mutable) {
             codeWriter.emit("var ")
         } else {
