@@ -4,7 +4,6 @@ import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodePart
 import love.forte.codegentle.common.code.CodeSimplePart
 import love.forte.codegentle.common.code.CodeValue
-import love.forte.codegentle.common.literalWithDoubleQuotes
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.canonicalName
 import love.forte.codegentle.common.writer.InternalWriterApi
@@ -47,10 +46,7 @@ internal fun CodeValue.emitTo(codeWriter: KotlinCodeWriter, ensureTrailingNewlin
             }
 
             is CodeArgumentPart.Str -> {
-                codeWriter.emit(
-                    part.value?.literalWithDoubleQuotes(codeWriter.indentValue)
-                        ?: "null"
-                )
+                codeWriter.emit(part.value.stringLiteralWithQuotes(codeWriter.indentValue))
             }
 
             is CodeArgumentPart.Type -> {

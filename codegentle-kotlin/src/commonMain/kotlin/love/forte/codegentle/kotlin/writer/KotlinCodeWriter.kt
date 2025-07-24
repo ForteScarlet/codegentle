@@ -121,11 +121,6 @@ public class KotlinCodeWriter private constructor(
                 typeName.emitTo(this)
             }
 
-            is KotlinLambdaTypeName -> {
-                // Use the emitTo extension function to handle lambda type emission
-                typeName.emitTo(this)
-            }
-
             is ArrayTypeName -> {
                 emitArrayTypeName(typeName)
             }
@@ -141,6 +136,13 @@ public class KotlinCodeWriter private constructor(
             is WildcardTypeName -> {
                 emitWildcardTypeName(typeName)
             }
+
+            is KotlinLambdaTypeName -> {
+                // Use the emitTo extension function to handle lambda type emission
+                typeName.emitTo(this)
+            }
+
+            else -> error("Unsupported type of TypeName for KotlinCodeWriter: $typeName")
         }
     }
 

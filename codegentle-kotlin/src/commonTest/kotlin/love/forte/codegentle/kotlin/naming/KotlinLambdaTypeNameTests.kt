@@ -6,6 +6,7 @@ import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec
 import love.forte.codegentle.kotlin.spec.addParameter
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
+import love.forte.codegentle.kotlin.writer.writeToKotlinString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -14,12 +15,19 @@ import kotlin.test.assertTrue
 class KotlinLambdaTypeNameTests {
 
     @Test
+    fun testEmptyLambdaType() {
+        val lambdaType = KotlinLambdaTypeName()
+        val result = lambdaType.writeToKotlinString()
+        assertEquals("() -> Unit", result)
+    }
+
+    @Test
     fun testSimpleLambdaType() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val booleanType = ClassName("kotlin", "Boolean").kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
-            addParameter("", stringType)
+            addParameter(stringType)
         }
 
         val result = buildString {
@@ -31,18 +39,30 @@ class KotlinLambdaTypeNameTests {
     }
 
     @Test
+    fun testSimpleLambdaWithNameType() {
+        val stringType = ClassName("kotlin", "String").kotlinRef()
+        val booleanType = ClassName("kotlin", "Boolean").kotlinRef()
+
+        val lambdaType = KotlinLambdaTypeName(booleanType) {
+            addParameter("name", stringType)
+        }
+
+        val result = lambdaType.writeToKotlinString()
+
+        assertEquals("(name: String) -> Boolean", result.trim())
+    }
+
+    @Test
     fun testSuspendLambdaType() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val unitType = ClassName("kotlin", "Unit").kotlinRef()
 
-        val lambdaType = buildKotlinSuspendLambdaTypeName(unitType) {
+        val lambdaType = KotlinLambdaTypeName(unitType) {
+            suspend()
             addParameter("", stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("suspend (String) -> Unit", result.trim())
     }
@@ -53,9 +73,9 @@ class KotlinLambdaTypeNameTests {
         val booleanType = ClassName("kotlin", "Boolean").kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName {
+            suspend()
             returns(booleanType)
             addParameter("input", stringType)
-            addModifier(KotlinModifier.SUSPEND)
         }
 
         assertTrue(lambdaType.isSuspend)
@@ -70,10 +90,7 @@ class KotlinLambdaTypeNameTests {
 
         val lambdaType = KotlinLambdaTypeName(unitType)
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("() -> Unit", result.trim())
     }
@@ -87,10 +104,7 @@ class KotlinLambdaTypeNameTests {
             receiver(stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("String.() -> Boolean", result.trim())
     }
@@ -106,10 +120,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("index", intType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("String.(index: Int) -> Unit", result.trim())
     }
@@ -119,14 +130,12 @@ class KotlinLambdaTypeNameTests {
         val stringType = KotlinNames.Classes.STRING.kotlinRef()
         val unitType = KotlinNames.Classes.UNIT.kotlinRef()
 
-        val lambdaType = buildKotlinSuspendLambdaTypeName(unitType) {
+        val lambdaType = KotlinLambdaTypeName(unitType) {
+            suspend()
             receiver(stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("suspend String.() -> Unit", result.trim())
     }
@@ -142,10 +151,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("message", stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("context(Logger) (message: String) -> Unit", result.trim())
     }
@@ -162,10 +168,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("message", stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("context(Logger, kotlin.coroutines.CoroutineContext) (message: String) -> Unit", result.trim())
     }
@@ -181,10 +184,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("age", intType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("(name: String, age: Int) -> Boolean", result.trim())
     }
@@ -200,10 +200,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("", intType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("(String, Int) -> Boolean", result.trim())
     }
@@ -219,10 +216,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("", intType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("(name: String, Int) -> Boolean", result.trim())
     }
@@ -238,13 +232,10 @@ class KotlinLambdaTypeNameTests {
             addContextReceiver(loggerType)
             receiver(stringType)
             addParameter("count", intType)
-            addModifier(KotlinModifier.SUSPEND)
+            suspend()
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("suspend context(Logger) String.(count: Int) -> Unit", result.trim())
     }
@@ -258,10 +249,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("input", stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("(input: String) -> List", result.trim())
     }
@@ -275,10 +263,7 @@ class KotlinLambdaTypeNameTests {
             addParameter("message", stringType)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("(message: String) -> Nothing", result.trim())
     }
@@ -303,7 +288,7 @@ class KotlinLambdaTypeNameTests {
             receiver(stringType)
             addContextReceiver(loggerType)
             addParameter("count", intType)
-            addModifier(KotlinModifier.SUSPEND)
+            suspend()
         }
 
         assertEquals(stringType, lambdaType.receiver)
@@ -335,10 +320,7 @@ class KotlinLambdaTypeNameTests {
             addParameter(param)
         }
 
-        val result = buildString {
-            val writer = KotlinCodeWriter.create(this)
-            writer.emit(lambdaType)
-        }
+        val result = lambdaType.writeToKotlinString()
 
         assertEquals("(input: String) -> Boolean", result.trim())
     }

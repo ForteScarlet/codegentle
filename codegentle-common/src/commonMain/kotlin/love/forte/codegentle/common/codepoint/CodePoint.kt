@@ -20,6 +20,9 @@ public value class CodePoint internal constructor(public val code: Int) {
     override fun toString(): String = stringValue()
 }
 
+@InternalCodePointApi
+public fun Char.codePoint(): CodePoint = CodePoint(this.code)
+
 internal expect fun CodePoint.stringValue(): String
 
 @InternalCodePointApi

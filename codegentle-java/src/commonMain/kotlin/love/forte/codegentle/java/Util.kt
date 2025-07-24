@@ -15,6 +15,8 @@
  */
 package love.forte.codegentle.java
 
+import love.forte.codegentle.common.appendCharacterLiteral
+
 internal expect fun Char.isJavaIdentifierStart(): Boolean
 
 internal expect fun Char.isJavaIdentifierPart(): Boolean
@@ -63,51 +65,47 @@ private fun Char.isIdentifierIgnorable(): Boolean {
         ) || this in CharCategory.FORMAT
 }
 
-internal fun String.literalWithDoubleQuotes1(indent: String): String {
+internal fun String?.stringLiteralWithQuotes(indent: String): String {
+    if (this == null) return "null"
+
     val value = this
-    return buildString(length + 2) {
-        append('"')
-        value.forEachIndexed { i, c ->
-            if (c == '\'') {
-                append('\'')
-                return@forEachIndexed
-            }
+    val result = StringBuilder(value.length + 32)
+    result.append('"')
 
-            // trivial case: double quotes must be escaped
-            if (c == '\"') {
-                append("\\\"")
-                return@forEachIndexed
+    for ((i, c) in this.withIndex()) {
+        when (c) {
+            '"' -> result.append("\\\"")
+            '\\' -> result.append("\\\\")
+            '\n' -> {
+                if (i != this.lastIndex) {
+                    result.append("\\n\"\n").append(indent).append(indent).append("+ \"")
+                } else {
+                    result.append("\\n")
+                }
             }
-
-            // default case: just let character literal do its work
-            append(c.characterLiteralWithoutSingleQuotes())
-
-            // need to append indent after linefeed?
-            if (c == '\n' && i + 1 < value.length) {
-                append("\"\n").append(indent).append(indent).append("+ \"")
-            }
+            '\r' -> result.append("\\r")
+            '\t' -> result.append("\\t")
+            else -> result.appendCharacterLiteralWithoutSingleQuotes(c)
         }
-        append('"')
+    }
+    result.append('"')
+    return result.toString()
+}
+
+internal fun Appendable.appendCharacterLiteralWithoutSingleQuotes(c: Char) {
+    val appendResult = appendCharacterLiteral(c) {
+        if (c == '\u000c') {
+            append("\\f") // \f \u000c: form feed (FF)
+            true
+        } else {
+            false
+        }
+    }
+
+    if (!appendResult) {
+        append(c)
     }
 }
 
-internal fun Char.characterLiteralWithoutSingleQuotes(): String {
-    // see https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.10.6
-    return when (this) {
-        '\b' -> "\\b" /* \u0008: backspace (BS) */
-        '\t' -> "\\t" /* \u0009: horizontal tab (HT) */
-        '\n' -> "\\n" /* \u000a: linefeed (LF) */
-        '\u000c' -> "\\f" /* \f \u000c: form feed (FF) */
-        '\r' -> "\\r" /* \u000d: carriage return (CR) */
-        '\"' -> "\"" /* \u0022: double quote (") */
-        '\'' -> "\\'" /* \u0027: single quote (') */
-        '\\' -> "\\\\" /* \u005c: backslash (\) */
-        else -> if (isISOControl()) formatIsoControlCode(code) else toString()
-    }
-}
-
-internal fun formatIsoControlCode(code: Int): String =
-    "\\u${code.toHexStr().padStart(4, '0')}"
-
-internal fun Int.toHexStr(): String =
-    toUInt().toString(16)
+internal fun Char.characterLiteralWithoutSingleQuotes(): String =
+    buildString { append(this@characterLiteralWithoutSingleQuotes) }

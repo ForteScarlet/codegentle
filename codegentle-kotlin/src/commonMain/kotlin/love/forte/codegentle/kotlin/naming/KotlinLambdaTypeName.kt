@@ -1,12 +1,13 @@
 package love.forte.codegentle.kotlin.naming
 
 import love.forte.codegentle.common.BuilderDsl
+import love.forte.codegentle.common.naming.CodeGentleNamingImplementation
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.KotlinModifierCollector
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 import love.forte.codegentle.kotlin.naming.internal.KotlinLambdaTypeNameBuilderImpl
+import love.forte.codegentle.kotlin.ref.KotlinTypeRefBuilderDsl
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterCollector
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec
@@ -25,7 +26,13 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  *
  * @author ForteScarlet
  */
+@SubclassOptInRequired(CodeGentleNamingImplementation::class)
 public interface KotlinLambdaTypeName : TypeName, KotlinModifierContainer {
+    /**
+     * This lambda's modifiers. It may contain the element [KotlinModifier.SUSPEND].
+     */
+    override val modifiers: Set<KotlinModifier>
+
     /**
      * The receiver type for extension lambdas, or null if this is not an extension lambda.
      * For example, in `String.() -> Unit`, the receiver type is `String`.
@@ -52,7 +59,6 @@ public interface KotlinLambdaTypeName : TypeName, KotlinModifierContainer {
 
     public interface Builder :
         BuilderDsl,
-        KotlinModifierCollector<Builder>,
         KotlinValueParameterCollector<Builder> {
         /**
          * Sets the receiver type for this lambda.
@@ -78,6 +84,11 @@ public interface KotlinLambdaTypeName : TypeName, KotlinModifierContainer {
          * Sets the return type of this lambda.
          */
         public fun returns(type: TypeRef<*>): Builder
+
+        /**
+         * Set `suspend` for this lambda.
+         */
+        public fun suspend(isSuspend: Boolean = true): Builder
 
         /**
          * Builds the [KotlinLambdaTypeName].
@@ -114,25 +125,58 @@ public inline fun KotlinLambdaTypeName(
     KotlinLambdaTypeName.builder().returns(returnType).apply(block).build()
 
 /**
- * Creates a suspending [KotlinLambdaTypeName] with the given return type.
+ * Add a parameter with a empty name `""`.
+ * In lambda, the parameter's name will be ignored if it's empty.
  *
- * @param returnType the return type of the lambda
- * @param block the configuration block
- * @return a new suspending [KotlinLambdaTypeName] instance
+ * Normal name:
+ * ```Kotlin
+ * // Builder:
+ * addParameter("name", stringType)
+ *
+ * // Generated:
+ * (name: String) -> Unit
+ * ```
+ *
+ * Empty name:
+ *
+ * ```Kotlin
+ * // Builder:
+ * addParameter(stringType)
+ * // or: addParameter("", stringType)
+ *
+ * // Generated:
+ * (String) -> Unit
+ * ```
+ *
  */
-public inline fun buildKotlinSuspendLambdaTypeName(
-    returnType: TypeRef<*> = KotlinNames.Classes.UNIT.kotlinRef(),
-    block: KotlinLambdaTypeName.Builder.() -> Unit = {}
-): KotlinLambdaTypeName =
-    KotlinLambdaTypeName.builder().returns(returnType).suspend().apply(block).build()
-
+public inline fun <C : KotlinValueParameterCollector<C>> C.addParameter(
+    type: TypeRef<*>,
+    block: KotlinValueParameterSpec.Builder.() -> Unit = {}
+): C = addParameter(KotlinValueParameterSpec.builder("", type).apply(block).build())
 
 /**
- * Makes this lambda suspending by adding the [KotlinModifier.SUSPEND] modifier.
+ * Sets the receiver type for this lambda.
  */
-public fun KotlinLambdaTypeName.Builder.suspend(): KotlinLambdaTypeName.Builder =
-    addModifier(KotlinModifier.SUSPEND)
+public inline fun <T : TypeName> KotlinLambdaTypeName.Builder.receiver(
+    receiver: T,
+    block: KotlinTypeRefBuilderDsl<T> = {}
+): KotlinLambdaTypeName.Builder =
+    receiver(receiver.kotlinRef(block))
 
+/**
+ * Adds a context receiver to this lambda.
+ */
+public inline fun <T : TypeName> KotlinLambdaTypeName.Builder.addContextReceiver(
+    contextReceiver: T,
+    block: KotlinTypeRefBuilderDsl<T> = {}
+): KotlinLambdaTypeName.Builder =
+    addContextReceiver(contextReceiver.kotlinRef(block))
+
+public inline fun <T : TypeName> KotlinLambdaTypeName.Builder.returns(
+    type: T,
+    block: KotlinTypeRefBuilderDsl<T> = {}
+): KotlinLambdaTypeName.Builder =
+    returns(type.kotlinRef(block))
 
 /**
  * Extension function to emit a [KotlinLambdaTypeName] to a [KotlinCodeWriter].

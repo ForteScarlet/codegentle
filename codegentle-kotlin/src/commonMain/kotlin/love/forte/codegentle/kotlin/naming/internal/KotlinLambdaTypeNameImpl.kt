@@ -2,6 +2,7 @@ package love.forte.codegentle.kotlin.naming.internal
 
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
+import love.forte.codegentle.kotlin.MutableKotlinModifierSet
 import love.forte.codegentle.kotlin.naming.KotlinLambdaTypeName
 import love.forte.codegentle.kotlin.spec.KotlinValueParameterSpec
 import love.forte.codegentle.kotlin.writer.writeToKotlinString
@@ -32,7 +33,7 @@ internal class KotlinLambdaTypeNameBuilderImpl : KotlinLambdaTypeName.Builder {
     private val contextReceivers: MutableList<TypeRef<*>> = mutableListOf()
     private val parameters: MutableList<KotlinValueParameterSpec> = mutableListOf()
     private var returnType: TypeRef<*>? = null
-    private val modifiers: MutableSet<KotlinModifier> = mutableSetOf()
+    private val modifiers: MutableSet<KotlinModifier> = MutableKotlinModifierSet.empty()
 
     override fun receiver(receiver: TypeRef<*>): KotlinLambdaTypeName.Builder = apply {
         this.receiver = receiver
@@ -66,16 +67,12 @@ internal class KotlinLambdaTypeNameBuilderImpl : KotlinLambdaTypeName.Builder {
         this.returnType = type
     }
 
-    override fun addModifiers(vararg modifiers: KotlinModifier): KotlinLambdaTypeName.Builder = apply {
-        this.modifiers.addAll(modifiers)
-    }
-
-    override fun addModifiers(modifiers: Iterable<KotlinModifier>): KotlinLambdaTypeName.Builder = apply {
-        this.modifiers.addAll(modifiers)
-    }
-
-    override fun addModifier(modifier: KotlinModifier): KotlinLambdaTypeName.Builder = apply {
-        this.modifiers.add(modifier)
+    override fun suspend(isSuspend: Boolean): KotlinLambdaTypeName.Builder = apply {
+        if (isSuspend) {
+            modifiers.add(KotlinModifier.SUSPEND)
+        } else {
+            modifiers.remove(KotlinModifier.SUSPEND)
+        }
     }
 
     override fun build(): KotlinLambdaTypeName {

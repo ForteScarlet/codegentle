@@ -198,16 +198,16 @@ class CodePointTest {
 
     @Test
     fun testUnpairedSurrogate() {
+        // AssertionError: Expected <55357>, actual <63>. ?
+
         // Test unpaired high surrogate
         val unpairedHighSurrogate = "\uD83D"
         val codePointFromUnpairedHigh = unpairedHighSurrogate.codePointAt(0)
-        println("[DEBUG] codePointFromUnpairedHigh: $codePointFromUnpairedHigh (${codePointFromUnpairedHigh.code})")
         assertEquals(0xD83D, codePointFromUnpairedHigh.code)
 
         // Test high surrogate followed by non-low surrogate
         val highSurrogateFollowedByNonLow = "\uD83DA"
         val codePointFromHighNonLow = highSurrogateFollowedByNonLow.codePointAt(0)
-        println("[DEBUG] codePointFromHighNonLow: $codePointFromHighNonLow (${codePointFromHighNonLow.code})")
         assertEquals(0xD83D, codePointFromHighNonLow.code)
     }
 }
