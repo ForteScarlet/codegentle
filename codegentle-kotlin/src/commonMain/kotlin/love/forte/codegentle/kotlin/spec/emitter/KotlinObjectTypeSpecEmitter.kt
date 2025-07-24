@@ -2,9 +2,9 @@ package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.utils.BlankLineManager
-import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinObjectTypeSpec
+import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -32,7 +32,7 @@ private fun KotlinObjectTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     codeWriter.emitModifiers(modifiers)
 
     // Emit "object" keyword for regular objects, "companion object" is handled by modifiers
-    codeWriter.emit("object")
+    codeWriter.emit(KotlinTypeSpec.Kind.OBJECT)
 
     // Emit the name (companion objects can have names or be anonymous)
     if (name.isNotEmpty() && (KotlinModifier.COMPANION !in modifiers || name != KotlinObjectTypeSpec.DEFAULT_COMPANION_NAME)) {
@@ -46,59 +46,12 @@ private fun KotlinObjectTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     // Emit superinterfaces (objects cannot have superclasses)
     if (superinterfaces.isNotEmpty()) {
         codeWriter.emit(" : ")
-        superinterfaces.forEachIndexed { index, typeName ->
-            if (index > 0) codeWriter.emit(", ")
-            codeWriter.emit(typeName)
-        }
+        emitSuperinterfaces(codeWriter)
     }
 
     // Emit the body
-    codeWriter.emit(" {\n")
-    codeWriter.indent()
-
-    // Emit initializer block
-    if (!initializerBlock.isEmpty()) {
-        codeWriter.emitNewLine("init {")
-        codeWriter.withIndent {
-            emit(initializerBlock)
-        }
-        codeWriter.emitNewLine("}")
-        blankLineManager.required()
-    }
-
-    // Emit properties
-    if (properties.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (property in properties) {
-                property.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    // Emit functions
-    if (functions.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (function in functions) {
-                function.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    // Emit subtypes
-    if (subtypes.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (subtype in subtypes) {
-                subtype.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
+    emitBody(codeWriter, blankLineManager)
 
     // Pop type variables from scope
     codeWriter.popTypeVariableRefs(typeVariables)
-
-    codeWriter.unindent()
-    codeWriter.emit("}")
 }

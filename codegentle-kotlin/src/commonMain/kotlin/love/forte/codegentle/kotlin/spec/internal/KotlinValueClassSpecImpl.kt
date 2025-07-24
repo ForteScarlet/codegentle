@@ -28,7 +28,6 @@ internal data class KotlinValueClassSpecImpl(
     override val properties: List<KotlinPropertySpec>,
     override val initializerBlock: CodeValue,
     override val functions: List<KotlinFunctionSpec>,
-    override val subtypes: List<KotlinTypeSpec>
 ) : KotlinValueClassSpec {
     override val superclass: TypeName? = null
 
@@ -171,8 +170,7 @@ internal class KotlinValueClassSpecBuilderImpl(
             superinterfaces = superinterfaces.toList(),
             properties = properties.toList(),
             initializerBlock = initializerBlock.build(),
-            functions = functions.toList(),
-            subtypes = emptyList<KotlinTypeSpec>()
+            functions = functions.toList()
         )
     }
 }

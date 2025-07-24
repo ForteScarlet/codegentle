@@ -28,6 +28,10 @@ public interface KotlinSimpleTypeSpec : KotlinTypeSpec {
 
     public val secondaryConstructors: List<KotlinConstructorSpec>
 
+    override fun isMemberEmpty(): Boolean {
+        return secondaryConstructors.isEmpty() && super.isMemberEmpty()
+    }
+
     public companion object {
         /**
          * Create a builder for a simple Kotlin type spec.

@@ -527,9 +527,7 @@ class KotlinFileTests {
 
                 enum class Color {
                     RED,
-                
                     GREEN,
-                
                     BLUE
                 }
             """.trimIndent(),

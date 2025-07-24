@@ -15,8 +15,6 @@ dependencies {
 
 kotlin {
     explicitApi()
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         optIn.addAll(
             "love.forte.codegentle.common.codepoint.InternalCodePointApi",
@@ -30,7 +28,11 @@ kotlin {
             "love.forte.codegentle.kotlin.spec.CodeGentleKotlinSpecImplementation",
             "love.forte.codegentle.kotlin.CodeGentleKotlinImportImplementation"
         )
-        freeCompilerArgs.add("-Xexpect-actual-classes")
+
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-Xcontext-parameters"
+        )
     }
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)

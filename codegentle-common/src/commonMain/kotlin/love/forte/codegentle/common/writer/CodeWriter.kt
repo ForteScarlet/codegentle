@@ -1,5 +1,6 @@
 package love.forte.codegentle.common.writer
 
+import love.forte.codegentle.common.InternalCommonCodeGentleApi
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.naming.PackageName
 import love.forte.codegentle.common.naming.TypeName
@@ -74,10 +75,13 @@ public inline fun <C : CodeWriter> C.withIndent(
     }
 }
 
+@InternalCommonCodeGentleApi
 public inline fun <C : CodeWriter> C.withIndentBlock(
     levels: Int = 1,
     prefix: String = "",
     newLine: Boolean = true,
+    bodyHead: String = "{",
+    bodyTail: String = "}",
     block: C.() -> Unit
 ) {
     if (prefix.isNotEmpty()) {
@@ -86,7 +90,7 @@ public inline fun <C : CodeWriter> C.withIndentBlock(
             emit(" ")
         }
     }
-    emit("{")
+    emit(bodyHead)
     if (newLine) {
         emitNewLine()
     } else {
@@ -97,7 +101,7 @@ public inline fun <C : CodeWriter> C.withIndentBlock(
         block()
     } finally {
         unindent(levels)
-        emit("}")
+        emit(bodyTail)
     }
 }
 

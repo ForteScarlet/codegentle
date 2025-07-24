@@ -25,10 +25,18 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
     override val kind: KotlinTypeSpec.Kind
         get() = KotlinTypeSpec.Kind.CLASS
 
+    // TODO 换成 primary Constructor, 因为 constructor 还有 modifiers
     /**
      * The primary constructor parameter of the value class.
      */
     public val primaryParameter: KotlinValueParameterSpec
+
+    /**
+     * Value class cannot have subtypes.
+     * Always empty.
+     */
+    override val subtypes: List<KotlinTypeSpec>
+        get() = emptyList()
 
     public companion object {
         /**
@@ -89,3 +97,5 @@ public inline fun KotlinValueClassSpec(
 ): KotlinValueClassSpec {
     return KotlinValueClassSpec.builder(name, primaryParameter).apply(block).build()
 }
+
+// TODO extensions: mark jvmInline

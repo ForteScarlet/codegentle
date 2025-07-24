@@ -153,7 +153,7 @@ class KotlinLambdaTypeNameTests {
 
         val result = lambdaType.writeToKotlinString()
 
-        assertEquals("context(Logger) (message: String) -> Unit", result.trim())
+        assertEquals("context(kotlin.io.Logger) (message: String) -> Unit", result.trim())
     }
 
     @Test
@@ -170,7 +170,7 @@ class KotlinLambdaTypeNameTests {
 
         val result = lambdaType.writeToKotlinString()
 
-        assertEquals("context(Logger, kotlin.coroutines.CoroutineContext) (message: String) -> Unit", result.trim())
+        assertEquals("context(kotlin.io.Logger, kotlin.coroutines.CoroutineContext) (message: String) -> Unit", result.trim())
     }
 
     @Test
@@ -237,7 +237,7 @@ class KotlinLambdaTypeNameTests {
 
         val result = lambdaType.writeToKotlinString()
 
-        assertEquals("suspend context(Logger) String.(count: Int) -> Unit", result.trim())
+        assertEquals("suspend context(kotlin.io.Logger) String.(count: Int) -> Unit", result.trim())
     }
 
     @Test
@@ -251,7 +251,7 @@ class KotlinLambdaTypeNameTests {
 
         val result = lambdaType.writeToKotlinString()
 
-        assertEquals("(input: String) -> List", result.trim())
+        assertEquals("(input: String) -> kotlin.collections.List", result.trim())
     }
 
     @Test

@@ -1,10 +1,10 @@
 package love.forte.codegentle.kotlin.spec.emitter
 
-import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.code.isNotEmpty
 import love.forte.codegentle.common.utils.BlankLineManager
 import love.forte.codegentle.common.writer.withIndentBlock
 import love.forte.codegentle.kotlin.spec.KotlinAnonymousClassTypeSpec
+import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -18,8 +18,6 @@ internal fun KotlinAnonymousClassTypeSpec.emitTo(codeWriter: KotlinCodeWriter, i
 }
 
 private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, isEnum: Boolean) {
-    val blankLineManager = BlankLineManager(codeWriter)
-
     // Emit superclass and superinterfaces
     val hasExtends = superclass != null
     val hasImplements = superinterfaces.isNotEmpty()
@@ -39,7 +37,7 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, i
         codeWriter.emitAnnotationRefs(annotations, false)
 
         // Emit "object : " for anonymous class
-        codeWriter.emit("object")
+        codeWriter.emit(KotlinTypeSpec.Kind.OBJECT)
     }
 
     fun emitConstructorDelegation() {
@@ -84,41 +82,11 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, i
     }
 
     // Emit the body
-    codeWriter.emitNewLine(" {")
-    codeWriter.indent()
-
     // Anonymous classes cannot have constructors, so we skip constructor emission
 
-    // Emit initializer block
-    if (!initializerBlock.isEmpty()) {
-        codeWriter.withIndentBlock(prefix = "init") {
-            emit(initializerBlock)
-        }
-        codeWriter.emitNewLine()
-        blankLineManager.required()
+    val blankLineManager = BlankLineManager(codeWriter)
+
+    codeWriter.withIndentBlock(prefix = " ") {
+        emitMembers(codeWriter, blankLineManager)
     }
-
-    // Emit properties
-    if (properties.isNotEmpty()) {
-        for (property in properties) {
-            blankLineManager.withRequirement {
-                property.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    // Emit functions
-    if (functions.isNotEmpty()) {
-        for (function in functions) {
-            blankLineManager.withRequirement {
-                function.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    codeWriter.unindent()
-    codeWriter.emit("}")
-
 }

@@ -2,10 +2,10 @@ package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.utils.BlankLineManager
-import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.VISIBILITY_MODIFIERS
 import love.forte.codegentle.kotlin.spec.ConstructorDelegation
+import love.forte.codegentle.kotlin.spec.KotlinConstructorSpec
 import love.forte.codegentle.kotlin.spec.KotlinSimpleTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
@@ -22,9 +22,14 @@ internal fun KotlinSimpleTypeSpec.emitTo(
     }
 }
 
-private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitModifiers: Set<KotlinModifier>) {
-    val blankLineManager = BlankLineManager(codeWriter)
+/**
+ * Extension function to emit a [KotlinSimpleTypeSpec] to a [KotlinCodeWriter].
+ */
+internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
+    emitTo(codeWriter, emptySet())
+}
 
+private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitModifiers: Set<KotlinModifier>) {
     // Emit KDoc
     if (!kDoc.isEmpty()) {
         codeWriter.emitDoc(kDoc)
@@ -37,26 +42,38 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
     codeWriter.emitModifiers(modifiers, implicitModifiers)
 
     // Emit the type keyword based on the kind
-    codeWriter.emit(kind.keyword)
-    codeWriter.emit(" ")
+    codeWriter.emit(kind, true)
 
     // Emit the name
     codeWriter.emit(name)
 
     // Emit type variables
-    codeWriter.emitTypeVariableRefs(typeVariables)
-
-    // Emit primary constructor if present
-    val primary = primaryConstructor
-    if (primary != null) {
-        if (primary.modifiers.any { it in VISIBILITY_MODIFIERS }) {
-            codeWriter.emit(" ")
-        }
-
-        primary.emitTo(codeWriter, true)
+    emitAndWithTypeVariableRefs(codeWriter) {
+        emitInTypeVariableRefs(codeWriter)
     }
+}
 
-    // Emit superclass and superinterfaces
+private fun KotlinSimpleTypeSpec.emitInTypeVariableRefs(codeWriter: KotlinCodeWriter) {
+    val blankLineManager = BlankLineManager(codeWriter)
+
+    // Emit primary constructor, superclass and superinterfaces
+    emitSupers(codeWriter)
+
+    // Emit the body
+    emitBody(
+        codeWriter,
+        blankLineManager,
+        beforeEmitMember = {
+            emitSecondaryConstructors(blankLineManager, codeWriter)
+        }
+    )
+}
+
+private fun KotlinSimpleTypeSpec.emitSupers(codeWriter: KotlinCodeWriter) {
+    val primary = this.primaryConstructor
+    emitPrimaryParameter(codeWriter, primary)
+
+    val superclass = superclass
     val hasExtends = superclass != null
     val hasImplements = superinterfaces.isNotEmpty()
 
@@ -64,12 +81,16 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
         codeWriter.emit(" : ")
 
         if (hasExtends) {
-            codeWriter.emit(superclass!!)
+            codeWriter.emit(superclass)
             codeWriter.emit("(")
 
             // Check if the primary constructor has super delegation and add arguments
             val primaryDelegation = primary?.constructorDelegation
-            if (primaryDelegation != null && primaryDelegation.kind == ConstructorDelegation.Kind.SUPER) {
+            if (primaryDelegation != null) {
+                require(primaryDelegation.kind == ConstructorDelegation.Kind.SUPER) {
+                    "Primary constructor delegation must be a super call, but was $primaryDelegation"
+                }
+
                 primaryDelegation.arguments.forEachIndexed { index, argument ->
                     if (index > 0) codeWriter.emit(", ")
                     codeWriter.emit(argument)
@@ -83,79 +104,33 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
             }
         }
 
-        if (hasImplements) {
-            superinterfaces.forEachIndexed { index, typeName ->
-                if (index > 0) codeWriter.emit(", ")
-                codeWriter.emit(typeName)
-            }
-        }
+        emitSuperinterfaces(codeWriter)
     }
+}
 
-    // Emit the body
-    codeWriter.emit(" {\n")
-    codeWriter.indent()
-
-    // Emit initializer block
-    if (!initializerBlock.isEmpty()) {
-        codeWriter.emitNewLine("init {")
-        codeWriter.withIndent {
-            emit(initializerBlock)
+private fun emitPrimaryParameter(
+    codeWriter: KotlinCodeWriter,
+    primaryConstructor: KotlinConstructorSpec?
+) {
+    if (primaryConstructor != null) {
+        if (primaryConstructor.modifiers.any { it in VISIBILITY_MODIFIERS }) {
+            codeWriter.emit(" ")
         }
-        codeWriter.emitNewLine()
-        codeWriter.emit("}")
-        blankLineManager.required()
-    }
 
-    // Emit secondary constructors
+        primaryConstructor.emitTo(codeWriter, true)
+    }
+}
+
+private fun KotlinSimpleTypeSpec.emitSecondaryConstructors(
+    blankLineManager: BlankLineManager,
+    codeWriter: KotlinCodeWriter
+) {
     if (secondaryConstructors.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (constructor in secondaryConstructors) {
+        for (constructor in secondaryConstructors) {
+            blankLineManager.withRequirement {
                 constructor.emitTo(codeWriter, false)
                 codeWriter.emitNewLine()
             }
         }
     }
-
-    // Emit properties
-    if (properties.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (property in properties) {
-                property.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    // Emit functions
-    if (functions.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (function in functions) {
-                function.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    // Emit subtypes
-    if (subtypes.isNotEmpty()) {
-        blankLineManager.withRequirement {
-            for (subtype in subtypes) {
-                subtype.emitTo(codeWriter)
-                codeWriter.emitNewLine()
-            }
-        }
-    }
-
-    // Pop type variables from scope
-    codeWriter.popTypeVariableRefs(typeVariables)
-
-    codeWriter.unindent()
-    codeWriter.emit("}")
-}
-
-/**
- * Extension function to emit a [KotlinSimpleTypeSpec] to a [KotlinCodeWriter].
- */
-internal fun KotlinSimpleTypeSpec.emitTo(codeWriter: KotlinCodeWriter) {
-    emitTo(codeWriter, emptySet())
 }
