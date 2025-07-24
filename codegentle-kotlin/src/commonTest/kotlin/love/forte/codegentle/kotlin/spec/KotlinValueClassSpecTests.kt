@@ -6,7 +6,7 @@ import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.kotlin.KotlinModifier
-import love.forte.codegentle.kotlin.naming.KotlinNames
+import love.forte.codegentle.kotlin.naming.KotlinClassNames
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.writer.writeToKotlinString
 import kotlin.test.Test
@@ -336,9 +336,9 @@ value class UserId(val value: String) {
 
     @Test
     fun testComplexValueClass() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val parameter = KotlinValueParameterSpec.builder("id", stringType)
             .immutableProperty()

@@ -97,8 +97,8 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testExtensionLambdaType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
             receiver(stringType)
@@ -111,9 +111,9 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testExtensionLambdaWithParameters() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val unitType = KotlinNames.Classes.UNIT.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val unitType = KotlinClassNames.UNIT.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(unitType) {
             receiver(stringType)
@@ -127,8 +127,8 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testSuspendExtensionLambdaType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val unitType = KotlinNames.Classes.UNIT.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val unitType = KotlinClassNames.UNIT.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(unitType) {
             suspend()
@@ -143,8 +143,8 @@ class KotlinLambdaTypeNameTests {
     @Test
     fun testContextReceiverLambdaType() {
         val loggerType = ClassName("kotlin.io", "Logger").kotlinRef()
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val unitType = KotlinNames.Classes.UNIT.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val unitType = KotlinClassNames.UNIT.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(unitType) {
             addContextReceiver(loggerType)
@@ -160,8 +160,8 @@ class KotlinLambdaTypeNameTests {
     fun testMultipleContextReceiversLambdaType() {
         val loggerType = ClassName("kotlin.io", "Logger").kotlinRef()
         val contextType = ClassName("kotlin.coroutines", "CoroutineContext").kotlinRef()
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val unitType = KotlinNames.Classes.UNIT.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val unitType = KotlinClassNames.UNIT.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(unitType) {
             addContextReceivers(loggerType, contextType)
@@ -175,9 +175,9 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testMultipleParametersLambdaType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
             addParameter("name", stringType)
@@ -191,9 +191,9 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testUnnamedParametersLambdaType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
             addParameter("", stringType)
@@ -207,9 +207,9 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testMixedNamedAndUnnamedParametersLambdaType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
             addParameter("name", stringType)
@@ -224,9 +224,9 @@ class KotlinLambdaTypeNameTests {
     @Test
     fun testComplexCombinationLambdaType() {
         val loggerType = ClassName("kotlin.io", "Logger").kotlinRef()
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val unitType = KotlinNames.Classes.UNIT.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val unitType = KotlinClassNames.UNIT.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(unitType) {
             addContextReceiver(loggerType)
@@ -242,8 +242,8 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testLambdaWithGenericReturnType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val listType = KotlinNames.Classes.LIST.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val listType = KotlinClassNames.LIST.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(listType) {
             addParameter("input", stringType)
@@ -256,8 +256,8 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testLambdaWithNothingReturnType() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val nothingType = KotlinNames.Classes.NOTHING.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val nothingType = KotlinClassNames.NOTHING.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(nothingType) {
             addParameter("message", stringType)
@@ -272,16 +272,16 @@ class KotlinLambdaTypeNameTests {
     fun testBuilderWithoutReturnTypeThrowsException() {
         assertFailsWith<IllegalStateException> {
             KotlinLambdaTypeName.builder()
-                .addParameter("input", KotlinNames.Classes.STRING.kotlinRef())
+                .addParameter("input", KotlinClassNames.STRING.kotlinRef())
                 .build()
         }
     }
 
     @Test
     fun testBuilderPropertiesAccess() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val intType = KotlinNames.Classes.INT.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val intType = KotlinClassNames.INT.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
         val loggerType = ClassName("kotlin.io", "Logger").kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
@@ -303,7 +303,7 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testEmptyContextReceiversList() {
-        val unitType = KotlinNames.Classes.UNIT.kotlinRef()
+        val unitType = KotlinClassNames.UNIT.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(unitType)
 
@@ -312,8 +312,8 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testParameterSpecDirectCreation() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val param = KotlinValueParameterSpec.builder("input", stringType).build()
         val lambdaType = KotlinLambdaTypeName(booleanType) {
@@ -327,8 +327,8 @@ class KotlinLambdaTypeNameTests {
 
     @Test
     fun testToStringMethod() {
-        val stringType = KotlinNames.Classes.STRING.kotlinRef()
-        val booleanType = KotlinNames.Classes.BOOLEAN.kotlinRef()
+        val stringType = KotlinClassNames.STRING.kotlinRef()
+        val booleanType = KotlinClassNames.BOOLEAN.kotlinRef()
 
         val lambdaType = KotlinLambdaTypeName(booleanType) {
             addParameter("input", stringType)

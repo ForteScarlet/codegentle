@@ -73,17 +73,17 @@ public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
 
     public companion object {
         public val defaultImports: Set<PackageName> = setOf(
-            PackageNames.kotlin,
-            PackageNames.kotlinJvm,
-            PackageNames.kotlinJs,
-            PackageNames.javaLang,
-            PackageNames.kotlinAnnotation,
-            PackageNames.kotlinCollections,
-            PackageNames.kotlinComparisons,
-            PackageNames.kotlinIo,
-            PackageNames.kotlinRanges,
-            PackageNames.kotlinSequences,
-            PackageNames.kotlinText,
+            PackageNames.KOTLIN,
+            PackageNames.KOTLIN_JVM,
+            PackageNames.KOTLIN_JS,
+            PackageNames.JAVA_LANG,
+            PackageNames.KOTLIN_ANNOTATION,
+            PackageNames.KOTLIN_COLLECTIONS,
+            PackageNames.KOTLIN_COMPARISONS,
+            PackageNames.KOTLIN_IO,
+            PackageNames.KOTLIN_RANGES,
+            PackageNames.KOTLIN_SEQUENCES,
+            PackageNames.KOTLIN_TEXT,
         )
     }
 }
@@ -93,10 +93,10 @@ public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
  */
 public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
     private val defaultImportPackages = setOf(
-        PackageNames.kotlin,
-        PackageNames.kotlinJvm,
-        PackageNames.kotlinJs,
-        PackageNames.kotlinAnnotation,
+        PackageNames.KOTLIN,
+        PackageNames.KOTLIN_JVM,
+        PackageNames.KOTLIN_JS,
+        PackageNames.KOTLIN_ANNOTATION,
     )
 
     override fun isIdentifier(value: String): Boolean = true

@@ -8,7 +8,7 @@ import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.common.ref.TypeVariableCollector
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierCollector
-import love.forte.codegentle.kotlin.naming.KotlinNames
+import love.forte.codegentle.kotlin.naming.KotlinClassNames
 import love.forte.codegentle.kotlin.ref.KotlinTypeRefBuilderDsl
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec.Companion.DEFAULT_REF
@@ -94,7 +94,7 @@ public interface KotlinFunctionSpec : KotlinCallableSpec {
     }
 
     public companion object {
-        public val DEFAULT_REF: TypeRef<*> = KotlinNames.Classes.UNIT.kotlinRef()
+        public val DEFAULT_REF: TypeRef<*> = KotlinClassNames.UNIT.kotlinRef()
 
         /**
          * Create a function builder.

@@ -1,6 +1,7 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.naming.ClassName
+import love.forte.codegentle.kotlin.naming.KotlinClassNames
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,9 +12,9 @@ import kotlin.test.assertNull
  */
 class KotlinContextParameterSpecTests {
 
-    private val stringType = ClassName("kotlin", "String").kotlinRef()
-    private val intType = ClassName("kotlin", "Int").kotlinRef()
-    private val listType = ClassName("kotlin.collections", "List").kotlinRef()
+    private val stringType = KotlinClassNames.STRING.kotlinRef()
+    private val intType = KotlinClassNames.INT.kotlinRef()
+    private val listType = KotlinClassNames.LIST.kotlinRef()
 
     @Test
     fun testBasicContextParameterCreation() {
@@ -229,17 +230,13 @@ class KotlinContextParameterSpecTests {
         assertEquals(type, dslParam.typeRef)
     }
 
-    // Code generation tests are commented out because context parameter emitter may not be implemented
-    // TODO: Uncomment these tests once the emitter is implemented
-
     @Test
     fun testContextParameterCodeGeneration() {
         val contextParam = KotlinContextParameterSpec("context", stringType)
 
         val generatedCode = contextParam.writeToKotlinString()
-        val expectedCode = "context: String"
 
-        assertEquals(expectedCode, generatedCode.trim())
+        assertEquals("context: String", generatedCode.trim())
     }
 
     @Test
@@ -247,17 +244,14 @@ class KotlinContextParameterSpecTests {
         val contextParam = KotlinContextParameterSpec(null, stringType)
 
         val generatedCode = contextParam.writeToKotlinString()
-        val expectedCode = "_: String"
 
-        assertEquals(expectedCode, generatedCode.trim())
+        assertEquals("_: String", generatedCode.trim())
     }
 
     @Test
     fun testContextParameterCodeGenerationConsistency() {
-        val contextParam = KotlinContextParameterSpec("context", stringType)
-
-        val generatedCode1 = contextParam.writeToKotlinString()
-        val generatedCode2 = contextParam.writeToKotlinString()
+        val generatedCode1 = KotlinContextParameterSpec("context", stringType).writeToKotlinString()
+        val generatedCode2 = KotlinContextParameterSpec("context", stringType).writeToKotlinString()
 
         assertEquals(generatedCode1, generatedCode2)
     }

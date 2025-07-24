@@ -119,7 +119,7 @@ public val KotlinLambdaTypeName.isSuspend: Boolean
  * @return a new [KotlinLambdaTypeName] instance
  */
 public inline fun KotlinLambdaTypeName(
-    returnType: TypeRef<*> = KotlinNames.Classes.UNIT.kotlinRef(),
+    returnType: TypeRef<*> = KotlinClassNames.UNIT.kotlinRef(),
     block: KotlinLambdaTypeName.Builder.() -> Unit = {}
 ): KotlinLambdaTypeName =
     KotlinLambdaTypeName.builder().returns(returnType).apply(block).build()

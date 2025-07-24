@@ -7,90 +7,90 @@ public object PackageNames {
     /**
      * `kotlin.*`
      */
-    public val kotlin: PackageName = "kotlin".parseToPackageName()
+    public val KOTLIN: PackageName = "kotlin".parseToPackageName()
 
     /**
      * `kotlin.jvm.*`
      */
-    public val kotlinJvm: PackageName = "kotlin.jvm".parseToPackageName()
+    public val KOTLIN_JVM: PackageName = "kotlin.jvm".parseToPackageName()
 
     /**
      * `kotlin.js.*`
      */
-    public val kotlinJs: PackageName = "kotlin.js".parseToPackageName()
+    public val KOTLIN_JS: PackageName = "kotlin.js".parseToPackageName()
 
     /**
      * `kotlin.annotation.*`
      */
-    public val kotlinAnnotation: PackageName = "kotlin.annotation".parseToPackageName()
+    public val KOTLIN_ANNOTATION: PackageName = "kotlin.annotation".parseToPackageName()
 
     /**
      * `kotlin.collections.*`
      */
-    public val kotlinCollections: PackageName = "kotlin.collections".parseToPackageName()
+    public val KOTLIN_COLLECTIONS: PackageName = "kotlin.collections".parseToPackageName()
 
     /**
      * `kotlin.sequences.*`
      */
-    public val kotlinSequences: PackageName = "kotlin.sequences".parseToPackageName()
+    public val KOTLIN_SEQUENCES: PackageName = "kotlin.sequences".parseToPackageName()
 
     /**
      * `kotlin.comparisons.*`
      */
-    public val kotlinComparisons: PackageName = "kotlin.comparisons".parseToPackageName()
+    public val KOTLIN_COMPARISONS: PackageName = "kotlin.comparisons".parseToPackageName()
 
     /**
      * `kotlin.io.*`
      */
-    public val kotlinIo: PackageName = "kotlin.io".parseToPackageName()
+    public val KOTLIN_IO: PackageName = "kotlin.io".parseToPackageName()
 
     /**
      * `kotlin.text.*`
      */
-    public val kotlinText: PackageName = "kotlin.text".parseToPackageName()
+    public val KOTLIN_TEXT: PackageName = "kotlin.text".parseToPackageName()
 
     /**
      * `kotlin.ranges.*`
      */
-    public val kotlinRanges: PackageName = "kotlin.ranges".parseToPackageName()
+    public val KOTLIN_RANGES: PackageName = "kotlin.ranges".parseToPackageName()
 
     /**
      * `kotlin.coroutines.*`
      */
-    public val kotlinCoroutines: PackageName = "kotlin.coroutines".parseToPackageName()
+    public val KOTLIN_COROUTINES: PackageName = "kotlin.coroutines".parseToPackageName()
 
     /**
      * `kotlin.reflect.*`
      */
-    public val kotlinReflect: PackageName = "kotlin.reflect".parseToPackageName()
+    public val KOTLIN_REFLECT: PackageName = "kotlin.reflect".parseToPackageName()
 
     /**
      * `java.lang.*`
      */
-    public val javaLang: PackageName = "java.lang".parseToPackageName()
+    public val JAVA_LANG: PackageName = "java.lang".parseToPackageName()
 
     /**
      * `java.util.*`
      */
-    public val javaUtil: PackageName = "java.util".parseToPackageName()
+    public val JAVA_UTIL: PackageName = "java.util".parseToPackageName()
 
     /**
      * `java.io.*`
      */
-    public val javaIo: PackageName = "java.io".parseToPackageName()
+    public val JAVA_IO: PackageName = "java.io".parseToPackageName()
 
     /**
      * `java.time.*`
      */
-    public val javaTime: PackageName = "java.time".parseToPackageName()
+    public val JAVA_TIME: PackageName = "java.time".parseToPackageName()
 
     /**
      * `java.math.*`
      */
-    public val javaMath: PackageName = "java.math".parseToPackageName()
+    public val JAVA_MATH: PackageName = "java.math".parseToPackageName()
 
     /**
      * `java.net.*`
      */
-    public val javaNet: PackageName = "java.net".parseToPackageName()
+    public val JAVA_NET: PackageName = "java.net".parseToPackageName()
 }

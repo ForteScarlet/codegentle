@@ -499,16 +499,6 @@ internal inline fun KotlinCodeWriter.emit(format: String, block: CodeValueSingle
     emit(CodeValue(format, block))
 }
 
-internal fun KotlinCodeEmitter.emitToString(): String =
-    buildString {
-        emit(
-            KotlinCodeWriter.create(
-                out = this,
-                strategy = ToStringKotlinWriteStrategy
-            )
-        )
-    }
-
 public fun TypeRef<*>.writeToKotlinString(strategy: KotlinWriteStrategy = ToStringKotlinWriteStrategy): String =
     buildString {
         KotlinCodeWriter.create(out = this, strategy = strategy)
