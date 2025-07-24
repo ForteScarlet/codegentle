@@ -33,6 +33,10 @@ public interface KotlinEnumTypeSpec : KotlinTypeSpec {
      */
     public val enumConstants: Map<String, KotlinAnonymousClassTypeSpec?>
 
+    override fun isMemberEmpty(): Boolean {
+        return enumConstants.isEmpty() && super.isMemberEmpty()
+    }
+
     public companion object {
         /**
          * Create a builder for an enum class.

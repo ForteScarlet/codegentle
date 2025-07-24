@@ -1,6 +1,7 @@
 package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.utils.BlankLineManager
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierSet
@@ -77,7 +78,7 @@ private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
             emit(initializerBlock)
         }
         codeWriter.emitNewLine()
-        codeWriter.emitNewLine("}")
+        codeWriter.emit("}")
         blankLineManager.required()
     }
 

@@ -2,6 +2,7 @@ package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.GenEnumSet
 import love.forte.codegentle.common.code.CodeValue
+import love.forte.codegentle.common.code.isNotEmpty
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
@@ -57,6 +58,26 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
     public val functions: List<KotlinFunctionSpec>
 
     public val subtypes: List<KotlinTypeSpec>
+
+    public fun isMemberEmpty(): Boolean {
+        if (properties.isNotEmpty()) {
+            return false
+        }
+
+        if (functions.isNotEmpty()) {
+            return false
+        }
+
+        if (subtypes.isNotEmpty()) {
+            return false
+        }
+
+        if (initializerBlock.isNotEmpty()) {
+            return false
+        }
+
+        return true
+    }
 
     @GenEnumSet(
         internal = true,
@@ -204,3 +225,5 @@ public val KotlinTypeSpec.isObject: Boolean
 
 public val KotlinTypeSpec.isCompanionObject: Boolean
     get() = kind == KotlinTypeSpec.Kind.OBJECT && KotlinModifier.COMPANION in modifiers
+
+public fun KotlinTypeSpec.isMemberNotEmpty(): Boolean = !isMemberEmpty()

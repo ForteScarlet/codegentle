@@ -82,18 +82,21 @@ public inline fun <C : CodeWriter> C.withIndentBlock(
 ) {
     if (prefix.isNotEmpty()) {
         emit(prefix)
-        emit(" ")
+        if (!prefix.last().isWhitespace()) {
+            emit(" ")
+        }
     }
     emit("{")
     if (newLine) {
         emitNewLine()
+    } else {
+        emit(" ")
     }
     indent(levels)
     try {
         block()
     } finally {
         unindent(levels)
-        emitNewLine()
         emit("}")
     }
 }

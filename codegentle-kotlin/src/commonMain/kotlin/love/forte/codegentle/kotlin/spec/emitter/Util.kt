@@ -34,5 +34,4 @@ internal fun CodeValue.removeFirstReturn(): CodeValue {
     }
 }
 
-
-
+// TODO 抽离 emit properties, functions subtypes 这类多个地方都存在、且需要保证它们之间结构的内容。

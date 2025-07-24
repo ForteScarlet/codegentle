@@ -1,6 +1,7 @@
 package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.common.utils.BlankLineManager
 import love.forte.codegentle.common.writer.withIndent
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinObjectTypeSpec

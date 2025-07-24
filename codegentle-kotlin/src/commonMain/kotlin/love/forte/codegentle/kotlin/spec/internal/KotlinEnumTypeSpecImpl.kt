@@ -168,7 +168,7 @@ internal class KotlinEnumTypeSpecBuilderImpl(
             properties = properties.toList(),
             initializerBlock = initializerBlock.build(),
             functions = functions.toList(),
-            subtypes = emptyList<KotlinTypeSpec>()
+            subtypes = emptyList()
         )
     }
 }
