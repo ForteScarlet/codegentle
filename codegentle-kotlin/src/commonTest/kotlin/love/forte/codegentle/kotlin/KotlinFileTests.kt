@@ -89,8 +89,7 @@ class KotlinFileTests {
                     println(greeting)
                 }
 
-                class Greeter {
-                }
+                class Greeter
             """.trimIndent(),
             output
         )
@@ -219,14 +218,11 @@ class KotlinFileTests {
             """
                 package com.example
 
-                class Class1 {
-                }
+                class Class1
 
-                class Class2 {
-                }
+                class Class2
 
-                interface Interface1 {
-                }
+                interface Interface1
             """.trimIndent(),
             output
         )
@@ -247,11 +243,9 @@ class KotlinFileTests {
             """
                 package com.example
 
-                class Class1 {
-                }
+                class Class1
 
-                class Class2 {
-                }
+                class Class2
             """.trimIndent(),
             output
         )
@@ -273,11 +267,9 @@ class KotlinFileTests {
             """
                 package com.example
 
-                class Class1 {
-                }
+                class Class1
 
-                class Class2 {
-                }
+                class Class2
             """.trimIndent(),
             output
         )
@@ -296,8 +288,7 @@ class KotlinFileTests {
             """
                 package com.example
 
-                class MyClass {
-                }
+                class MyClass
             """.trimIndent(),
             output
         )
@@ -319,8 +310,7 @@ class KotlinFileTests {
                 // This is a test file.
                 package com.example
 
-                class MyClass {
-                }
+                class MyClass
             """.trimIndent(),
             output
         )
@@ -345,8 +335,7 @@ class KotlinFileTests {
                 import kotlin.collections.Collections.emptyList
                 import kotlin.collections.Collections.emptyMap
 
-                class MyClass {
-                }
+                class MyClass
             """.trimIndent(),
             output
         )
@@ -394,8 +383,7 @@ class KotlinFileTests {
             """
                 package com.example
 
-                class MyClass {
-                }
+                class MyClass
             """.trimIndent(),
             output
         )
@@ -420,8 +408,7 @@ class KotlinFileTests {
             """
                 package com.example
 
-                sealed class Result {
-                }
+                sealed class Result
             """.trimIndent(),
             output
         )
@@ -444,8 +431,7 @@ class KotlinFileTests {
             """
                 package com.example
 
-                sealed interface State {
-                }
+                sealed interface State
             """.trimIndent(),
             output
         )
@@ -498,8 +484,7 @@ class KotlinFileTests {
             """
                 package com.example
 
-                value class UserId(val value: String) {
-                }
+                value class UserId(val value: String)
             """.trimIndent(),
             output
         )
@@ -571,8 +556,7 @@ class KotlinFileTests {
         assertEquals("""
             package com.example
             
-            object Singleton {
-            }
+            object Singleton
         """.trimIndent(), output)
     }
 
@@ -596,8 +580,7 @@ class KotlinFileTests {
                 package com.example
                 
                 class MyClass {
-                    companion object {
-                    }
+                    companion object
                 }
             """.trimIndent(),
             output
@@ -688,8 +671,7 @@ class KotlinFileTests {
                 |
                 |    public fun greet(greeting: String): String = "$greeting, $name!"
                 |
-                |    inner class NestedClass {
-                |    }
+                |    inner class NestedClass
                 |}
             """.trimMargin(),
             output

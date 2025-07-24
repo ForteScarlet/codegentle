@@ -116,6 +116,12 @@ class KotlinPropertySpecMutableTests {
             .build()
 
         val code = classSpec.writeToKotlinString()
-        assertEquals("class Person {\n    var name: String = \"Unknown\"\n    val age: Int = 0\n}", code)
+        assertEquals(
+            """
+                class Person {
+                    var name: String = "Unknown"
+                
+                    val age: Int = 0
+                }""".trimIndent(), code)
     }
 }

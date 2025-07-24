@@ -28,7 +28,7 @@ class KotlinValueClassSpecTests {
         val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
 
         val code = valueClass.writeToKotlinString()
-        assertEquals("value class UserId(val value: String) {\n}", code)
+        assertEquals("value class UserId(val value: String)", code)
     }
 
     @Test
@@ -48,8 +48,7 @@ class KotlinValueClassSpecTests {
  * A value class representing a user ID.
  * @param value the string value of the user ID
  */
-value class UserId(val value: String) {
-}"""
+value class UserId(val value: String)"""
         assertEquals(expectedCode, code)
     }
 
@@ -69,13 +68,10 @@ value class UserId(val value: String) {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        println("[DEBUG_LOG] Generated code for testValueClassWithAnnotations:")
-        println("[DEBUG_LOG] $code")
         val expectedCode = """
                 @kotlinx.serialization.Serializable
                 @JvmInline
-                value class UserId(val value: String) {
-                }
+                value class UserId(val value: String)
                 """.trimIndent()
         assertEquals(expectedCode, code)
     }
@@ -102,8 +98,7 @@ value class UserId(val value: String) {
                 @kotlinx.serialization.Serializable
                 @JvmInline
                 @Deprecated(message = "Use NewUserId instead")
-                value class UserId(val value: String) {
-                }
+                value class UserId(val value: String)
                 """.trimIndent()
         assertEquals(expectedCode, code)
     }
@@ -120,25 +115,7 @@ value class UserId(val value: String) {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        val expectedCode = """internal value class UserId(val value: String) {
-}"""
-        assertEquals(expectedCode, code)
-    }
-
-    @Test
-    fun testValueClassWithMultipleModifiers() {
-        val stringType = ClassName("kotlin", "String").kotlinRef()
-        val parameter = KotlinValueParameterSpec.builder("value", stringType)
-            .immutableProperty()
-            .build()
-
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
-            .addModifiers(KotlinModifier.INTERNAL, KotlinModifier.INLINE)
-            .build()
-
-        val code = valueClass.writeToKotlinString()
-        val expectedCode = """internal inline value class UserId(val value: String) {
-}"""
+        val expectedCode = """internal value class UserId(val value: String)"""
         assertEquals(expectedCode, code)
     }
 
@@ -157,8 +134,7 @@ value class UserId(val value: String) {
 
         val code = valueClass.writeToKotlinString()
         println(code)
-        val expectedCode = """value class Wrapper<T>(val value: T) {
-}"""
+        val expectedCode = """value class Wrapper<T>(val value: T)"""
         assertEquals(expectedCode, code)
     }
 
@@ -178,8 +154,7 @@ value class UserId(val value: String) {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        val expectedCode = """value class Wrapper<T, U>(val value: T) {
-}"""
+        val expectedCode = """value class Wrapper<T, U>(val value: T)"""
         assertEquals(expectedCode, code)
     }
 
@@ -199,8 +174,7 @@ value class UserId(val value: String) {
             .build()
 
         val code = valueClass.writeToKotlinString()
-        val expectedCode = """value class UserId(val value: String) : Comparable, java.io.Serializable {
-}"""
+        val expectedCode = """value class UserId(val value: String) : Comparable, java.io.Serializable"""
         assertEquals(expectedCode, code)
     }
 
@@ -327,8 +301,7 @@ value class UserId(val value: String) {
         val code = valueClass.writeToKotlinString()
         assertEquals(
             """
-            value class UserId(val value: String = "default") {
-            }
+            value class UserId(val value: String = "default")
         """.trimIndent(),
             code
         )

@@ -29,7 +29,7 @@ class KotlinSimpleTypeSpecConstructorTests {
             .build()
 
         val code = typeSpec.writeToKotlinString()
-        assertEquals("class Person(name: String, age: Int = 0) {\n}", code)
+        assertEquals("class Person(name: String, age: Int = 0)", code)
     }
 
     @Test
@@ -46,7 +46,7 @@ class KotlinSimpleTypeSpecConstructorTests {
             .build()
 
         val code = typeSpec.writeToKotlinString()
-        assertEquals("class Person private constructor(name: String) {\n}", code)
+        assertEquals("class Person private constructor(name: String)", code)
     }
 
     @Test
@@ -121,6 +121,7 @@ class KotlinSimpleTypeSpecConstructorTests {
             """
             class Person(name: String) {
                 constructor(name: String, age: Int) : this(name)
+            
                 constructor(name: String, isActive: Boolean) : this(name)
             }
             """.trimIndent(),
@@ -146,7 +147,7 @@ class KotlinSimpleTypeSpecConstructorTests {
             .build()
 
         val code = typeSpec.writeToKotlinString()
-        assertEquals("class Child(name: String) : test.Parent(name) {\n}", code)
+        assertEquals("class Child(name: String) : test.Parent(name)", code)
     }
 
     @Test
@@ -178,6 +179,7 @@ class KotlinSimpleTypeSpecConstructorTests {
             """
             class Person(name: String, age: Int) {
                 val name: String = name
+            
                 val age: Int = age
             }
             """.trimIndent(),

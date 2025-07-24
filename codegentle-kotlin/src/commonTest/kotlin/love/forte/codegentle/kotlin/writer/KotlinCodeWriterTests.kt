@@ -174,15 +174,13 @@ class KotlinCodeWriterTests {
                 /**
                  * This is an inner class.
                  */
-                inner class InnerClass {
-                }
+                inner class InnerClass
             }
         """.trimIndent()
 
         assertEquals(expected, result)
     }
 
-    // TODO ERROR
     @Test
     fun testFunctionWithParameters() {
         val className = ClassName("com.example", "MyClass")

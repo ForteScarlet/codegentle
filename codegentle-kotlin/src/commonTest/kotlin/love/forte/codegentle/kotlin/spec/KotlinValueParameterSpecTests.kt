@@ -395,7 +395,7 @@ class KotlinValueParameterSpecTests {
             .build()
 
         val code = classSpec.writeToKotlinString()
-        val expected = "class Person(val name: String, var age: Int = 0) {\n}"
+        val expected = "class Person(val name: String, var age: Int = 0)"
         assertEquals(expected, code)
     }
 
@@ -716,7 +716,7 @@ class KotlinValueParameterSpecTests {
             .build()
 
         val code = dataClass.writeToKotlinString()
-        assertEquals("data class User(val id: Int, val name: String) {\n}", code)
+        assertEquals("data class User(val id: Int, val name: String)", code)
     }
 
     @Test

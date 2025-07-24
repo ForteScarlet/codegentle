@@ -83,7 +83,9 @@ internal fun KotlinTypeSpec.emitInitializerBlock(codeWriter: KotlinCodeWriter, b
         blankLineManager.withRequirement {
             codeWriter.withIndentBlock(prefix = "init") {
                 emit(initializerBlock)
+                emitNewLine()
             }
+            codeWriter.emitNewLine()
         }
     }
 }
