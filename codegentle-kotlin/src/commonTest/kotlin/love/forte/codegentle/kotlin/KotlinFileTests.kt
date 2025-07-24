@@ -3,13 +3,9 @@ package love.forte.codegentle.kotlin
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.parseToPackageName
 import love.forte.codegentle.kotlin.ref.kotlinRef
-import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
-import love.forte.codegentle.kotlin.spec.KotlinPropertySpec
-import love.forte.codegentle.kotlin.spec.KotlinSimpleTypeSpec
-import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
+import love.forte.codegentle.kotlin.spec.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  * Tests for KotlinFile functionality.
@@ -219,33 +215,21 @@ class KotlinFileTests {
 
         val output = kotlinFile.writeToKotlinString()
 
-        assertTrue(output.contains("class Class1"))
-        assertTrue(output.contains("class Class2"))
-        assertTrue(output.contains("interface Interface1"))
+        assertEquals(
+            """
+                package com.example
 
-        // Check that there are newlines between the types
-        val lines = output.lines()
-        var class1Line = -1
-        var class2Line = -1
-        var interface1Line = -1
+                class Class1 {
+                }
 
-        for ((index, line) in lines.withIndex()) {
-            if (line.contains("class Class1")) {
-                class1Line = index
-            } else if (line.contains("class Class2")) {
-                class2Line = index
-            } else if (line.contains("interface Interface1")) {
-                interface1Line = index
-            }
-        }
+                class Class2 {
+                }
 
-        assertTrue(class1Line >= 0, "Class1 not found in output")
-        assertTrue(class2Line >= 0, "Class2 not found in output")
-        assertTrue(interface1Line >= 0, "Interface1 not found in output")
-
-        // Verify that there are at least 2 lines between each type (for the closing brace and a blank line)
-        assertTrue(class2Line - class1Line >= 3, "Not enough separation between Class1 and Class2")
-        assertTrue(interface1Line - class2Line >= 3, "Not enough separation between Class2 and Interface1")
+                interface Interface1 {
+                }
+            """.trimIndent(),
+            output
+        )
     }
 
     @Test
@@ -259,8 +243,18 @@ class KotlinFileTests {
 
         val output = kotlinFile.writeToKotlinString()
 
-        assertTrue(output.contains("class Class1"))
-        assertTrue(output.contains("class Class2"))
+        assertEquals(
+            """
+                package com.example
+
+                class Class1 {
+                }
+
+                class Class2 {
+                }
+            """.trimIndent(),
+            output
+        )
     }
 
     @Test
@@ -275,8 +269,18 @@ class KotlinFileTests {
 
         val output = kotlinFile.writeToKotlinString()
 
-        assertTrue(output.contains("class Class1"))
-        assertTrue(output.contains("class Class2"))
+        assertEquals(
+            """
+                package com.example
+
+                class Class1 {
+                }
+
+                class Class2 {
+                }
+            """.trimIndent(),
+            output
+        )
     }
 
     @Test
@@ -288,8 +292,15 @@ class KotlinFileTests {
 
         val output = kotlinFile.writeToKotlinString()
 
-        assertTrue(output.contains("package com.example"))
-        assertTrue(output.contains("class MyClass"))
+        assertEquals(
+            """
+                package com.example
+
+                class MyClass {
+                }
+            """.trimIndent(),
+            output
+        )
     }
 
     @Test
@@ -355,9 +366,7 @@ class KotlinFileTests {
 
         val output = kotlinFile.writeToKotlinString()
 
-        // Should not contain import for kotlin.String
-        assertTrue(!output.contains("import kotlin.String"))
-
+        // Should not contain import for kotlin.String (verified by the complete output check below)
         assertEquals(
             """
                 package com.example
@@ -381,9 +390,6 @@ class KotlinFileTests {
 
         val output = kotlinFile.writeToKotlinString()
 
-        // Check that the class body is indented with a tab
-        assertTrue(output.contains("class MyClass") || output.contains("class MyClass {"))
-
         assertEquals(
             """
                 package com.example
@@ -391,6 +397,303 @@ class KotlinFileTests {
                 class MyClass {
                 }
             """.trimIndent(),
+            output
+        )
+    }
+
+    // ========== COMPREHENSIVE TYPE TESTS ==========
+
+    @Test
+    fun testSealedClass() {
+        val packageName = "com.example".parseToPackageName()
+        val sealedClass = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.CLASS, "Result")
+            .addModifier(KotlinModifier.SEALED)
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(sealedClass)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+
+                sealed class Result {
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testSealedInterface() {
+        val packageName = "com.example".parseToPackageName()
+        val sealedInterface = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.INTERFACE, "State")
+            .addModifier(KotlinModifier.SEALED)
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(sealedInterface)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+
+                sealed interface State {
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testDataClass() {
+        val packageName = "com.example".parseToPackageName()
+        val property = KotlinPropertySpec.builder("name", ClassName("kotlin", "String").kotlinRef())
+            .build()
+        val dataClass = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.CLASS, "Person")
+            .addModifier(KotlinModifier.DATA)
+            .addProperty(property)
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(dataClass)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+
+                data class Person {
+                    val name: String
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testValueClass() {
+        val packageName = "com.example".parseToPackageName()
+        val parameter = KotlinValueParameterSpec.builder("value", ClassName("kotlin", "String").kotlinRef())
+            .immutableProperty()
+            .build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(valueClass)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+
+                value class UserId(val value: String) {
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testEnumClass() {
+        val packageName = "com.example".parseToPackageName()
+        val enumClass = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED")
+            .addEnumConstant("GREEN")
+            .addEnumConstant("BLUE")
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(enumClass)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        // TODO 元素紧凑？
+        assertEquals(
+            """
+                package com.example
+
+                enum class Color {
+                    RED,
+                
+                    GREEN,
+                
+                    BLUE
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testAnnotationClass() {
+        val packageName = "com.example".parseToPackageName()
+        val annotationClass = KotlinAnnotationTypeSpec.builder("MyAnnotation")
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(annotationClass)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+
+                annotation class MyAnnotation
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testObject() {
+        val packageName = "com.example".parseToPackageName()
+        val objectType = KotlinObjectTypeSpec.builder("Singleton")
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName, objectType).build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        // Temporarily use assertEquals to see actual output
+        assertEquals("""
+            package com.example
+            
+            object Singleton {
+            }
+        """.trimIndent(), output)
+    }
+
+    @Test
+    fun testCompanionObject() {
+        val packageName = "com.example".parseToPackageName()
+        val companionObject = KotlinObjectTypeSpec.companionBuilder()
+            .build()
+        val classWithCompanion = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.CLASS, "MyClass")
+            .addSubtype(companionObject)
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(classWithCompanion)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+                
+                class MyClass {
+                    companion object {
+                    }
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testFunInterface() {
+        val packageName = "com.example".parseToPackageName()
+        val funInterface = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.INTERFACE, "Processor")
+            .addModifier(KotlinModifier.FUN)
+            .addFunction(
+                KotlinFunctionSpec.builder("process", ClassName("kotlin", "Unit").kotlinRef())
+                    .addParameter("input", ClassName("kotlin", "String").kotlinRef())
+                    .build()
+            )
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(funInterface)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            """
+                package com.example
+                
+                fun interface Processor {
+                    fun process(input: String): Unit
+                }
+            """.trimIndent(),
+            output
+        )
+    }
+
+    @Test
+    fun testComplexClassWithAllElements() {
+        val packageName = "com.example".parseToPackageName()
+
+        // Create a function with parameters
+        val function = KotlinFunctionSpec.builder("greet", ClassName("kotlin", "String").kotlinRef())
+            .addModifier(KotlinModifier.PUBLIC)
+            .addParameter("greeting", ClassName("kotlin", "String").kotlinRef())
+            .addCode("return \"\$greeting, \$name!\"")
+            .build()
+
+        // Create a constructor
+        val constructor = KotlinConstructorSpec.builder()
+            .addParameter(
+                name = "initialName",
+                type = ClassName("kotlin", "String").kotlinRef()
+            )
+            .build()
+
+        // Create a simple property
+        val property = KotlinPropertySpec.builder("name", ClassName("kotlin", "String").kotlinRef())
+            .mutable(true)
+            .addModifier(KotlinModifier.PRIVATE)
+            .initializer("initialName")
+            .build()
+
+        // Create a nested class
+        val nestedClass = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.CLASS, "NestedClass")
+            .addModifier(KotlinModifier.INNER)
+            .build()
+
+        val complexClass = KotlinSimpleTypeSpec.builder(KotlinTypeSpec.Kind.CLASS, "ComplexClass")
+            .addModifier(KotlinModifier.OPEN)
+            .primaryConstructor(constructor)
+            .addProperty(property)
+            .addFunction(function)
+            .addSubtype(nestedClass)
+            .build()
+
+        val kotlinFile = KotlinFile.builder(packageName)
+            .addType(complexClass)
+            .build()
+
+        val output = kotlinFile.writeToKotlinString()
+
+        assertEquals(
+            $$"""
+                |package com.example
+                |
+                |open class ComplexClass(initialName: String) {
+                |    private var name: String = initialName
+                |
+                |    public fun greet(greeting: String): String = "$greeting, $name!"
+                |
+                |    inner class NestedClass {
+                |    }
+                |}
+            """.trimMargin(),
             output
         )
     }

@@ -2,6 +2,7 @@ package love.forte.codegentle.kotlin.spec.internal
 
 import love.forte.codegentle.common.code.CodeArgumentPart
 import love.forte.codegentle.common.code.CodeValue
+import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
@@ -184,6 +185,9 @@ internal class KotlinSimpleTypeSpecBuilderImpl(
     }
 
     override fun primaryConstructor(constructor: KotlinConstructorSpec?): KotlinSimpleTypeSpec.Builder = apply {
+        require(constructor == null || constructor.code.isEmpty()) {
+            "Primary constructor cannot have code."
+        }
         this.primaryConstructor = constructor
     }
 
@@ -191,15 +195,22 @@ internal class KotlinSimpleTypeSpecBuilderImpl(
         this.secondaryConstructors.add(constructor)
     }
 
-    override fun addSecondaryConstructors(constructors: Iterable<KotlinConstructorSpec>): KotlinSimpleTypeSpec.Builder = apply {
-        this.secondaryConstructors.addAll(constructors)
-    }
+    override fun addSecondaryConstructors(constructors: Iterable<KotlinConstructorSpec>): KotlinSimpleTypeSpec.Builder =
+        apply {
+            this.secondaryConstructors.addAll(constructors)
+        }
 
-    override fun addSecondaryConstructors(vararg constructors: KotlinConstructorSpec): KotlinSimpleTypeSpec.Builder = apply {
-        this.secondaryConstructors.addAll(constructors)
-    }
+    override fun addSecondaryConstructors(vararg constructors: KotlinConstructorSpec): KotlinSimpleTypeSpec.Builder =
+        apply {
+            this.secondaryConstructors.addAll(constructors)
+        }
 
     override fun build(): KotlinSimpleTypeSpec {
+        val primaryConstructor = primaryConstructor
+        require(primaryConstructor == null || primaryConstructor.code.isEmpty()) {
+            "Primary constructor cannot have code."
+        }
+
         return KotlinSimpleTypeSpecImpl(
             kind = kind,
             name = name,

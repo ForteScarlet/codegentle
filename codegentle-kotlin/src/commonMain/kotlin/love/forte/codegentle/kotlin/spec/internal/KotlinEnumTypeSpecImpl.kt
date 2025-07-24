@@ -153,7 +153,7 @@ internal class KotlinEnumTypeSpecBuilderImpl(
     override fun build(): KotlinEnumTypeSpec {
         val immutableModifiers = modifierSet.immutable()
 
-        check(KotlinModifier.VALUE in immutableModifiers) {
+        check(KotlinModifier.ENUM in immutableModifiers) {
             "Enum class $name must have `${KotlinModifier.ENUM}` modifier, but $immutableModifiers"
         }
 

@@ -85,7 +85,7 @@ public interface KotlinFile : KotlinCodeEmitter {
          * @return A new [KotlinFileBuilder] instance
          */
         public fun builder(packageName: PackageName, type: KotlinTypeSpec): KotlinFileBuilder =
-            KotlinFileBuilder(packageName, type)
+            KotlinFileBuilder(packageName).addType(type)
 
         /**
          * Creates a [KotlinFileBuilder] instance without an initial type.
@@ -101,10 +101,7 @@ public interface KotlinFile : KotlinCodeEmitter {
 /**
  * Kotlin file builder
  */
-public class KotlinFileBuilder internal constructor(
-    public val packageName: PackageName,
-    initialType: KotlinTypeSpec? = null,
-) : BuilderDsl {
+public class KotlinFileBuilder internal constructor(public val packageName: PackageName) : BuilderDsl {
     private val fileComment = CodeValue.builder()
     private var skipKotlinImports: Boolean = true
     private var indent: String = "    "
@@ -112,12 +109,6 @@ public class KotlinFileBuilder internal constructor(
     private val types = mutableListOf<KotlinTypeSpec>()
     private val functions = mutableListOf<KotlinFunctionSpec>()
     private val properties = mutableListOf<KotlinPropertySpec>()
-
-    init {
-        if (initialType != null) {
-            types.add(initialType)
-        }
-    }
 
     /**
      * Adds a type to the file

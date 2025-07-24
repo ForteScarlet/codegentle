@@ -140,3 +140,5 @@ public inline fun KotlinSimpleTypeSpec.Builder.primaryConstructor(
 public inline fun KotlinSimpleTypeSpec.Builder.addSecondaryConstructor(
     block: KotlinConstructorSpec.Builder.() -> Unit = {}
 ): KotlinSimpleTypeSpec.Builder = addSecondaryConstructor(KotlinConstructorSpec.builder().apply(block).build())
+
+// TODO addCompanionObject via addSubtype

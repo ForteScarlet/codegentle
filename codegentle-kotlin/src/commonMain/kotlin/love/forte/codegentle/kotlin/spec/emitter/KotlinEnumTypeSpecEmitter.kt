@@ -31,7 +31,8 @@ private fun KotlinEnumTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     // Emit annotations
     codeWriter.emitAnnotationRefs(annotations, false)
 
-    codeWriter.emitModifiers(modifiers)
+    // Emit modifiers excluding ENUM since it's part of "enum class" keyword
+    codeWriter.emitModifiers(modifiers, setOf(KotlinModifier.ENUM))
 
     // Emit the enum class keyword
     codeWriter.emit("enum class ")

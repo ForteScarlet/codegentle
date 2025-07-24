@@ -38,6 +38,10 @@ public interface KotlinWriteStrategy : Strategy {
      */
     public fun omitPackage(packageName: PackageName): Boolean
     // No need to declare methods that are already in Strategy
+
+    // TODO 返回值 Unit 时省略 (不是单行 return 的时候)
+    // TODO 单行 return 替换
+    // TODO 无访问修饰符时默认填充 PUBLIC
 }
 
 /**

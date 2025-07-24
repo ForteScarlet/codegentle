@@ -2,6 +2,7 @@ package love.forte.codegentle.kotlin.spec.emitter
 
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.writer.withIndent
+import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinObjectTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
@@ -29,8 +30,11 @@ private fun KotlinObjectTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     // Emit modifiers (companion objects have COMPANION modifier)
     codeWriter.emitModifiers(modifiers)
 
+    // Emit "object" keyword for regular objects, "companion object" is handled by modifiers
+    codeWriter.emit("object")
+
     // Emit the name (companion objects can have names or be anonymous)
-    if (name.isNotEmpty() && name != KotlinObjectTypeSpec.DEFAULT_COMPANION_NAME) {
+    if (name.isNotEmpty() && (KotlinModifier.COMPANION !in modifiers || name != KotlinObjectTypeSpec.DEFAULT_COMPANION_NAME)) {
         codeWriter.emit(" ")
         codeWriter.emit(name)
     }

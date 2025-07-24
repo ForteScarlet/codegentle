@@ -161,8 +161,8 @@ internal class KotlinConstructorSpecBuilderImpl : KotlinConstructorSpec.Builder 
         this.constructorDelegation = delegation
     }
 
-    override fun build(): KotlinConstructorSpec =
-        KotlinConstructorSpecImpl(
+    override fun build(): KotlinConstructorSpec {
+        return KotlinConstructorSpecImpl(
             annotations = annotations.toList(),
             modifiers = modifierSet.immutable(),
             parameters = parameters.toList(),
@@ -170,4 +170,5 @@ internal class KotlinConstructorSpecBuilderImpl : KotlinConstructorSpec.Builder 
             code = code.build(),
             constructorDelegation = constructorDelegation
         )
+    }
 }
