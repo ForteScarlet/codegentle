@@ -4,13 +4,14 @@ import love.forte.codegentle.common.code.CodePart
 import love.forte.codegentle.common.code.emitString
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.naming.ClassName
-import love.forte.codegentle.common.naming.PackageNames
 import love.forte.codegentle.common.naming.TypeVariableName
-import love.forte.codegentle.common.naming.className
 import love.forte.codegentle.common.ref.addAnnotationRef
 import love.forte.codegentle.common.ref.addMember
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.kotlin.KotlinModifier
+import love.forte.codegentle.kotlin.naming.AnnotationTargetExtensionScope
+import love.forte.codegentle.kotlin.naming.addDeprecated
+import love.forte.codegentle.kotlin.naming.setMessage
 import love.forte.codegentle.kotlin.ref.kotlinRef
 import love.forte.codegentle.kotlin.writer.writeToKotlinString
 import kotlin.test.*
@@ -617,14 +618,14 @@ class KotlinEnumTypeSpecTests {
         assertEquals(expectedCode, generatedCode.trim())
     }
 
+    @Suppress("ImplicitThis")
+    @OptIn(AnnotationTargetExtensionScope::class)
     @Test
     fun testEnumConstantWithAnnotationCodeGeneration() {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
             .addEnumConstant("RED") {
-                addAnnotationRef(PackageNames.KOTLIN.className("Deprecated")) {
-                    addMember("message", "%V") {
-                        emitString("Use CRIMSON instead")
-                    }
+                addDeprecated {
+                    setMessage("Use CRIMSON instead")
                 }
             }
             .addEnumConstant("GREEN")
@@ -641,15 +642,14 @@ class KotlinEnumTypeSpecTests {
         assertEquals(expectedCode, generatedCode.trim())
     }
 
+    @OptIn(AnnotationTargetExtensionScope::class)
     @Test
     fun testEnumConstantWithKDocAndAnnotationCodeGeneration() {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
             .addEnumConstant("RED") {
                 addKDoc("Represents the red color.")
-                addAnnotationRef(ClassName("kotlin", "Deprecated")) {
-                    addMember("message", "%V") {
-                        emitString("Use CRIMSON instead")
-                    }
+                addDeprecated {
+                    setMessage("Use CRIMSON instead")
                 }
             }
             .addEnumConstant("GREEN")

@@ -3,6 +3,10 @@ package love.forte.codegentle.kotlin.naming
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.PackageNames
 
+/**
+ * @see PackageNames
+ * @see KotlinAnnotationNames
+ */
 public object KotlinClassNames {
 
     /**
@@ -113,3 +117,4 @@ public object KotlinClassNames {
      */
     public val ARRAY: ClassName = ClassName(PackageNames.KOTLIN, "Array")
 }
+

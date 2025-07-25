@@ -1,6 +1,5 @@
 package love.forte.codegentle.java.ref
 
-import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.emitLiteral
 import love.forte.codegentle.common.code.emitType
 import love.forte.codegentle.common.naming.TypeName
@@ -17,7 +16,7 @@ internal fun AnnotationRef.emitTo(codeWriter: JavaCodeWriter) {
 
 private fun JavaCodeWriter.emitJavaAnnotation(
     type: TypeName,
-    members: Map<String, List<CodeValue>>
+    members: Map<String, AnnotationRef.MemberValue>
 ) {
     // val whitespace = if (inline) "" else "\n"
     val memberSeparator = ", " // member: inline only //if (inline) ", " else ",\n"
@@ -51,21 +50,24 @@ private fun JavaCodeWriter.emitJavaAnnotation(
 
 private fun JavaCodeWriter.emitAnnotationValues(
     memberSeparator: String,
-    values: List<CodeValue>
+    value: AnnotationRef.MemberValue
 ) {
-    if (values.size == 1) {
-        indent(2)
-        values[0].emitTo(this)
-        unindent(2)
-        return
+    when (value) {
+        is AnnotationRef.MemberValue.Single -> {
+            withIndent(2) {
+                value.codeValue.emitTo(this)
+            }
+            return
+        }
+        is AnnotationRef.MemberValue.Multiple -> {
+            emit("{")
+            var first = true
+            for (codeValue in value.codeValues) {
+                if (!first) emit(memberSeparator)
+                codeValue.emitTo(this)
+                first = false
+            }
+            emit("}")
+        }
     }
-
-    emit("{")
-    var first = true
-    for (codeBlock in values) {
-        if (!first) emit(memberSeparator)
-        codeBlock.emitTo(this)
-        first = false
-    }
-    emit("}")
 }

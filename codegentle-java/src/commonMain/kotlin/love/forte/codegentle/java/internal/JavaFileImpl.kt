@@ -249,7 +249,7 @@ private class ClassImportVisitor(
     fun visitAnnotationRef(annotationRef: AnnotationRef) {
         visitTypeName(annotationRef.typeName)
         for (memberValue in annotationRef.members.values) {
-            for (value in memberValue) {
+            for (value in memberValue.codeValues) {
                 visitCodeValue(value)
             }
         }

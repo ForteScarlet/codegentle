@@ -24,22 +24,23 @@ internal fun AnnotationRef.emitTo(codeWriter: KotlinCodeWriter) {
             codeWriter.emit(name)
             codeWriter.emit(" = ")
 
-            // Emit parameter values
-            if (values.size == 1) {
-                // Single value
-                codeWriter.emit(values[0])
-            } else {
-                // Multiple values - emit as array
-                codeWriter.emit("[")
-                var firstValue = true
-                for (value in values) {
-                    if (!firstValue) {
-                        codeWriter.emit(", ")
-                    }
-                    firstValue = false
-                    codeWriter.emit(value)
+            when (values) {
+                is AnnotationRef.MemberValue.Single -> {
+                    codeWriter.emit(values.codeValue)
                 }
-                codeWriter.emit("]")
+                is AnnotationRef.MemberValue.Multiple -> {
+                    // Multiple values - emit as array
+                    codeWriter.emit("[")
+                    var firstValue = true
+                    for (value in values.codeValues) {
+                        if (!firstValue) {
+                            codeWriter.emit(", ")
+                        }
+                        firstValue = false
+                        codeWriter.emit(value)
+                    }
+                    codeWriter.emit("]")
+                }
             }
         }
         codeWriter.emit(")")
