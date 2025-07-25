@@ -7,26 +7,25 @@ import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.naming.TypeVariableName
 import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.common.spec.NamedSpec
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.KotlinModifierContainer
 
 /**
  * A Kotlin type.
  */
-public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
+public sealed interface KotlinTypeSpec : KotlinSpec, NamedSpec, KotlinModifierContainer {
+    // TODO typealias type
+
     /**
-     * 获取类型的种类。
-     *
-     * @return 类型的种类
+     * Kind of this type.
      */
     public val kind: Kind
 
     /**
-     * 获取类型的名称。
-     *
-     * @return 类型的名称
+     * Name of this type.
      */
-    public val name: String
+    override val name: String
 
     public val kDoc: CodeValue
     public val annotations: List<AnnotationRef>
@@ -87,24 +86,9 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
     public enum class Kind(
         internal val keyword: String,
     ) {
-        /**
-         * 类
-         */
         CLASS("class"),
-
-        /**
-         * 接口
-         */
         INTERFACE("interface"),
-
-        /**
-         * 对象
-         */
         OBJECT("object"),
-
-        /**
-         * 类型别名
-         */
         TYPE_ALIAS("typealias")
     }
 
@@ -189,7 +173,7 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
          * @return a new builder
          */
         public fun typeAliasBuilder(name: String): KotlinSimpleTypeSpec.Builder {
-            return KotlinSimpleTypeSpec.builder(Kind.TYPE_ALIAS, name)
+            TODO()
         }
     }
 }
