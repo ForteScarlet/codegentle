@@ -26,9 +26,17 @@ public interface AnnotationRefCollector<B : AnnotationRefCollector<B>> {
         addAnnotationRefs(refs.asList())
 }
 
+public inline fun <S : AnnotationRefStatus,
+    SB : AnnotationRefStatusBuilder<S>,
+    B : AnnotationRefCollector<B>> B.addAnnotationRef(
+    className: ClassName,
+    factory: AnnotationRefStatusBuilderFactory<S, SB>,
+    block: AnnotationRefBuilderDsl<S, SB> = {}
+): B = addAnnotationRef(className.annotationRef(factory, block))
+
 public inline fun <B : AnnotationRefCollector<B>> B.addAnnotationRef(
     className: ClassName,
-    block: AnnotationRefBuilder.() -> Unit = {}
+    block: BasicAnnotationRefBuilderDsl = {}
 ): B = addAnnotationRef(className.annotationRef(block))
 
 /**
@@ -41,7 +49,6 @@ internal constructor(public val collector: B) {
     public fun add(ref: AnnotationRef): B = collector.addAnnotationRef(ref)
     public fun addAll(refs: Iterable<AnnotationRef>): B = collector.addAnnotationRefs(refs)
     public fun addAll(vararg refs: AnnotationRef): B = collector.addAnnotationRefs(refs.asList())
-
 }
 
 public inline val <B : AnnotationRefCollector<B>> B.annotationRefs: AnnotationRefCollectorOps<B>

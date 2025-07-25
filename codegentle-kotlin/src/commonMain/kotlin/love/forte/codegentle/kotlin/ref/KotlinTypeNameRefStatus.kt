@@ -41,7 +41,8 @@ public class KotlinTypeNameRefStatusBuilder @PublishedApi internal constructor()
     }
 }
 
-public typealias KotlinTypeRefBuilderDsl<T> = TypeRefBuilder<T, KotlinTypeNameRefStatus, KotlinTypeNameRefStatusBuilder>.() -> Unit
+public typealias KotlinTypeRefBuilderDsl<T> =
+    TypeRefBuilder<T, KotlinTypeNameRefStatus, KotlinTypeNameRefStatusBuilder>.() -> Unit
 
 /**
  * Create a [TypeRef] with [T] and [KotlinTypeNameRefStatus].
@@ -54,12 +55,16 @@ public inline fun <T : TypeName> T.kotlinRef(
 
 /**
  * ```Kotlin
- * status as? JavaTypeNameRefStatus
+ * this as? JavaTypeNameRefStatus
  * ```
  */
 public val TypeNameRefStatus.kotlinOrNull: KotlinTypeNameRefStatus?
     get() = this as? KotlinTypeNameRefStatus?
 
-public inline fun KotlinTypeNameRefStatus(block: KotlinTypeNameRefStatusBuilder.() -> Unit): KotlinTypeNameRefStatus {
-    return KotlinTypeNameRefStatusBuilder().also(block).build()
-}
+/**
+ * ```Kotlin
+ * status as? JavaTypeNameRefStatus
+ * ```
+ */
+public val TypeRef<*>.kotlinStatusOrNull: KotlinTypeNameRefStatus?
+    get() = status as? KotlinTypeNameRefStatus?

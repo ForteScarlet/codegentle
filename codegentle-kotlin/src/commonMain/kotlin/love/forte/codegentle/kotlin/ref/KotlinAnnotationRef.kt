@@ -8,6 +8,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal fun AnnotationRef.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emit("@")
+    emitStatus(codeWriter)
     codeWriter.emit(typeName)
 
     // Handle annotation parameters
@@ -28,6 +29,7 @@ internal fun AnnotationRef.emitTo(codeWriter: KotlinCodeWriter) {
                 is AnnotationRef.MemberValue.Single -> {
                     codeWriter.emit(values.codeValue)
                 }
+
                 is AnnotationRef.MemberValue.Multiple -> {
                     // Multiple values - emit as array
                     codeWriter.emit("[")
@@ -44,5 +46,14 @@ internal fun AnnotationRef.emitTo(codeWriter: KotlinCodeWriter) {
             }
         }
         codeWriter.emit(")")
+    }
+}
+
+private fun AnnotationRef.emitStatus(codeWriter: KotlinCodeWriter) {
+    val kotlinStatus = status as? KotlinAnnotationRefStatus
+    val useSite = kotlinStatus?.useSite
+    if (useSite != null) {
+        codeWriter.emit(useSite.name.lowercase())
+        codeWriter.emit(":")
     }
 }

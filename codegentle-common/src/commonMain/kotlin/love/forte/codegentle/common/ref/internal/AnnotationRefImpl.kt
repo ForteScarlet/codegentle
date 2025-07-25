@@ -3,6 +3,7 @@ package love.forte.codegentle.common.ref.internal
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.ref.AnnotationRef
+import love.forte.codegentle.common.ref.AnnotationRefStatus
 
 /**
  *
@@ -10,9 +11,9 @@ import love.forte.codegentle.common.ref.AnnotationRef
  */
 internal data class AnnotationRefImpl(
     override val typeName: ClassName,
-    override val members: Map<String, AnnotationRef.MemberValue>
+    override val members: Map<String, AnnotationRef.MemberValue>,
+    override val status: AnnotationRefStatus
 ) : AnnotationRef
-
 
 internal class SingleMemberValueImpl(
     override val codeValue: CodeValue

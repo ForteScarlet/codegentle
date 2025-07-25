@@ -5,7 +5,7 @@ import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.emitName
 import love.forte.codegentle.common.code.emitType
 import love.forte.codegentle.common.naming.ClassName
-import love.forte.codegentle.common.ref.AnnotationRefBuilder
+import love.forte.codegentle.kotlin.ref.KotlinAnnotationRefBuilder
 
 
 @RequiresOptIn
@@ -23,7 +23,7 @@ public object KotlinTargetExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinTargetExtensionScope)
-public fun AnnotationRefBuilder.setAllowedTargets(vararg setAllowedTargets: AnnotationTarget) {
+public fun KotlinAnnotationRefBuilder.setAllowedTargets(vararg setAllowedTargets: AnnotationTarget) {
     addMultipleMembers(
         "allowedTargets",
         setAllowedTargets.map {
@@ -47,7 +47,7 @@ public object KotlinRetentionExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinRetentionExtensionScope)
-public fun AnnotationRefBuilder.setValue(retention: AnnotationRetention): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setValue(retention: AnnotationRetention): KotlinAnnotationRefBuilder {
     return addMember(
         "value",
         CodeValue("%V.%V") {
@@ -68,7 +68,7 @@ public object KotlinJvmNameExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinJvmNameExtensionScope)
-public fun AnnotationRefBuilder.setName(name: String): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setName(name: String): KotlinAnnotationRefBuilder {
     return addMember("name", CodeValue(CodePart.string(name)))
 }
 
@@ -83,7 +83,7 @@ public object KotlinDeprecatedExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinDeprecatedExtensionScope)
-public fun AnnotationRefBuilder.setMessage(message: String): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setMessage(message: String): KotlinAnnotationRefBuilder {
     return addMember("message", CodeValue(CodePart.string(message)))
 }
 
@@ -95,7 +95,7 @@ public fun AnnotationRefBuilder.setMessage(message: String): AnnotationRefBuilde
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinDeprecatedExtensionScope)
-public fun AnnotationRefBuilder.setReplaceWith(replaceWith: CodeValue): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setReplaceWith(replaceWith: CodeValue): KotlinAnnotationRefBuilder {
     return addMember("replaceWith", replaceWith)
 }
 
@@ -107,7 +107,7 @@ public fun AnnotationRefBuilder.setReplaceWith(replaceWith: CodeValue): Annotati
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinDeprecatedExtensionScope)
-public fun AnnotationRefBuilder.setLevel(level: DeprecationLevel): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setLevel(level: DeprecationLevel): KotlinAnnotationRefBuilder {
     return addMember(
         "level",
         CodeValue("%V.%V") {
@@ -128,7 +128,7 @@ public object KotlinReplaceWithExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinReplaceWithExtensionScope)
-public fun AnnotationRefBuilder.setExpression(expression: String): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setExpression(expression: String): KotlinAnnotationRefBuilder {
     return addMember("expression", CodeValue(CodePart.string(expression)))
 }
 
@@ -140,7 +140,7 @@ public fun AnnotationRefBuilder.setExpression(expression: String): AnnotationRef
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinReplaceWithExtensionScope)
-public fun AnnotationRefBuilder.setImports(vararg imports: String): Unit {
+public fun KotlinAnnotationRefBuilder.setImports(vararg imports: String): Unit {
     addMultipleMembers("imports", imports.map { CodeValue(CodePart.string(it)) })
 }
 
@@ -155,7 +155,7 @@ public object KotlinSuppressExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinSuppressExtensionScope)
-public fun AnnotationRefBuilder.setNames(vararg names: String): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setNames(vararg names: String): KotlinAnnotationRefBuilder {
     return addMultipleMembers("names", names.map { CodeValue(CodePart.string(it)) })
 }
 
@@ -170,7 +170,7 @@ public object KotlinOptInExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinOptInExtensionScope)
-public fun AnnotationRefBuilder.setMarkerClass(vararg markerClass: ClassName): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setMarkerClass(vararg markerClass: ClassName): KotlinAnnotationRefBuilder {
     return addMultipleMembers(
         "markerClass",
         markerClass.map { CodeValue("%V::class", CodePart.type(it)) }
@@ -188,7 +188,7 @@ public object KotlinRequiresOptInExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinRequiresOptInExtensionScope)
-public fun AnnotationRefBuilder.setMessage(message: String): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setMessage(message: String): KotlinAnnotationRefBuilder {
     return addMember("message", CodeValue(CodePart.string(message)))
 }
 
@@ -200,7 +200,7 @@ public fun AnnotationRefBuilder.setMessage(message: String): AnnotationRefBuilde
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinRequiresOptInExtensionScope)
-public fun AnnotationRefBuilder.setLevel(level: RequiresOptIn.Level): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setLevel(level: RequiresOptIn.Level): KotlinAnnotationRefBuilder {
     return addMember(
         "level",
         CodeValue("%V.%V") {
@@ -221,7 +221,7 @@ public object KotlinThrowsExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinThrowsExtensionScope)
-public fun AnnotationRefBuilder.setExceptionClasses(vararg exceptionClasses: ClassName): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setExceptionClasses(vararg exceptionClasses: ClassName): KotlinAnnotationRefBuilder {
     return addMultipleMembers(
         "exceptionClasses",
         exceptionClasses.map { CodeValue("%V::class", CodePart.type(it)) }
@@ -239,6 +239,6 @@ public object KotlinJvmSuppressWildcardsExtensionScope
  */
 @OptIn(AnnotationTargetExtensionScope::class)
 context(_: KotlinJvmSuppressWildcardsExtensionScope)
-public fun AnnotationRefBuilder.setSuppress(suppress: Boolean): AnnotationRefBuilder {
+public fun KotlinAnnotationRefBuilder.setSuppress(suppress: Boolean): KotlinAnnotationRefBuilder {
     return addMember("suppress", CodeValue(CodePart.literal(suppress)))
 }

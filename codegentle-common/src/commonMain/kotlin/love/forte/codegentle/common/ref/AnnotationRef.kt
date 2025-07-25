@@ -9,6 +9,20 @@ import love.forte.codegentle.common.ref.internal.AnnotationRefImpl
 import love.forte.codegentle.common.ref.internal.MultipleMemberValueImpl
 import love.forte.codegentle.common.ref.internal.SingleMemberValueImpl
 
+
+/**
+ * Basic implementation of [AnnotationRefStatus] with no special content.
+ */
+public object BasicAnnotationRefStatus : AnnotationRefStatus {
+    public object Builder : AnnotationRefStatusBuilder<BasicAnnotationRefStatus> {
+        override fun build(): BasicAnnotationRefStatus = BasicAnnotationRefStatus
+    }
+
+    public object Factory : AnnotationRefStatusBuilderFactory<BasicAnnotationRefStatus, Builder> {
+        override fun createBuilder(): Builder = Builder
+    }
+}
+
 /**
  * A reference to an annotation.
  *
@@ -20,8 +34,7 @@ import love.forte.codegentle.common.ref.internal.SingleMemberValueImpl
 public interface AnnotationRef {
     public val typeName: ClassName
     public val members: Map<String, MemberValue>
-
-    // TODO status? support Kotlin's `@get:, @file:, etc`
+    public val status: AnnotationRefStatus
 
     /**
      * The [CodeValue] of annotation ref's member.
@@ -46,32 +59,49 @@ public interface AnnotationRef {
     }
 }
 
+public typealias AnnotationRefBuilderDsl<S, B> = AnnotationRefBuilder<S, B>.() -> Unit
+public typealias BasicAnnotationRefBuilderDsl =
+    AnnotationRefBuilder<BasicAnnotationRefStatus, BasicAnnotationRefStatus.Builder>.() -> Unit
+
 /**
- * Constructs an [AnnotationRef] instance based on the current [ClassName].
+ * Create an [AnnotationRef] with status [S].
+ *
+ * @see AnnotationRef
+ */
+public inline fun <S : AnnotationRefStatus, B : AnnotationRefStatusBuilder<S>> ClassName.annotationRef(
+    statusBuilderFactory: AnnotationRefStatusBuilderFactory<S, B>,
+    block: AnnotationRefBuilderDsl<S, B> = {}
+): AnnotationRef = AnnotationRefBuilder(this, statusBuilderFactory).also(block).build()
+
+/**
+ * Constructs an [AnnotationRef] instance based on the current [ClassName] with basic status.
  *
  * @param block An optional lambda receiver of type [AnnotationRefBuilder]
  *              that can be used to configure the [AnnotationRef].
  *              If no block is provided, a default empty block is used.
  * @return An instance of [AnnotationRef] constructed using the [AnnotationRefBuilder].
  */
-public inline fun ClassName.annotationRef(block: AnnotationRefBuilder.() -> Unit = {}): AnnotationRef {
-    return AnnotationRefBuilder(this@annotationRef).apply {
-        block()
-    }.build()
+public inline fun ClassName.annotationRef(
+    block: BasicAnnotationRefBuilderDsl = {}
+): AnnotationRef {
+    return AnnotationRefBuilder(this, BasicAnnotationRefStatus.Factory).apply(block).build()
 }
 
 /**
  * Builder for [AnnotationRef].
  */
-public class AnnotationRefBuilder(public val className: ClassName) :
-    BuilderDsl,
-    AnnotationRefBuildable<AnnotationRefBuilder> {
+public class AnnotationRefBuilder<S : AnnotationRefStatus, B : AnnotationRefStatusBuilder<S>>(
+    public val className: ClassName,
+    builderFactory: AnnotationRefStatusBuilderFactory<S, B>
+) : BuilderDsl,
+    AnnotationRefBuildable<AnnotationRefBuilder<S, B>> {
     private val members = linkedMapOf<String, MemberValue>()
+    public val status: B = builderFactory.createBuilder()
 
     override fun addMultipleMembers(
         name: String,
         codeValues: Iterable<CodeValue>
-    ): AnnotationRefBuilder = apply {
+    ): AnnotationRefBuilder<S, B> = apply {
         members.computeValue(name) { _, value ->
             if (value == null) {
                 MultipleMemberValueImpl(codeValues.toList())
@@ -81,7 +111,7 @@ public class AnnotationRefBuilder(public val className: ClassName) :
         }
     }
 
-    override fun addMember(name: String, codeValue: CodeValue): AnnotationRefBuilder = apply {
+    override fun addMember(name: String, codeValue: CodeValue): AnnotationRefBuilder<S, B> = apply {
         members.computeValue(name) { _, value ->
             if (value == null) {
                 SingleMemberValueImpl(codeValue)
@@ -94,7 +124,20 @@ public class AnnotationRefBuilder(public val className: ClassName) :
     public fun build(): AnnotationRef {
         return AnnotationRefImpl(
             typeName = className,
-            members = members.toMap(linkedMapOf())
+            members = members.toMap(linkedMapOf()),
+            status = status.build()
         )
     }
 }
+
+/**
+ * ```Kotlin
+ * val ref = className.annotationRef(statusFactory) {
+ *     status {
+ *         // ...
+ *     }
+ * }
+ */
+public inline fun <S : AnnotationRefStatus, B : AnnotationRefStatusBuilder<S>> AnnotationRefBuilder<S, B>.status(
+    block: B.() -> Unit = {}
+): AnnotationRefBuilder<S, B> = apply { status.block() }
