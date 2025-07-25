@@ -350,18 +350,6 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
         writeNewByMethod(writer, baseClass, immutableImplName)
         
         // Add overrides for the four methods
-        writer.write("    override fun containsAny(elements: Collection<$enumName>): Boolean =\n")
-        writer.write("        super.containsAny(elements)\n\n")
-        
-        writer.write("    override fun intersect(other: Set<$enumName>): Set<$enumName> =\n")
-        writer.write("        super.intersect(other)\n\n")
-        
-        writer.write("    override fun union(other: Set<$enumName>): Set<$enumName> =\n")
-        writer.write("        super.union(other)\n\n")
-        
-        writer.write("    override fun difference(other: Set<$enumName>): Set<$enumName> =\n")
-        writer.write("        super.difference(other)\n\n")
-
         writer.write("    override fun mutable(): $mutableImplName =\n")
         writeMutableConversion(writer, baseClass, mutableImplName)
 
@@ -398,18 +386,6 @@ internal class EnumSetProcessor(private val environment: SymbolProcessorEnvironm
         writeNewByMethod(writer, baseClass, mutableImplName)
 
         // Add overrides for the four methods
-        writer.write("    override fun containsAny(elements: Collection<$enumName>): Boolean =\n")
-        writer.write("        super.containsAny(elements)\n\n")
-
-        writer.write("    override fun intersect(other: Set<$enumName>): Set<$enumName> =\n")
-        writer.write("        super.intersect(other)\n\n")
-
-        writer.write("    override fun union(other: Set<$enumName>): Set<$enumName> =\n")
-        writer.write("        super.union(other)\n\n")
-
-        writer.write("    override fun difference(other: Set<$enumName>): Set<$enumName> =\n")
-        writer.write("        super.difference(other)\n\n")
-
         writer.write("    override fun immutable(): $immutableImplName =\n")
         writeImmutableConversion(writer, baseClass, immutableImplName)
 

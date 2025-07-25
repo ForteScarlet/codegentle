@@ -24,13 +24,6 @@ internal class CodeValueExtensionsProcessor(private val environment: SymbolProce
     private val collectedFactoryFunctions = mutableListOf<KSFunctionDeclaration>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        // 1. 收集 love.forte.codegentle.common.code.CodePart 的 Companion 中，
-        //   标记了 love.forte.codegentle.common.code.CodePartFactory 的工厂函数
-        // 2. 将这些收集到的工厂函数，转化成 CodeValueSingleFormatBuilder 的扩展函数，
-        //   例如有个工厂函数 CodePart.literal(value: Any?), 那么就会生成函数
-        //   `fun CodeValueSingleFormatBuilder.addLiteral(value: Any?): CodeValueSingleFormatBuilder =
-        //     addValue(CodePart.otherCodeValue(value))`
-
         // Find the CodePart class
         val codePartClass = resolver.getClassDeclarationByName(resolver.getKSNameFromString(codePartClassName))
         if (codePartClass == null) {

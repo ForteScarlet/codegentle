@@ -1,26 +1,10 @@
 package love.forte.codegentle.internal.processor.enumset
 
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-/**
- * Test for the EnumSet processor.
- * This test verifies that the generated EnumSet classes can be used correctly.
- *
- * Note: The EnumSet classes (TestEnumSet, InternalTestEnumSet, BigTestEnumSet, etc.) will be generated
- * during the build process when KSP runs. The unresolved references in this test are expected
- * until the code is generated.
- *
- * The tests for OperatorsTestEnum and CustomAdderTestEnum verify that:
- * 1. The container interface is generated with the correct function names
- * 2. The value class methods use the correct function names
- * 3. The function names in the value class are fully lowercase
- *
- * The test for KeywordTestEnum verifies that:
- * 1. Enum entries that become Kotlin keywords when lowercase are properly escaped with backticks
- *    in the generated value class, allowing them to be used as function names without compilation errors
- *
- * Note that extension properties and functions are no longer generated, so they must be accessed directly.
- */
 class EnumSetTest {
 
     @Test
@@ -82,6 +66,148 @@ class EnumSetTest {
         assertTrue(set.contains(BigTestEnum.C5))
         assertTrue(set.contains(BigTestEnum.G10))
         assertFalse(set.contains(BigTestEnum.B2))
+    }
+
+    @Test
+    fun testI32EnumSetOperations() {
+        // Test containsAny
+        val set1 = TestEnumSet.of(TestEnum.A, TestEnum.B)
+        val set2 = TestEnumSet.of(TestEnum.B, TestEnum.C)
+        val set3 = TestEnumSet.of(TestEnum.D, TestEnum.E)
+        
+        assertTrue(set1.containsAny(listOf(TestEnum.A, TestEnum.D)))
+        assertTrue(set1.containsAny(listOf(TestEnum.B)))
+        assertFalse(set1.containsAny(listOf(TestEnum.D, TestEnum.E)))
+        assertFalse(set1.containsAny(emptyList()))
+        
+        // Test intersect
+        val intersection = set1.intersect(set2)
+        assertEquals(1, intersection.size)
+        assertTrue(intersection.contains(TestEnum.B))
+        
+        val emptyIntersection = set1.intersect(set3)
+        assertTrue(emptyIntersection.isEmpty())
+        
+        // Test union
+        val union = set1.union(set2)
+        assertEquals(3, union.size)
+        assertTrue(union.contains(TestEnum.A))
+        assertTrue(union.contains(TestEnum.B))
+        assertTrue(union.contains(TestEnum.C))
+        
+        // Test difference
+        val difference = set1.difference(set2)
+        assertEquals(1, difference.size)
+        assertTrue(difference.contains(TestEnum.A))
+        assertFalse(difference.contains(TestEnum.B))
+        
+        val noDifference = set1.difference(set1)
+        assertTrue(noDifference.isEmpty())
+    }
+
+    @Test
+    fun testInternalEnumSetOperations() {
+        // Test containsAny
+        val set1 = InternalTestEnumSet.of(InternalTestEnum.A, InternalTestEnum.B)
+        val set2 = InternalTestEnumSet.of(InternalTestEnum.B, InternalTestEnum.C)
+        val set3 = InternalTestEnumSet.of(InternalTestEnum.C)
+        
+        assertTrue(set1.containsAny(listOf(InternalTestEnum.A)))
+        assertTrue(set1.containsAny(listOf(InternalTestEnum.B, InternalTestEnum.C)))
+        assertFalse(set1.containsAny(listOf(InternalTestEnum.C)))
+        
+        // Test intersect
+        val intersection = set1.intersect(set2)
+        assertEquals(1, intersection.size)
+        assertTrue(intersection.contains(InternalTestEnum.B))
+        
+        // Test union
+        val union = set1.union(set3)
+        assertEquals(3, union.size)
+        assertTrue(union.contains(InternalTestEnum.A))
+        assertTrue(union.contains(InternalTestEnum.B))
+        assertTrue(union.contains(InternalTestEnum.C))
+        
+        // Test difference
+        val difference = set2.difference(set1)
+        assertEquals(1, difference.size)
+        assertTrue(difference.contains(InternalTestEnum.C))
+    }
+
+    @Test
+    fun testI64EnumSetOperations() {
+        // Test containsAny
+        val set1 = MediumTestEnumSet.of(MediumTestEnum.A1, MediumTestEnum.B5, MediumTestEnum.E5)
+        val set2 = MediumTestEnumSet.of(MediumTestEnum.B5, MediumTestEnum.C3, MediumTestEnum.D8)
+        val set3 = MediumTestEnumSet.of(MediumTestEnum.C1, MediumTestEnum.D1)
+        
+        assertTrue(set1.containsAny(listOf(MediumTestEnum.A1, MediumTestEnum.C1)))
+        assertTrue(set1.containsAny(listOf(MediumTestEnum.E5)))
+        assertFalse(set1.containsAny(listOf(MediumTestEnum.C3, MediumTestEnum.D8)))
+        assertFalse(set1.containsAny(emptyList()))
+        
+        // Test intersect
+        val intersection = set1.intersect(set2)
+        assertEquals(1, intersection.size)
+        assertTrue(intersection.contains(MediumTestEnum.B5))
+        
+        val emptyIntersection = set1.intersect(set3)
+        assertTrue(emptyIntersection.isEmpty())
+        
+        // Test union
+        val union = set1.union(set2)
+        assertEquals(5, union.size)
+        assertTrue(union.contains(MediumTestEnum.A1))
+        assertTrue(union.contains(MediumTestEnum.B5))
+        assertTrue(union.contains(MediumTestEnum.E5))
+        assertTrue(union.contains(MediumTestEnum.C3))
+        assertTrue(union.contains(MediumTestEnum.D8))
+        
+        // Test difference
+        val difference = set1.difference(set2)
+        assertEquals(2, difference.size)
+        assertTrue(difference.contains(MediumTestEnum.A1))
+        assertTrue(difference.contains(MediumTestEnum.E5))
+        assertFalse(difference.contains(MediumTestEnum.B5))
+        
+        val noDifference = set1.difference(set1)
+        assertTrue(noDifference.isEmpty())
+    }
+
+    @Test
+    fun testBigEnumSetOperations() {
+        // Test containsAny
+        val set1 = BigTestEnumSet.of(BigTestEnum.A1, BigTestEnum.B5, BigTestEnum.G10)
+        val set2 = BigTestEnumSet.of(BigTestEnum.B5, BigTestEnum.C3, BigTestEnum.F8)
+        val set3 = BigTestEnumSet.of(BigTestEnum.D1, BigTestEnum.E7)
+        
+        assertTrue(set1.containsAny(listOf(BigTestEnum.A1, BigTestEnum.D1)))
+        assertTrue(set1.containsAny(listOf(BigTestEnum.G10)))
+        assertFalse(set1.containsAny(listOf(BigTestEnum.C3, BigTestEnum.F8)))
+        
+        // Test intersect
+        val intersection = set1.intersect(set2)
+        assertEquals(1, intersection.size)
+        assertTrue(intersection.contains(BigTestEnum.B5))
+        
+        val emptyIntersection = set1.intersect(set3)
+        assertTrue(emptyIntersection.isEmpty())
+        
+        // Test union
+        val union = set1.union(set2)
+        assertEquals(5, union.size)
+        assertTrue(union.contains(BigTestEnum.A1))
+        assertTrue(union.contains(BigTestEnum.B5))
+        assertTrue(union.contains(BigTestEnum.G10))
+        assertTrue(union.contains(BigTestEnum.C3))
+        assertTrue(union.contains(BigTestEnum.F8))
+        
+        // Test difference
+        val difference = set1.difference(set2)
+        assertEquals(2, difference.size)
+        assertTrue(difference.contains(BigTestEnum.A1))
+        assertTrue(difference.contains(BigTestEnum.G10))
+        assertFalse(difference.contains(BigTestEnum.B5))
     }
 
     @Test

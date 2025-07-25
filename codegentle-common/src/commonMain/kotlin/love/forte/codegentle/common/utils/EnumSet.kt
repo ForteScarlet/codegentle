@@ -420,7 +420,7 @@ public abstract class BigEnumSet<E : Enum<E>>(
 
     @JvmInline
     private value class IndexAndBit(val value: Long) {
-        operator fun component1(): Int = (value shr 32).toInt()
+        operator fun component1(): Int = (value ushr 32).toInt()
         operator fun component2(): Int = value.toInt()
     }
 
