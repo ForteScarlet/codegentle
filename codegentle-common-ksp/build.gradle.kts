@@ -7,8 +7,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":codegentle-common-ksp"))
-    api(project(":codegentle-kotlin"))
+    api(project(":codegentle-common"))
     compileOnly(libs.ksp)
     testImplementation(kotlin("test"))
 }

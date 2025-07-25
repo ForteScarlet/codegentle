@@ -30,6 +30,8 @@ kotlin {
         )
 
         freeCompilerArgs.addAll(
+            "-Xjvm-default=all",
+            "-Xjsr305=strict",
             "-Xexpect-actual-classes",
             "-Xcontext-parameters"
         )

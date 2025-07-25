@@ -27,50 +27,38 @@ public sealed class CodePart {
         public fun simple(value: String): CodeSimplePart = CodeSimplePart(value)
 
         /**
-         * Skip this `%V`, Just write `%V` itself.
+         * Skip this `%V`, Just write `"%V"` itself.
          */
         @CodePartFactory
         public fun skip(): CodeArgumentPart = CodeArgumentPart.Skip
 
         /**
-         * Emits a `literal` value with no escaping.
-         * Arguments for literals may be
-         * strings, primitives, type declarations (`TypeSpec`),
-         * [annotation references][love.forte.codegentle.common.ref.AnnotationRef]
-         * and even other [code values][CodeValue]
-         * or code emitters (`JavaCodeEmitter`, etc.).
+         * Emits a `literal`.
          */
         @CodePartFactory
         public fun literal(value: Any?): CodeArgumentPart = CodeArgumentPart.Literal(value)
 
         /**
-         * Emits a `name`, using name collision avoidance where necessary.
-         * Arguments for names may be strings (actually any [character sequence][CharSequence]),
-         * [parameters][ParameterSpec], [fields][FieldSpec],
-         * [methods][MethodSpec], and [types][TypeSpec].
+         * Emits a `name`.
          */
         @CodePartFactory
         public fun name(nameValue: Any?): CodeArgumentPart = CodeArgumentPart.Name(nameValue)
 
         /**
-         * Escapes the value as a `string`, wraps it with double quotes, and emits
+         * Emit a `string`, wraps it with double quotes, and emits
          *  that. For example, `6" sandwich` is emitted `"6\" sandwich"`.
          */
         @CodePartFactory
         public fun string(value: String?): CodeArgumentPart = CodeArgumentPart.Str(value)
 
         /**
-         * Emits a `type` reference. Types will be imported if possible. Arguments
-         * for types may be `Class` classes, `TypeMirror` type mirrors,
-         * and `Element` elements.
+         * Emits a `type` reference.
          */
         @CodePartFactory
         public fun type(type: TypeName): CodeArgumentPart = CodeArgumentPart.Type(type)
 
         /**
-         * Emits a `type` reference. Types will be imported if possible. Arguments
-         * for types may be `Class` classes, `TypeMirror` type mirrors,
-         * and `Element` elements.
+         * Emits a `type` reference.
          */
         @CodePartFactory
         public fun type(type: TypeRef<*>): CodeArgumentPart = CodeArgumentPart.TypeRef(type)
@@ -127,7 +115,7 @@ public sealed class CodePart {
  */
 public sealed class CodeArgumentPart : CodePart() {
     /**
-     * Skip this `%V`, Just write `%V` itself.
+     * Skip this `%V`, Just write `"%V"` itself.
      */
     public data object Skip : CodeArgumentPart()
 
@@ -154,7 +142,7 @@ public sealed class CodeArgumentPart : CodePart() {
     }
 
     /**
-     * Emits a `name`, using name collision avoidance where necessary.
+     * Emits a `name`.
      */
     public class Name internal constructor(public val name: String?) : CodeArgumentPart() {
 
@@ -189,7 +177,7 @@ public sealed class CodeArgumentPart : CodePart() {
     }
 
     /**
-     * `%S` escapes the value as a `string`, wraps it with double quotes, and emits
+     * Emit a `string`, wraps it with double quotes, and emits
      *  that. For example, `6" sandwich` is emitted `"6\" sandwich"`.
      */
     public class Str(public val value: String?) : CodeArgumentPart() {
@@ -212,9 +200,7 @@ public sealed class CodeArgumentPart : CodePart() {
     }
 
     /**
-     * `%T` emits a `type` reference. Types will be imported if possible. Arguments
-     * for types may be `Class` classes, `TypeMirror` type mirrors,
-     * and `Element` elements.
+     * Emit a `type` reference.
      */
     public class Type internal constructor(public val type: TypeName) : CodeArgumentPart() {
 
@@ -260,7 +246,7 @@ public sealed class CodeArgumentPart : CodePart() {
     }
 
     /**
-     * `%>` increases the indentation level.
+     * Increases the indentation level.
      */
     public class Indent internal constructor(public val levels: Int = 1) : CodeArgumentPart() {
         override fun equals(other: Any?): Boolean {
@@ -283,7 +269,7 @@ public sealed class CodeArgumentPart : CodePart() {
 
 
     /**
-     * `%<` decreases the indentation level.
+     * Decreases the indentation level.
      */
     public class Unindent internal constructor(public val levels: Int = 1) : CodeArgumentPart() {
         override fun equals(other: Any?): Boolean {
@@ -305,25 +291,22 @@ public sealed class CodeArgumentPart : CodePart() {
     }
 
     /**
-     * `%[` begins a statement.
-     * For multiline statements, every line after the first line
-     * is double-indented.
+     * Begins a statement.
      */
     public data object StatementBegin : CodeArgumentPart()
 
     /**
-     * `%]` ends a statement.
+     * Ends a statement.
      */
     public data object StatementEnd : CodeArgumentPart()
 
     /**
-     * `%W` emits a space or a newline, depending on its position on the line. This prefers
-     * to wrap lines before 100 columns.
+     * Emits a space or a newline, depending on its position on the line.
      */
     public data object WrappingSpace : CodeArgumentPart()
 
     /**
-     * `%Z` acts as a zero-width space. This prefers to wrap lines before 100 columns.
+     * `Acts as a zero-width space.
      */
     public data object ZeroWidthSpace : CodeArgumentPart()
 

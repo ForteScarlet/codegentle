@@ -37,6 +37,7 @@ rootProject.name = "codegentle"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":codegentle-common")
+include(":codegentle-common-ksp")
 include(":codegentle-java")
 include(":codegentle-kotlin")
 include(":codegentle-kotlin-ksp")
