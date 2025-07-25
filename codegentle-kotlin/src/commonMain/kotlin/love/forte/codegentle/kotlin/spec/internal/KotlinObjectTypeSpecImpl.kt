@@ -86,11 +86,11 @@ internal class KotlinObjectTypeSpecBuilderImpl(
         this.initializerBlock.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinObjectTypeSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinObjectTypeSpec.Builder = apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinObjectTypeSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinObjectTypeSpec.Builder = apply {
         annotationRefs.addAll(refs)
     }
 

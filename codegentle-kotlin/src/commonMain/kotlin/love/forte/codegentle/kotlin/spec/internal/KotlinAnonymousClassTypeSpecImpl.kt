@@ -79,11 +79,11 @@ internal class KotlinAnonymousClassTypeSpecBuilderImpl : KotlinAnonymousClassTyp
         this.initializerBlock.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinAnonymousClassTypeSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinAnonymousClassTypeSpec.Builder = apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinAnonymousClassTypeSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinAnonymousClassTypeSpec.Builder = apply {
         annotationRefs.addAll(refs)
     }
 

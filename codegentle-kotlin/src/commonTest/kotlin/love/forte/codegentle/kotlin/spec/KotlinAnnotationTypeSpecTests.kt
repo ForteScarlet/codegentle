@@ -4,7 +4,7 @@ import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.addKDoc
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.TypeVariableName
-import love.forte.codegentle.common.ref.addAnnotationRef
+import love.forte.codegentle.common.ref.addAnnotation
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.ref.kotlinRef
@@ -109,8 +109,8 @@ class KotlinAnnotationTypeSpecTests {
         }
 
         val annotationSpec = KotlinAnnotationTypeSpec.builder("TestAnnotation")
-            .addAnnotationRef(targetAnnotation)
-            .addAnnotationRef(retentionAnnotation)
+            .addAnnotation(targetAnnotation)
+            .addAnnotation(retentionAnnotation)
             .build()
 
         assertEquals(2, annotationSpec.annotations.size)
@@ -124,7 +124,7 @@ class KotlinAnnotationTypeSpecTests {
         )
 
         val annotationSpec = KotlinAnnotationTypeSpec.builder("TestAnnotation")
-            .addAnnotationRefs(annotations)
+            .addAnnotations(annotations)
             .build()
 
         assertEquals(2, annotationSpec.annotations.size)
@@ -242,7 +242,7 @@ class KotlinAnnotationTypeSpecTests {
         val annotationSpec = KotlinAnnotationTypeSpec("ComplexAnnotation") {
             addModifier(KotlinModifier.PUBLIC)
             addKDoc("A complex annotation with all features.")
-            addAnnotationRef(ClassName("kotlin.annotation", "Target").annotationRef())
+            addAnnotation(ClassName("kotlin.annotation", "Target").annotationRef())
             addTypeVariable(TypeVariableName("T").kotlinRef())
             addProperty("value", stringType) {
                 initializer("\"default\"")
@@ -325,7 +325,7 @@ annotation class TestAnnotation"""
     @Test
     fun testAnnotationWithAnnotationsCodeGeneration() {
         val annotationSpec = KotlinAnnotationTypeSpec("TestAnnotation") {
-            addAnnotationRef(ClassName("kotlin.annotation", "Target").annotationRef {
+            addAnnotation(ClassName("kotlin.annotation", "Target").annotationRef {
                 addMember("value", "AnnotationTarget.CLASS")
             })
         }
@@ -362,7 +362,7 @@ annotation class TestAnnotation"""
         val annotationSpec = KotlinAnnotationTypeSpec("ComplexAnnotation") {
             addModifier(KotlinModifier.PUBLIC)
             addKDoc("A complex test annotation.")
-            addAnnotationRef(ClassName("kotlin.annotation", "Target")) {
+            addAnnotation(ClassName("kotlin.annotation", "Target")) {
                 addMember("value", "AnnotationTarget.CLASS")
             }
             addProperty("value", stringType) {

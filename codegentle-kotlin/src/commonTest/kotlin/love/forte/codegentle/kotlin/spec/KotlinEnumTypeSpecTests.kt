@@ -5,7 +5,7 @@ import love.forte.codegentle.common.code.emitString
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.naming.TypeVariableName
-import love.forte.codegentle.common.ref.addAnnotationRef
+import love.forte.codegentle.common.ref.addAnnotation
 import love.forte.codegentle.common.ref.addMember
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.kotlin.KotlinModifier
@@ -104,7 +104,7 @@ class KotlinEnumTypeSpecTests {
     @Test
     fun testEnumWithAnnotations() {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
-            .addAnnotationRef(ClassName("kotlin", "Deprecated").annotationRef {
+            .addAnnotation(ClassName("kotlin", "Deprecated").annotationRef {
                 addMember("message", "\"Use NewColor instead\"")
             })
             .build()
@@ -277,7 +277,7 @@ class KotlinEnumTypeSpecTests {
     @Test
     fun testEnumWithAnnotationsCodeGeneration() {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
-            .addAnnotationRef(ClassName("kotlin", "Deprecated").annotationRef {
+            .addAnnotation(ClassName("kotlin", "Deprecated").annotationRef {
                 addMember("message", "\"Use NewColor instead\"")
             })
             .addEnumConstant("RED")
@@ -469,7 +469,7 @@ class KotlinEnumTypeSpecTests {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
             .addModifier(KotlinModifier.PUBLIC)
             .addKDoc("Represents RGB colors with comparison capability.")
-            .addAnnotationRef(ClassName("kotlin", "Suppress").annotationRef {
+            .addAnnotation(ClassName("kotlin", "Suppress").annotationRef {
                 addMember("names", "\"UNUSED\"")
             })
             .addTypeVariable(typeVar)
@@ -673,12 +673,12 @@ class KotlinEnumTypeSpecTests {
     fun testEnumConstantWithMultipleAnnotationsCodeGeneration() {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
             .addEnumConstant("RED") {
-                addAnnotationRef(ClassName("kotlin", "Deprecated")) {
+                addAnnotation(ClassName("kotlin", "Deprecated")) {
                     addMember("message", "%V") {
                         emitString("Use CRIMSON instead")
                     }
                 }
-                addAnnotationRef(ClassName("kotlin", "Suppress")) {
+                addAnnotation(ClassName("kotlin", "Suppress")) {
                     addMember("names", "%V", CodePart.string("DEPRECATION"))
                 }
             }
@@ -701,7 +701,7 @@ class KotlinEnumTypeSpecTests {
     fun testEnumConstantWithKDocAnnotationAndFunctionCodeGeneration() {
         val redAnonymous = KotlinAnonymousClassTypeSpec.builder()
             .addKDoc("Red color with custom implementation.")
-            .addAnnotationRef(ClassName("kotlin", "Suppress").annotationRef {
+            .addAnnotation(ClassName("kotlin", "Suppress").annotationRef {
                 addMember("names", "\"UNUSED\"")
             })
             .addFunction(
@@ -738,14 +738,14 @@ class KotlinEnumTypeSpecTests {
     fun testMultipleEnumConstantsWithKDocAndAnnotationsCodeGeneration() {
         val redAnonymous = KotlinAnonymousClassTypeSpec.builder()
             .addKDoc("Primary red color.")
-            .addAnnotationRef(ClassName("kotlin", "Deprecated").annotationRef {
+            .addAnnotation(ClassName("kotlin", "Deprecated").annotationRef {
                 addMember("message", "\"Use CRIMSON instead\"")
             })
             .build()
 
         val blueAnonymous = KotlinAnonymousClassTypeSpec.builder()
             .addKDoc("Primary blue color.")
-            .addAnnotationRef(ClassName("kotlin", "Suppress").annotationRef {
+            .addAnnotation(ClassName("kotlin", "Suppress").annotationRef {
                 addMember("names", "\"UNUSED\"")
             })
             .build()

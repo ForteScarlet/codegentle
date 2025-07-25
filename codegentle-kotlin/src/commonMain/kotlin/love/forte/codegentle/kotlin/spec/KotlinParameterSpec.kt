@@ -1,7 +1,9 @@
 package love.forte.codegentle.kotlin.spec
 
 import love.forte.codegentle.common.BuilderDsl
+import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.ref.TypeRef
+import love.forte.codegentle.kotlin.ref.kotlinRef
 
 /**
  * A Kotlin parameter.
@@ -57,3 +59,9 @@ public inline fun <C : KotlinValueParameterCollector<C>> C.addParameter(
     type: TypeRef<*>,
     block: KotlinValueParameterSpec.Builder.() -> Unit = {}
 ): C = addParameter(KotlinValueParameterSpec.builder(name, type).apply(block).build())
+
+public inline fun <C : KotlinValueParameterCollector<C>> C.addParameter(
+    name: String,
+    type: TypeName,
+    block: KotlinValueParameterSpec.Builder.() -> Unit = {}
+): C = addParameter(name, type.kotlinRef(), block)

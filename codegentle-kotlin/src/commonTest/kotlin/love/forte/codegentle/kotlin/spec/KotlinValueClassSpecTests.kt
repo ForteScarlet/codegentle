@@ -76,8 +76,8 @@ value class UserId(val value: String)"""
         val jvmInline = ClassName("kotlin.jvm", "JvmInline").annotationRef()
 
         val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
-            .addAnnotationRef(serializable)
-            .addAnnotationRef(jvmInline)
+            .addAnnotation(serializable)
+            .addAnnotation(jvmInline)
             .build()
 
         val code = valueClass.writeToKotlinString()
@@ -103,7 +103,7 @@ value class UserId(val value: String)"""
         }
 
         val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
-            .addAnnotationRefs(listOf(serializable, jvmInline, deprecated))
+            .addAnnotations(listOf(serializable, jvmInline, deprecated))
             .build()
 
         val code = valueClass.writeToKotlinString()
@@ -347,7 +347,7 @@ value class UserId(val value: String)"""
         val valueClass = KotlinValueClassSpec.builder("ComplexUserId", createValueClassConstructor(parameter))
             .addKDoc("A complex value class for user identification.")
             .addKDoc("\n@param id the string identifier")
-            .addAnnotationRef(serializable)
+            .addAnnotation(serializable)
             .addModifier(KotlinModifier.INTERNAL)
             .addSuperinterface(comparable)
             .addProperty(lengthProperty)

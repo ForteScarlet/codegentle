@@ -72,11 +72,11 @@ internal class KotlinFunctionSpecBuilderImpl(
         modifierSet.addAll(modifiers)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinFunctionSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinFunctionSpec.Builder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinFunctionSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinFunctionSpec.Builder = apply {
         annotations.addAll(refs)
     }
 

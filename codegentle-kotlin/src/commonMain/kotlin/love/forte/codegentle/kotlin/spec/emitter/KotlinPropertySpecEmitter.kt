@@ -18,7 +18,7 @@ internal fun KotlinPropertySpec.emitTo(codeWriter: KotlinCodeWriter) {
     codeWriter.emitAnnotationRefs(annotations, false)
 
     // Emit modifiers
-    codeWriter.emitModifiers(modifiers)
+    codeWriter.emitModifiers(codeWriter.strategy.resolveModifiers(modifiers))
 
     // Emit the property keyword (val or var)
     codeWriter.emit(if (mutable) "var " else "val ")

@@ -97,11 +97,11 @@ internal class KotlinValueParameterSpecBuilderImpl(
         kDoc.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinValueParameterSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinValueParameterSpec.Builder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinValueParameterSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinValueParameterSpec.Builder = apply {
         annotations.addAll(refs)
     }
 

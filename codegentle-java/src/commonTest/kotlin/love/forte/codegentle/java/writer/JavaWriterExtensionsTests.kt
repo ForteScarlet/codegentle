@@ -120,7 +120,7 @@ class JavaWriterExtensionsTests {
         val annotationRef = ClassName("javax.annotation", "Nonnull").annotationRef()
         val typeRef = ClassName("java.lang", "String").javaRef {
             status {
-                addAnnotationRef(annotationRef)
+                addAnnotation(annotationRef)
             }
         }
 

@@ -102,11 +102,11 @@ internal class KotlinValueClassSpecBuilderImpl(
         this.initializerBlock.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinValueClassSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinValueClassSpec.Builder = apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinValueClassSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinValueClassSpec.Builder = apply {
         annotationRefs.addAll(refs)
     }
 

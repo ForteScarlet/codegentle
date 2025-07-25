@@ -7,7 +7,7 @@ import love.forte.codegentle.common.code.emitType
 import love.forte.codegentle.common.naming.ClassName
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.common.ref.AnnotationRefCollectorOps
-import love.forte.codegentle.common.ref.addAnnotationRef
+import love.forte.codegentle.common.ref.addAnnotation
 import love.forte.codegentle.common.ref.addMember
 import love.forte.codegentle.java.naming.JavaAnnotationNames
 
@@ -16,7 +16,7 @@ import love.forte.codegentle.java.naming.JavaAnnotationNames
  * Add annotation ref: [JavaAnnotationNames.Override]
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addOverride(): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Override)
+    return collector.addAnnotation(JavaAnnotationNames.Override)
 }
 
 /**
@@ -29,7 +29,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addDepre
     since: String? = null,
     forRemoval: Boolean? = null,
 ): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Deprecated) {
+    return collector.addAnnotation(JavaAnnotationNames.Deprecated) {
         since?.also { since ->
             addMember("since", "%V") {
                 string(since)
@@ -47,7 +47,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addDepre
  * @param values `value` of `java.lang.SuppressWarnings`.
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addSuppressWarnings(vararg values: String): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.SuppressWarnings) {
+    return collector.addAnnotation(JavaAnnotationNames.SuppressWarnings) {
         if (values.isNotEmpty()) {
             for (value in values) {
                 addMember("value", "%V") { string(value) }
@@ -60,14 +60,14 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addSuppr
  * Add annotation ref: [JavaAnnotationNames.SafeVarargs]
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addSafeVarargs(): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.SafeVarargs)
+    return collector.addAnnotation(JavaAnnotationNames.SafeVarargs)
 }
 
 /**
  * Add annotation ref: [JavaAnnotationNames.Documented]
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addDocumented(): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Documented)
+    return collector.addAnnotation(JavaAnnotationNames.Documented)
 }
 
 /**
@@ -76,7 +76,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addDocum
  * @param value `value` of `java.lang.annotation.Retention`
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addRetention(value: AnnotationRetention? = null): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Retention) {
+    return collector.addAnnotation(JavaAnnotationNames.Retention) {
         val javaRetentionName = when (value) {
             AnnotationRetention.SOURCE -> "SOURCE"
             AnnotationRetention.BINARY -> "CLASS"
@@ -104,7 +104,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addReten
  * @throws IllegalArgumentException if any chars not meet `it in 'A'..'Z' || it == '_'`
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addTarget(vararg values: String): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Target) {
+    return collector.addAnnotation(JavaAnnotationNames.Target) {
         if (values.isNotEmpty()) {
             for (value in values) {
                 val elementName = value.uppercase()
@@ -122,7 +122,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addTarge
  * Add annotation ref: [JavaAnnotationNames.Inherited].
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addInherited(): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Inherited)
+    return collector.addAnnotation(JavaAnnotationNames.Inherited)
 }
 
 /**
@@ -131,7 +131,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addInher
  * @param value `value` of `java.lang.annotation.Repeatable`
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addRepeatable(value: ClassName): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Repeatable) {
+    return collector.addAnnotation(JavaAnnotationNames.Repeatable) {
         addMember("value", "%V.class") {
             emitType(value)
         }
@@ -142,14 +142,14 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addRepea
  * Add annotation ref: [JavaAnnotationNames.Native].
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addNative(): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Native)
+    return collector.addAnnotation(JavaAnnotationNames.Native)
 }
 
 /**
  * Add annotation ref: [JavaAnnotationNames.FunctionalInterface].
  */
 public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addFunctionalInterface(): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.FunctionalInterface)
+    return collector.addAnnotation(JavaAnnotationNames.FunctionalInterface)
 }
 
 /**
@@ -164,7 +164,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addGener
     date: String? = null,
     comments: String? = null
 ): B {
-    return collector.addAnnotationRef(JavaAnnotationNames.Generated) {
+    return collector.addAnnotation(JavaAnnotationNames.Generated) {
         values?.takeIf { it.isNotEmpty() }?.also { values ->
             for (value in values) {
                 addMember("value", "%V") { emitString(value) }

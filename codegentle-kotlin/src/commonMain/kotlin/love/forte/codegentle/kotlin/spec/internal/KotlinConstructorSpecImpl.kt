@@ -110,11 +110,11 @@ internal class KotlinConstructorSpecBuilderImpl : KotlinConstructorSpec.Builder 
         modifierSet.addAll(modifiers)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinConstructorSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinConstructorSpec.Builder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinConstructorSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinConstructorSpec.Builder = apply {
         annotations.addAll(refs)
     }
 

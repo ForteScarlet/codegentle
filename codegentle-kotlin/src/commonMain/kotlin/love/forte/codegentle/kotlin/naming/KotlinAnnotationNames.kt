@@ -8,7 +8,7 @@ import love.forte.codegentle.common.ref.AnnotationRefBuilder
 import love.forte.codegentle.common.ref.AnnotationRefCollector
 import love.forte.codegentle.kotlin.ref.KotlinAnnotationRefStatus
 import love.forte.codegentle.kotlin.ref.KotlinAnnotationRefStatusBuilder
-import love.forte.codegentle.kotlin.ref.addKotlinAnnotationRef
+import love.forte.codegentle.kotlin.ref.addKotlinAnnotation
 
 /**
  * @see PackageNames
@@ -184,7 +184,7 @@ public object KotlinAnnotationNames {
 public inline fun <B : AnnotationRefCollector<B>> B.addTarget(
     block: context(KotlinTargetExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.TARGET) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.TARGET) {
     context(KotlinTargetExtensionScope) {
         block()
     }
@@ -196,7 +196,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addTarget(
 public inline fun <B : AnnotationRefCollector<B>> B.addRetention(
     block: context(KotlinRetentionExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.RETENTION) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.RETENTION) {
     context(KotlinRetentionExtensionScope) {
         block()
     }
@@ -207,28 +207,28 @@ public inline fun <B : AnnotationRefCollector<B>> B.addRetention(
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addRepeatable(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.REPEATABLE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.REPEATABLE, block)
 
 /**
  * Add [KotlinAnnotationNames.MUST_BE_DOCUMENTED] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addMustBeDocumented(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.MUST_BE_DOCUMENTED, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.MUST_BE_DOCUMENTED, block)
 
 /**
  * Add [KotlinAnnotationNames.JVM_STATIC] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmStatic(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_STATIC, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_STATIC, block)
 
 /**
  * Add [KotlinAnnotationNames.JVM_FIELD] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmField(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_FIELD, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_FIELD, block)
 
 /**
  * Add [KotlinAnnotationNames.JVM_NAME] into [B].
@@ -236,7 +236,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addJvmField(
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmName(
     block: context(KotlinJvmNameExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_NAME) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_NAME) {
     context(KotlinJvmNameExtensionScope) {
         block()
     }
@@ -247,21 +247,21 @@ public inline fun <B : AnnotationRefCollector<B>> B.addJvmName(
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmOverloads(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_OVERLOADS, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_OVERLOADS, block)
 
 /**
  * Add [KotlinAnnotationNames.JVM_INLINE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmInline(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_INLINE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_INLINE, block)
 
 /**
  * Add [KotlinAnnotationNames.JVM_MULTIFILE_CLASS] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmMultifileClass(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_MULTIFILE_CLASS, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_MULTIFILE_CLASS, block)
 
 /**
  * Add [KotlinAnnotationNames.JVM_SUPPRESS_WILDCARDS] into [B].
@@ -269,7 +269,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addJvmMultifileClass(
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmSuppressWildcards(
     block: context(KotlinJvmSuppressWildcardsExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_SUPPRESS_WILDCARDS) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_SUPPRESS_WILDCARDS) {
     context(KotlinJvmSuppressWildcardsExtensionScope) {
         block()
     }
@@ -280,7 +280,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addJvmSuppressWildcards(
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJvmWildcard(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JVM_WILDCARD, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JVM_WILDCARD, block)
 
 /**
  * Add [KotlinAnnotationNames.THROWS] into [B].
@@ -288,7 +288,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addJvmWildcard(
 public inline fun <B : AnnotationRefCollector<B>> B.addThrows(
     block: context(KotlinThrowsExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.THROWS) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.THROWS) {
     context(KotlinThrowsExtensionScope) {
         block()
     }
@@ -299,56 +299,56 @@ public inline fun <B : AnnotationRefCollector<B>> B.addThrows(
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addTransient(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.TRANSIENT, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.TRANSIENT, block)
 
 /**
  * Add [KotlinAnnotationNames.VOLATILE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addVolatile(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.VOLATILE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.VOLATILE, block)
 
 /**
  * Add [KotlinAnnotationNames.SYNCHRONIZED] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addSynchronized(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.SYNCHRONIZED, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.SYNCHRONIZED, block)
 
 /**
  * Add [KotlinAnnotationNames.STRICTFP] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addStrictfp(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.STRICTFP, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.STRICTFP, block)
 
 /**
  * Add [KotlinAnnotationNames.JS_NAME] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJsName(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JS_NAME, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JS_NAME, block)
 
 /**
  * Add [KotlinAnnotationNames.JS_MODULE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJsModule(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JS_MODULE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JS_MODULE, block)
 
 /**
  * Add [KotlinAnnotationNames.JS_NON_MODULE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJsNonModule(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JS_NON_MODULE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JS_NON_MODULE, block)
 
 /**
  * Add [KotlinAnnotationNames.JS_EXPORT] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addJsExport(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.JS_EXPORT, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.JS_EXPORT, block)
 
 /**
  * Add [KotlinAnnotationNames.DEPRECATED] into [B].
@@ -356,7 +356,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addJsExport(
 public inline fun <B : AnnotationRefCollector<B>> B.addDeprecated(
     block: context(KotlinDeprecatedExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.DEPRECATED) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.DEPRECATED) {
     context(KotlinDeprecatedExtensionScope) {
         block()
     }
@@ -368,7 +368,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addDeprecated(
 public inline fun <B : AnnotationRefCollector<B>> B.addReplaceWith(
     block: context(KotlinReplaceWithExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.REPLACE_WITH) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.REPLACE_WITH) {
     context(KotlinReplaceWithExtensionScope) {
         block()
     }
@@ -380,7 +380,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addReplaceWith(
 public inline fun <B : AnnotationRefCollector<B>> B.addSuppress(
     block: context(KotlinSuppressExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.SUPPRESS) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.SUPPRESS) {
     context(KotlinSuppressExtensionScope) {
         block()
     }
@@ -392,7 +392,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addSuppress(
 public inline fun <B : AnnotationRefCollector<B>> B.addOptIn(
     block: context(KotlinOptInExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.OPT_IN) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.OPT_IN) {
     context(KotlinOptInExtensionScope) {
         block()
     }
@@ -404,7 +404,7 @@ public inline fun <B : AnnotationRefCollector<B>> B.addOptIn(
 public inline fun <B : AnnotationRefCollector<B>> B.addRequiresOptIn(
     block: context(KotlinRequiresOptInExtensionScope)
     AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.REQUIRES_OPT_IN) {
+): B = addKotlinAnnotation(KotlinAnnotationNames.REQUIRES_OPT_IN) {
     context(KotlinRequiresOptInExtensionScope) {
         block()
     }
@@ -415,33 +415,33 @@ public inline fun <B : AnnotationRefCollector<B>> B.addRequiresOptIn(
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addDslMarker(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.DSL_MARKER, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.DSL_MARKER, block)
 
 /**
  * Add [KotlinAnnotationNames.UNSAFE_VARIANCE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addUnsafeVariance(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.UNSAFE_VARIANCE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.UNSAFE_VARIANCE, block)
 
 /**
  * Add [KotlinAnnotationNames.PUBLISHED_API] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addPublishedApi(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.PUBLISHED_API, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.PUBLISHED_API, block)
 
 /**
  * Add [KotlinAnnotationNames.BUILDER_INFERENCE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addBuilderInference(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.BUILDER_INFERENCE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.BUILDER_INFERENCE, block)
 
 /**
  * Add [KotlinAnnotationNames.OVERLOAD_RESOLUTION_BY_LAMBDA_RETURN_TYPE] into [B].
  */
 public inline fun <B : AnnotationRefCollector<B>> B.addOverloadResolutionByLambdaReturnType(
     block: AnnotationRefBuilder<KotlinAnnotationRefStatus, KotlinAnnotationRefStatusBuilder>.() -> Unit = {}
-): B = addKotlinAnnotationRef(KotlinAnnotationNames.OVERLOAD_RESOLUTION_BY_LAMBDA_RETURN_TYPE, block)
+): B = addKotlinAnnotation(KotlinAnnotationNames.OVERLOAD_RESOLUTION_BY_LAMBDA_RETURN_TYPE, block)
 

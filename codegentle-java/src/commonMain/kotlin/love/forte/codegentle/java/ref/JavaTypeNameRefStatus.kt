@@ -21,11 +21,11 @@ public class JavaTypeNameRefStatusBuilder @PublishedApi internal constructor() :
     TypeNameRefStatusBuilder<JavaTypeNameRefStatus> {
     private val annotations: MutableList<AnnotationRef> = mutableListOf()
 
-    override fun addAnnotationRef(ref: AnnotationRef): JavaTypeNameRefStatusBuilder = apply {
+    override fun addAnnotation(ref: AnnotationRef): JavaTypeNameRefStatusBuilder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): JavaTypeNameRefStatusBuilder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): JavaTypeNameRefStatusBuilder = apply {
         annotations.addAll(refs)
     }
 

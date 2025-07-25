@@ -4,6 +4,7 @@ import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.utils.BlankLineManager
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.spec.KotlinAnnotationTypeSpec
+import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -32,10 +33,10 @@ private fun KotlinAnnotationTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     codeWriter.emitAnnotationRefs(annotations, false)
 
     // Emit modifiers
-    codeWriter.emitModifiers(modifiers)
+    codeWriter.emitModifiers(codeWriter.strategy.resolveModifiers(modifiers))
 
     // Emit the annotation class keyword
-    codeWriter.emit("class ")
+    codeWriter.emit(KotlinTypeSpec.Kind.CLASS, true)
 
     // Emit the name
     codeWriter.emit(name)

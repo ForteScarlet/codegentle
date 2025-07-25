@@ -3,6 +3,8 @@ package love.forte.codegentle.kotlin.spec.emitter
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.code.isNotEmpty
 import love.forte.codegentle.common.writer.withIndent
+import love.forte.codegentle.kotlin.naming.KotlinClassNames
+import love.forte.codegentle.kotlin.ref.kotlinOrNull
 import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
@@ -29,7 +31,7 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
     }
 
     // Emit modifiers
-    codeWriter.emitModifiers(modifiers)
+    codeWriter.emitModifiers(codeWriter.strategy.resolveModifiers(modifiers))
 
     // Emit the function keyword
     codeWriter.emit("fun ")
@@ -76,9 +78,12 @@ internal fun KotlinFunctionSpec.emitTo(codeWriter: KotlinCodeWriter) {
         codeWriter.emit(")")
     }
 
-    // Emit return type
-    codeWriter.emit(": ")
-    codeWriter.emit(returnType)
+    // Emit the return type if it != Unit || it == `Unit?`
+    if (returnType.typeName != KotlinClassNames.UNIT
+        || returnType.status.kotlinOrNull?.nullable != true) {
+        codeWriter.emit(": ")
+        codeWriter.emit(returnType)
+    }
 
     if (!code.isEmpty()) {
         if (code.isStartWithReturn()) {

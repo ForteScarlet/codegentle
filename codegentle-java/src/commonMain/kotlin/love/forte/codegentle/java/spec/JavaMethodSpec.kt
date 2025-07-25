@@ -114,11 +114,11 @@ public class JavaMethodSpecBuilder internal constructor(
         javadoc.add(codeValue)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): JavaMethodSpecBuilder = apply {
+    override fun addAnnotation(ref: AnnotationRef): JavaMethodSpecBuilder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): JavaMethodSpecBuilder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): JavaMethodSpecBuilder = apply {
         this.annotations.addAll(refs)
     }
 

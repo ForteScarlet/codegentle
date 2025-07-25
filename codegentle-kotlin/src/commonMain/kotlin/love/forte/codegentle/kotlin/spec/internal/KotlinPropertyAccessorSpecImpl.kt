@@ -59,11 +59,11 @@ internal class KotlinGetterSpecBuilderImpl : KotlinGetterSpec.Builder {
         modifierSet.addAll(modifiers)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinGetterSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinGetterSpec.Builder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinGetterSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinGetterSpec.Builder = apply {
         annotations.addAll(refs)
     }
 
@@ -150,11 +150,11 @@ internal class KotlinSetterSpecBuilderImpl(
         modifierSet.addAll(modifiers)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinSetterSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinSetterSpec.Builder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinSetterSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinSetterSpec.Builder = apply {
         annotations.addAll(refs)
     }
 

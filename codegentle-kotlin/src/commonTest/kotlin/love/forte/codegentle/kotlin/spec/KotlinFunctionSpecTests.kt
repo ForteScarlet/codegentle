@@ -317,7 +317,7 @@ class KotlinFunctionSpecTests {
         }
 
         val functionSpec = KotlinFunctionSpec.builder("testFunction", unitType)
-            .addAnnotationRef(deprecatedAnnotation)
+            .addAnnotation(deprecatedAnnotation)
             .build()
 
         assertEquals(1, functionSpec.annotations.size)

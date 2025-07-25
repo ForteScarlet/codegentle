@@ -9,7 +9,7 @@ import kotlin.jvm.JvmInline
  *
  * ```Kotlin
  * builder {
- *    addAnnotationRef(...)
+ *    addAnnotation(...)
  * }
  * ```
  *
@@ -18,26 +18,26 @@ import kotlin.jvm.JvmInline
  */
 @SubclassOptInRequired(CodeGentleBuilderExtensionImplementation::class)
 public interface AnnotationRefCollector<B : AnnotationRefCollector<B>> {
-    public fun addAnnotationRef(ref: AnnotationRef): B
+    public fun addAnnotation(ref: AnnotationRef): B
 
-    public fun addAnnotationRefs(refs: Iterable<AnnotationRef>): B
+    public fun addAnnotations(refs: Iterable<AnnotationRef>): B
 
-    public fun addAnnotationRefs(vararg refs: AnnotationRef): B =
-        addAnnotationRefs(refs.asList())
+    public fun addAnnotations(vararg refs: AnnotationRef): B =
+        addAnnotations(refs.asList())
 }
 
 public inline fun <S : AnnotationRefStatus,
     SB : AnnotationRefStatusBuilder<S>,
-    B : AnnotationRefCollector<B>> B.addAnnotationRef(
+    B : AnnotationRefCollector<B>> B.addAnnotation(
     className: ClassName,
     factory: AnnotationRefStatusBuilderFactory<S, SB>,
     block: AnnotationRefBuilderDsl<S, SB> = {}
-): B = addAnnotationRef(className.annotationRef(factory, block))
+): B = addAnnotation(className.annotationRef(factory, block))
 
-public inline fun <B : AnnotationRefCollector<B>> B.addAnnotationRef(
+public inline fun <B : AnnotationRefCollector<B>> B.addAnnotation(
     className: ClassName,
     block: BasicAnnotationRefBuilderDsl = {}
-): B = addAnnotationRef(className.annotationRef(block))
+): B = addAnnotation(className.annotationRef(block))
 
 /**
  * Some operations for [AnnotationRefCollector].
@@ -46,19 +46,19 @@ public inline fun <B : AnnotationRefCollector<B>> B.addAnnotationRef(
 public value class AnnotationRefCollectorOps<B : AnnotationRefCollector<B>>
 @PublishedApi
 internal constructor(public val collector: B) {
-    public fun add(ref: AnnotationRef): B = collector.addAnnotationRef(ref)
-    public fun addAll(refs: Iterable<AnnotationRef>): B = collector.addAnnotationRefs(refs)
-    public fun addAll(vararg refs: AnnotationRef): B = collector.addAnnotationRefs(refs.asList())
+    public fun add(ref: AnnotationRef): B = collector.addAnnotation(ref)
+    public fun addAll(refs: Iterable<AnnotationRef>): B = collector.addAnnotations(refs)
+    public fun addAll(vararg refs: AnnotationRef): B = collector.addAnnotations(refs.asList())
 }
 
-public inline val <B : AnnotationRefCollector<B>> B.annotationRefs: AnnotationRefCollectorOps<B>
+public inline val <B : AnnotationRefCollector<B>> B.annotations: AnnotationRefCollectorOps<B>
     get() = AnnotationRefCollectorOps(this)
 
 /**
  * DSL block with [AnnotationRefCollectorOps].
  */
-public inline fun <B : AnnotationRefCollector<B>> B.annotationRefs(
+public inline fun <B : AnnotationRefCollector<B>> B.annotations(
     block: AnnotationRefCollectorOps<B>.() -> Unit
 ) {
-    annotationRefs.block()
+    annotations.block()
 }

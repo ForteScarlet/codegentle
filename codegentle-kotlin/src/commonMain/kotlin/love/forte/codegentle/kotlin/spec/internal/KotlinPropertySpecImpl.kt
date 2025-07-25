@@ -126,11 +126,11 @@ internal class KotlinPropertySpecBuilderImpl(
         modifierSet.addAll(modifiers)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinPropertySpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinPropertySpec.Builder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinPropertySpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinPropertySpec.Builder = apply {
         annotations.addAll(refs)
     }
 

@@ -44,12 +44,12 @@ public inline fun JavaFieldSpecBuilder.addAnnotationRef(
     cls: Class<*>,
     block: AnnotationRefBuilder.() -> Unit = {}
 ): JavaFieldSpecBuilder = apply {
-    addAnnotationRef(cls.toJavaClassName().annotationRef(block))
+    addAnnotation(cls.toJavaClassName().annotationRef(block))
 }
 
 public inline fun JavaFieldSpecBuilder.addAnnotationRef(
     cls: KClass<*>,
     block: AnnotationRefBuilder.() -> Unit = {}
 ): JavaFieldSpecBuilder = apply {
-    addAnnotationRef(cls.toJavaClassName().annotationRef(block))
+    addAnnotation(cls.toJavaClassName().annotationRef(block))
 }

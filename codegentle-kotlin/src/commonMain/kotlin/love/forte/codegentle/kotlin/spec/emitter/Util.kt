@@ -4,6 +4,10 @@ import love.forte.codegentle.common.code.CodePart
 import love.forte.codegentle.common.code.CodeSimplePart
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.code.isEmpty
+import love.forte.codegentle.kotlin.KotlinModifier
+import love.forte.codegentle.kotlin.MutableKotlinModifierSet
+import love.forte.codegentle.kotlin.strategy.KotlinWriteStrategy
+import love.forte.codegentle.kotlin.visibility
 
 internal fun CodeValue.isStartWithReturn(): Boolean {
     if (isEmpty()) return false
@@ -31,5 +35,23 @@ internal fun CodeValue.removeFirstReturn(): CodeValue {
             add(CodePart.simple(replacedFirstValue))
             addAll(parts.subList(1, parts.size))
         })
+    }
+}
+
+internal fun KotlinWriteStrategy.resolveModifiers(
+    modifiers: Set<KotlinModifier>
+): Set<KotlinModifier> {
+    val currentVisibility = modifiers.visibility
+    if (currentVisibility != null) {
+        return modifiers
+    }
+
+    val defaultVisibility = defaultVisibility()
+    if (defaultVisibility == null) {
+        return modifiers
+    }
+
+    return MutableKotlinModifierSet.of(modifiers).also { set ->
+        set.add(defaultVisibility)
     }
 }

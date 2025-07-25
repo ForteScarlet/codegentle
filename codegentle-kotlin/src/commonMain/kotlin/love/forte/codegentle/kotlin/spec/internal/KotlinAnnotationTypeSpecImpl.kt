@@ -60,11 +60,11 @@ internal class KotlinAnnotationTypeSpecBuilderImpl(
         kDoc.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinAnnotationTypeSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinAnnotationTypeSpec.Builder = apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinAnnotationTypeSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinAnnotationTypeSpec.Builder = apply {
         annotationRefs.addAll(refs)
     }
 

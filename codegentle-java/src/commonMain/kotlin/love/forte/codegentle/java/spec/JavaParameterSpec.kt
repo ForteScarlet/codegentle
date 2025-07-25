@@ -78,11 +78,11 @@ public class JavaParameterSpecBuilder internal constructor(
         javadoc.add(codeValue)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): JavaParameterSpecBuilder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): JavaParameterSpecBuilder = apply {
         this.annotations.addAll(refs)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): JavaParameterSpecBuilder = apply {
+    override fun addAnnotation(ref: AnnotationRef): JavaParameterSpecBuilder = apply {
         annotations.add(ref)
     }
 

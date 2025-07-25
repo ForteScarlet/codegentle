@@ -39,7 +39,7 @@ private fun KotlinSimpleTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, implicitM
     codeWriter.emitAnnotationRefs(annotations, false)
 
     // Emit modifiers
-    codeWriter.emitModifiers(modifiers, implicitModifiers)
+    codeWriter.emitModifiers(codeWriter.strategy.resolveModifiers(modifiers), implicitModifiers)
 
     // Emit the type keyword based on the kind
     codeWriter.emit(kind, true)

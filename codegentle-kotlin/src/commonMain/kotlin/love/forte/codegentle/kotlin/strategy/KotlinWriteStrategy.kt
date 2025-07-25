@@ -4,12 +4,17 @@ import love.forte.codegentle.common.naming.PackageName
 import love.forte.codegentle.common.naming.PackageNames
 import love.forte.codegentle.common.naming.TypeName
 import love.forte.codegentle.common.writer.Strategy
+import love.forte.codegentle.kotlin.KotlinModifier
+
+@RequiresOptIn
+public annotation class KotlinWriteStrategyInterfaceImplementation
 
 /**
  * The strategies for writing Kotlin code.
  *
  * @author ForteScarlet
  */
+@SubclassOptInRequired(KotlinWriteStrategyInterfaceImplementation::class)
 public interface KotlinWriteStrategy : Strategy {
     /**
      * A number of packages are imported into every Kotlin file by default:
@@ -40,13 +45,26 @@ public interface KotlinWriteStrategy : Strategy {
     // No need to declare methods that are already in Strategy
 
     // TODO 返回值 Unit 时省略 (不是单行 return 的时候)
+    public fun omitFunctionUnitReturnType(): Boolean
+
     // TODO 单行 return 替换
+    public fun replaceReturnWithExpressionBody(): Boolean
+
     // TODO 无访问修饰符时默认填充 PUBLIC, 或者选择一个默认填充
+    /**
+     *
+     * Support:
+     * - functions
+     * - properties
+     * - types
+     */
+    public fun defaultVisibility(): KotlinModifier?
 }
 
 /**
  * Default implementation of [KotlinWriteStrategy].
  */
+@OptIn(KotlinWriteStrategyInterfaceImplementation::class)
 public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
     override fun isIdentifier(value: String): Boolean {
         if (value.isEmpty()) return false
@@ -75,6 +93,12 @@ public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
     override fun omitPackage(packageName: PackageName): Boolean =
         packageName in defaultImports
 
+    override fun omitFunctionUnitReturnType(): Boolean = true
+
+    override fun replaceReturnWithExpressionBody(): Boolean = true
+
+    override fun defaultVisibility(): KotlinModifier? = null
+
     public companion object {
         public val defaultImports: Set<PackageName> = setOf(
             PackageNames.KOTLIN,
@@ -95,6 +119,7 @@ public open class DefaultKotlinWriteStrategy : KotlinWriteStrategy {
 /**
  * A [KotlinWriteStrategy] for generating code as a string.
  */
+@OptIn(KotlinWriteStrategyInterfaceImplementation::class)
 public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
     private val defaultImportPackages = setOf(
         PackageNames.KOTLIN,
@@ -114,6 +139,12 @@ public object ToStringKotlinWriteStrategy : KotlinWriteStrategy {
      */
     override fun omitPackage(packageName: PackageName): Boolean =
         packageName in defaultImportPackages
+
+    override fun omitFunctionUnitReturnType(): Boolean = true
+
+    override fun replaceReturnWithExpressionBody(): Boolean = true
+
+    override fun defaultVisibility(): KotlinModifier? = null
 }
 
 /**

@@ -29,7 +29,7 @@ private fun KotlinObjectTypeSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     codeWriter.emitAnnotationRefs(annotations, false)
 
     // Emit modifiers (companion objects have COMPANION modifier)
-    codeWriter.emitModifiers(modifiers)
+    codeWriter.emitModifiers(codeWriter.strategy.resolveModifiers(modifiers))
 
     // Emit "object" keyword for regular objects, "companion object" is handled by modifiers
     codeWriter.emit(KotlinTypeSpec.Kind.OBJECT)

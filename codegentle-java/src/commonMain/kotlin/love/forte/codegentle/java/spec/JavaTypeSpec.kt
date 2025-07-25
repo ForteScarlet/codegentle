@@ -251,11 +251,11 @@ public sealed class JavaTypeSpecBuilder<B : JavaTypeSpecBuilder<B, T>, T : JavaT
         this.initializerBlock.add(codeValue)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): B = self.apply {
+    override fun addAnnotation(ref: AnnotationRef): B = self.apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): B = self.apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): B = self.apply {
         annotationRefs.addAll(refs)
     }
 

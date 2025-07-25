@@ -175,20 +175,20 @@ class KotlinValueParameterSpecTests {
     fun testParameterAnnotations() {
         // Single annotation
         val singleAnnParam = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(deprecatedAnnotation)
+            .addAnnotation(deprecatedAnnotation)
             .build()
         assertEquals(listOf(deprecatedAnnotation), singleAnnParam.annotations)
 
         // Multiple annotations
         val multiAnnParam = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(deprecatedAnnotation)
-            .addAnnotationRef(jvmNameAnnotation)
+            .addAnnotation(deprecatedAnnotation)
+            .addAnnotation(jvmNameAnnotation)
             .build()
         assertEquals(listOf(deprecatedAnnotation, jvmNameAnnotation), multiAnnParam.annotations)
 
         // Multiple annotations via iterable
         val iterableAnnParam = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRefs(listOf(deprecatedAnnotation, jvmNameAnnotation))
+            .addAnnotations(listOf(deprecatedAnnotation, jvmNameAnnotation))
             .build()
         assertEquals(listOf(deprecatedAnnotation, jvmNameAnnotation), iterableAnnParam.annotations)
     }
@@ -245,14 +245,14 @@ class KotlinValueParameterSpecTests {
     @Test
     fun testCodeGenerationWithAnnotations() {
         val singleAnnParam = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(deprecatedAnnotation)
+            .addAnnotation(deprecatedAnnotation)
             .build()
         assertEquals("@Deprecated(message = \"This parameter is deprecated\")\nparam: String", 
                     singleAnnParam.writeToKotlinString())
 
         val multiAnnParam = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(deprecatedAnnotation)
-            .addAnnotationRef(jvmNameAnnotation)
+            .addAnnotation(deprecatedAnnotation)
+            .addAnnotation(jvmNameAnnotation)
             .build()
         val expected = "@Deprecated(message = \"This parameter is deprecated\")\n@JvmName(name = \"customName\")\nparam: String"
         assertEquals(expected, multiAnnParam.writeToKotlinString())
@@ -280,7 +280,7 @@ class KotlinValueParameterSpecTests {
         }
 
         val param = KotlinValueParameterSpec.builder("complexParam", stringType)
-            .addAnnotationRef(complexAnnotation)
+            .addAnnotation(complexAnnotation)
             .addModifier(KotlinModifier.CROSSINLINE)
             .immutableProperty()
             .defaultValue("\"complex\"")
@@ -336,7 +336,7 @@ class KotlinValueParameterSpecTests {
     fun testParameterBuilderChaining() {
         val param = KotlinValueParameterSpec.builder("param", stringType)
             .addModifier(KotlinModifier.CROSSINLINE)
-            .addAnnotationRef(deprecatedAnnotation)
+            .addAnnotation(deprecatedAnnotation)
             .immutableProperty()
             .defaultValue("\"test\"")
             .addKDoc("Test parameter")
@@ -583,7 +583,7 @@ class KotlinValueParameterSpecTests {
         }
 
         val param = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(complexAnnotation)
+            .addAnnotation(complexAnnotation)
             .build()
 
         val code = param.writeToKotlinString()
@@ -627,7 +627,7 @@ class KotlinValueParameterSpecTests {
         }
 
         val param = KotlinValueParameterSpec.builder("complexParam", stringType)
-            .addAnnotationRef(complexAnnotation)
+            .addAnnotation(complexAnnotation)
             .addModifier(KotlinModifier.CROSSINLINE)
             .immutableProperty()
             .defaultValue("\"complex\"")
@@ -668,8 +668,8 @@ class KotlinValueParameterSpecTests {
         }
 
         val param = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(annotation1)
-            .addAnnotationRef(annotation2)
+            .addAnnotation(annotation1)
+            .addAnnotation(annotation2)
             .build()
 
         assertEquals(2, param.annotations.size)
@@ -739,7 +739,7 @@ class KotlinValueParameterSpecTests {
         }
 
         val param = KotlinValueParameterSpec.builder("param", stringType)
-            .addAnnotationRef(customAnnotation)
+            .addAnnotation(customAnnotation)
             .build()
 
         val code = param.writeToKotlinString()

@@ -102,11 +102,11 @@ public class JavaFieldSpecBuilder @PublishedApi internal constructor(
         javadoc.add(codeValue)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): JavaFieldSpecBuilder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): JavaFieldSpecBuilder = apply {
         annotations.addAll(refs)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): JavaFieldSpecBuilder = apply {
+    override fun addAnnotation(ref: AnnotationRef): JavaFieldSpecBuilder = apply {
         annotations.add(ref)
     }
 

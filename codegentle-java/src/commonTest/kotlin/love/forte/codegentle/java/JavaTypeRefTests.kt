@@ -1,7 +1,7 @@
 package love.forte.codegentle.java
 
 import love.forte.codegentle.common.naming.ClassName
-import love.forte.codegentle.common.ref.addAnnotationRef
+import love.forte.codegentle.common.ref.addAnnotation
 import love.forte.codegentle.common.ref.status
 import love.forte.codegentle.java.ref.javaRef
 import love.forte.codegentle.java.writer.writeToJavaString
@@ -18,7 +18,7 @@ class JavaTypeRefTests {
         val className = ClassName("com.example", "Example")
         val ref = className.javaRef {
             status {
-                addAnnotationRef(ClassName("com.example.anno", "Anno"))
+                addAnnotation(ClassName("com.example.anno", "Anno"))
             }
         }
 

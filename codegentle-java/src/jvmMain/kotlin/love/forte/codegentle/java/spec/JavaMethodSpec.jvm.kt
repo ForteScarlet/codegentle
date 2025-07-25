@@ -35,7 +35,7 @@ public inline fun ExecutableElement.toJavaMethodSpecOverring(
     }
 
     return JavaMethodSpec(name) {
-        addAnnotationRef(JavaAnnotationNames.Override.annotationRef())
+        addAnnotation(JavaAnnotationNames.Override.annotationRef())
 
         // copy modifiers
         val newModifierSet = mutableSetOf<JavaModifier>()

@@ -24,11 +24,11 @@ public class KotlinTypeNameRefStatusBuilder @PublishedApi internal constructor()
     public var nullable: Boolean = false
     private val annotations: MutableList<AnnotationRef> = mutableListOf()
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinTypeNameRefStatusBuilder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinTypeNameRefStatusBuilder = apply {
         annotations.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinTypeNameRefStatusBuilder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinTypeNameRefStatusBuilder = apply {
         annotations.addAll(refs)
     }
 

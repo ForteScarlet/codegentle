@@ -102,11 +102,11 @@ internal class KotlinSimpleTypeSpecBuilderImpl(
         this.initializerBlock.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinSimpleTypeSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinSimpleTypeSpec.Builder = apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinSimpleTypeSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinSimpleTypeSpec.Builder = apply {
         annotationRefs.addAll(refs)
     }
 

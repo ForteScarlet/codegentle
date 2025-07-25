@@ -33,7 +33,7 @@ private fun KotlinValueClassSpec.emitTo0(codeWriter: KotlinCodeWriter) {
     // Emit annotations
     codeWriter.emitAnnotationRefs(annotations, false)
 
-    codeWriter.emitModifiers(modifiers)
+    codeWriter.emitModifiers(codeWriter.strategy.resolveModifiers(modifiers))
 
     // Emit the value class keyword
     codeWriter.emit(KotlinTypeSpec.Kind.CLASS, true)

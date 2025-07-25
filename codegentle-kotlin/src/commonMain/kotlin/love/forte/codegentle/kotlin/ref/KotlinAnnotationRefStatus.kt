@@ -45,7 +45,7 @@ public val AnnotationRef.kotlinStatusOrNull: KotlinAnnotationRefStatus?
 
 // AnnotationRefCollector
 
-public inline fun <B : AnnotationRefCollector<B>> B.addKotlinAnnotationRef(
+public inline fun <B : AnnotationRefCollector<B>> B.addKotlinAnnotation(
     className: ClassName,
     block: KotlinAnnotationRefBuilderDsl = {}
-): B = addAnnotationRef(className.kotlinAnnotationRef(block))
+): B = addAnnotation(className.kotlinAnnotationRef(block))

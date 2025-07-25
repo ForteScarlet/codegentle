@@ -74,11 +74,11 @@ internal class KotlinEnumTypeSpecBuilderImpl(
         this.initializerBlock.add(format, *argumentParts)
     }
 
-    override fun addAnnotationRef(ref: AnnotationRef): KotlinEnumTypeSpec.Builder = apply {
+    override fun addAnnotation(ref: AnnotationRef): KotlinEnumTypeSpec.Builder = apply {
         annotationRefs.add(ref)
     }
 
-    override fun addAnnotationRefs(refs: Iterable<AnnotationRef>): KotlinEnumTypeSpec.Builder = apply {
+    override fun addAnnotations(refs: Iterable<AnnotationRef>): KotlinEnumTypeSpec.Builder = apply {
         annotationRefs.addAll(refs)
     }
 

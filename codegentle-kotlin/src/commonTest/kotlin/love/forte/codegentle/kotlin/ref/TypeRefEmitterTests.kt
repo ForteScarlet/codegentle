@@ -39,7 +39,7 @@ class TypeRefEmitterTests {
         
         val typeRef = className.kotlinRef {
             status {
-                addAnnotationRef(annotation)
+                addAnnotation(annotation)
             }
         }
         
@@ -59,7 +59,7 @@ class TypeRefEmitterTests {
         
         val typeRef = className.kotlinRef {
             status {
-                addAnnotationRef(annotation)
+                addAnnotation(annotation)
                 nullable = true
             }
         }
@@ -80,8 +80,8 @@ class TypeRefEmitterTests {
         
         val typeRef = className.kotlinRef {
             status {
-                addAnnotationRef(annotation1)
-                addAnnotationRef(annotation2)
+                addAnnotation(annotation1)
+                addAnnotation(annotation2)
             }
         }
         
@@ -101,8 +101,8 @@ class TypeRefEmitterTests {
         
         val typeRef = className.kotlinRef {
             status {
-                addAnnotationRef(annotation1)
-                addAnnotationRef(annotation2)
+                addAnnotation(annotation1)
+                addAnnotation(annotation2)
                 nullable = true
             }
         }
@@ -123,7 +123,7 @@ class TypeRefEmitterTests {
         
         val typeRef = className.kotlinRef {
             status {
-                addAnnotationRef(annotation)
+                addAnnotation(annotation)
                 nullable = true
             }
         }
