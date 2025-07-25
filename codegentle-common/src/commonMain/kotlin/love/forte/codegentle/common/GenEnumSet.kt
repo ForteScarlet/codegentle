@@ -12,4 +12,11 @@ public annotation class GenEnumSet(
     val containerSingleAdder: String = "",
     val containerMultiAdder: String = "",
     val operatorsName: String = "",
-)
+) {
+
+    /**
+     * A set of mutually exclusive enum elements.
+     * Within this group, setting one element will cancel the settings of other elements in the group.
+     */
+    public annotation class Group(val name: String)
+}

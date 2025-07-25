@@ -1,5 +1,7 @@
 package love.forte.codegentle.common.utils
 
+import kotlin.jvm.JvmInline
+
 @RequiresOptIn("This api is internal. It may be changed in the future.")
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
@@ -416,11 +418,21 @@ public abstract class BigEnumSet<E : Enum<E>>(
 
     protected abstract fun newBy(bitset: LongArray): BigEnumSet<E>
 
+    @JvmInline
+    private value class IndexAndBit(val value: Long) {
+        operator fun component1(): Int = (value shr 32).toInt()
+        operator fun component2(): Int = value.toInt()
+    }
+
     /**
      * Gets array index and bit position for an enum ordinal
      */
-    private fun getIndexAndBit(ordinal: Int): Pair<Int, Int> {
-        return ordinal / 64 to ordinal % 64
+    private fun getIndexAndBit(ordinal: Int): IndexAndBit {
+        // return ordinal / 64 to ordinal % 64
+        val c1 = ordinal / 64
+        val c2 = ordinal % 64
+        val value = (c1.toLong() shl 32) or c2.toLong()
+        return IndexAndBit(value)
     }
 
     /**
@@ -487,17 +499,17 @@ public abstract class BigEnumSet<E : Enum<E>>(
             val eb = other.bitset
             val size = maxOf(bitset.size, eb.size)
             val result = LongArray(size)
-            
+
             // Copy this bitset
             for (i in bitset.indices) {
                 result[i] = bitset[i]
             }
-            
+
             // OR with other bitset
             for (i in eb.indices) {
                 result[i] = result[i] or eb[i]
             }
-            
+
             return newBy(result)
         }
         // Fallback for other EnumSet implementations
@@ -511,18 +523,18 @@ public abstract class BigEnumSet<E : Enum<E>>(
             val eb = other.bitset
             val size = bitset.size
             val result = LongArray(size)
-            
+
             // Copy this bitset
             for (i in bitset.indices) {
                 result[i] = bitset[i]
             }
-            
+
             // Remove bits from other bitset
             val minSize = minOf(size, eb.size)
             for (i in 0 until minSize) {
                 result[i] = result[i] and eb[i].inv()
             }
-            
+
             return newBy(result)
         }
         // Fallback for other EnumSet implementations

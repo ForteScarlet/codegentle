@@ -75,30 +75,41 @@ public enum class KotlinModifier(
     IN("in"),
     OUT("out"),
     ;
-
-    // @GenEnumSet(
-    //     internal = true,
-    //     immutableName = "KotlinModifierTargetSet",
-    //     mutableName = "MutableKotlinModifierTargetSet"
-    // )
-    // internal enum class Target {
-    //     CLASS,
-    //     VARIANCE,
-    //     PARAMETER,
-    //     TYPE_PARAMETER,
-    //     FUNCTION,
-    //     PROPERTY,
-    //     INTERFACE,
-    // }
-
 }
 
-internal val VISIBILITY_MODIFIERS: Set<KotlinModifier> = KotlinModifierSet.of(
+internal val VISIBILITY_MODIFIERS = KotlinModifierSet.of(
     KotlinModifier.PUBLIC,
     KotlinModifier.INTERNAL,
     KotlinModifier.PROTECTED,
     KotlinModifier.PRIVATE
 )
+
+internal fun Set<KotlinModifier>.containsVisibility(): Boolean {
+    return if (this is KotlinModifierSet) {
+        containsAny(VISIBILITY_MODIFIERS)
+    } else {
+        any { it in VISIBILITY_MODIFIERS }
+    }
+}
+
+internal val Set<KotlinModifier>.visibilities: Set<KotlinModifier>
+    get() = if (this is KotlinModifierSet) {
+        intersect(VISIBILITY_MODIFIERS)
+    } else {
+        MutableKotlinModifierSet.of(VISIBILITY_MODIFIERS).also {
+            it.retainAll(this)
+        }
+    }
+
+internal val Set<KotlinModifier>.visibility: KotlinModifier?
+    get() {
+        val visibilities = visibilities
+        if (visibilities.size > 1) {
+            throw IllegalStateException("Multiple visibility modifiers: $visibilities")
+        }
+
+        return visibilities.firstOrNull()
+    }
 
 public interface KotlinModifierContainer {
     public val modifiers: Set<KotlinModifier>

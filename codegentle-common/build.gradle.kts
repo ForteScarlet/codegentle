@@ -24,7 +24,10 @@ kotlin {
             "love.forte.codegentle.common.writer.CodeGentleCodeWriterImplementation",
             "love.forte.codegentle.common.CodeGentleBuilderExtensionImplementation",
         )
-        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-Xcontext-parameters"
+        )
     }
 
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
