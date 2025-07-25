@@ -60,7 +60,7 @@ kotlin {
         commonMain {
             kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
             dependencies {
-                api(project(":codegentle-common"))
+                api(project(":codegentle-kotlin"))
             }
 
             tasks.withType<KspTaskMetadata> {

@@ -32,19 +32,19 @@ public fun AnnotationMirror.toAnnotationRef(): AnnotationRef {
 }
 
 private class AnnotationMirrorVisitor(
-    val builder: AnnotationRefBuilder,
-) : SimpleAnnotationValueVisitor8<AnnotationRefBuilder, String>() {
-    override fun defaultAction(o: Any, name: String): AnnotationRefBuilder {
+    val builder: AnnotationRefBuilder<*, *>,
+) : SimpleAnnotationValueVisitor8<AnnotationRefBuilder<*, *>, String>() {
+    override fun defaultAction(o: Any, name: String): AnnotationRefBuilder<*, *> {
         return builder.addMemberForValue(name, o)
     }
 
-    override fun visitAnnotation(annotationMirror: AnnotationMirror, name: String): AnnotationRefBuilder {
+    override fun visitAnnotation(annotationMirror: AnnotationMirror, name: String): AnnotationRefBuilder<*, *> {
         return builder.addMember(name, "%V") {
             emitLiteral(annotationMirror.toAnnotationRef())
         }
     }
 
-    override fun visitEnumConstant(c: VariableElement, name: String): AnnotationRefBuilder {
+    override fun visitEnumConstant(c: VariableElement, name: String): AnnotationRefBuilder<*, *> {
         return builder.addMember(name, "%V.%V") {
             emitType(c.asType().toTypeName())
             emitLiteral(c.simpleName)
@@ -52,7 +52,7 @@ private class AnnotationMirrorVisitor(
     }
 }
 
-internal fun AnnotationRefBuilder.addMemberForValue(memberName: String, value: Any): AnnotationRefBuilder {
+internal fun AnnotationRefBuilder<*, *>.addMemberForValue(memberName: String, value: Any): AnnotationRefBuilder<*, *> {
     check(SourceVersion.isName(memberName)) {
         "not a valid name: $memberName"
     }

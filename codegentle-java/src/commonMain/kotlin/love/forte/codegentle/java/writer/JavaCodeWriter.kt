@@ -207,7 +207,7 @@ public class JavaCodeWriter private constructor(
     internal fun emitLiteral(value: Any?) {
         when (value) {
             is AnnotationRef -> {
-                emit(value, CommonAnnotationRefEmitOption.Inline)
+                emit(value)
             }
 
             is JavaCodeEmitter -> {
@@ -253,8 +253,6 @@ public class JavaCodeWriter private constructor(
     }
 
     override fun emit(annotationRef: AnnotationRef, vararg options: AnnotationRefEmitOption) {
-        val inline = options.contains(CommonAnnotationRefEmitOption.Inline)
-        // TODO inline?
         annotationRef.emitTo(this)
     }
 

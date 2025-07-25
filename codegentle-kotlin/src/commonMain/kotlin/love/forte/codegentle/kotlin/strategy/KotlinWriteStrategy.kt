@@ -50,14 +50,6 @@ public interface KotlinWriteStrategy : Strategy {
     // TODO 单行 return 替换
     public fun replaceReturnWithExpressionBody(): Boolean
 
-    // TODO 无访问修饰符时默认填充 PUBLIC, 或者选择一个默认填充
-    /**
-     *
-     * Support:
-     * - functions
-     * - properties
-     * - types
-     */
     public fun defaultVisibility(): KotlinModifier?
 }
 

@@ -39,6 +39,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":codegentle-common")
 include(":codegentle-java")
 include(":codegentle-kotlin")
+include(":codegentle-kotlin-ksp")
 
 // Execution failed for task ':tests:test-java-apt:proj:compileJava'.
 //  > java.lang.NoClassDefFoundError: love/forte/codegentle/common/naming/ClassName_jvmKt

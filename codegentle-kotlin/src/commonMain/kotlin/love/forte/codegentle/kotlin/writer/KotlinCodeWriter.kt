@@ -104,7 +104,7 @@ public class KotlinCodeWriter private constructor(
     internal fun emitLiteral(value: Any?) {
         when (value) {
             is AnnotationRef -> {
-                emit(value, CommonAnnotationRefEmitOption.Inline)
+                emit(value)
             }
 
             else -> emitAndIndent(value.toString())
@@ -251,7 +251,7 @@ public class KotlinCodeWriter private constructor(
     ) {
         // Use the new emitKotlinTo function which properly handles annotations and nullable
         typeRef.emitKotlinTo(this)
-        
+
         // TODO: Handle TypeRefEmitOption if needed in the future
         // val typeNameOptions = mutableListOf<TypeNameEmitOption>()
         // val annotationOptions = mutableListOf<AnnotationRefEmitOption>()
@@ -264,12 +264,7 @@ public class KotlinCodeWriter private constructor(
         // }
     }
 
-    override fun emit(
-        annotationRef: AnnotationRef,
-        vararg options: AnnotationRefEmitOption
-    ) {
-        val inline = options.contains(CommonAnnotationRefEmitOption.Inline)
-        // TODO inline?
+    override fun emit(annotationRef: AnnotationRef, vararg options: AnnotationRefEmitOption) {
         annotationRef.emitTo(this)
     }
 
