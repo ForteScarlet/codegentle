@@ -25,11 +25,11 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
     override val kind: KotlinTypeSpec.Kind
         get() = KotlinTypeSpec.Kind.CLASS
 
-    // TODO 换成 primary Constructor, 因为 constructor 还有 modifiers
     /**
-     * The primary constructor parameter of the value class.
+     * The primary constructor of the value class.
+     * Cannot have constructorDelegation since value classes cannot inherit from other classes.
      */
-    public val primaryParameter: KotlinValueParameterSpec
+    public val primaryConstructor: KotlinConstructorSpec
 
     /**
      * Value class cannot have subtypes.
@@ -43,11 +43,11 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
          * Create a builder for a value class.
          *
          * @param name the value class name
-         * @param primaryParameter the primary constructor parameter
+         * @param primaryConstructor the primary constructor
          * @return a new builder
          */
-        public fun builder(name: String, primaryParameter: KotlinValueParameterSpec): Builder {
-            return KotlinValueClassSpecBuilderImpl(name, primaryParameter)
+        public fun builder(name: String, primaryConstructor: KotlinConstructorSpec): Builder {
+            return KotlinValueClassSpecBuilderImpl(name, primaryConstructor)
         }
     }
 
@@ -70,9 +70,9 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
         public val name: String
 
         /**
-         * The primary constructor parameter of the value class.
+         * The primary constructor of the value class.
          */
-        public val primaryParameter: KotlinValueParameterSpec
+        public val primaryConstructor: KotlinConstructorSpec
 
         /**
          * Build [KotlinValueClassSpec] instance.
@@ -83,19 +83,21 @@ public interface KotlinValueClassSpec : KotlinTypeSpec {
 
 
 /**
- * Create a [KotlinValueClassSpec] with the given name and primary parameter.
+ * Create a [KotlinValueClassSpec] with the given name and primary constructor.
  *
  * @param name the value class name
- * @param primaryParameter the primary constructor parameter
+ * @param primaryConstructor the primary constructor
  * @param block the configuration block
  * @return a new [KotlinValueClassSpec] instance
  */
 public inline fun KotlinValueClassSpec(
     name: String,
-    primaryParameter: KotlinValueParameterSpec,
+    primaryConstructor: KotlinConstructorSpec,
     block: KotlinValueClassSpec.Builder.() -> Unit = {}
 ): KotlinValueClassSpec {
-    return KotlinValueClassSpec.builder(name, primaryParameter).apply(block).build()
+    return KotlinValueClassSpec.builder(name, primaryConstructor).apply(block).build()
 }
 
 // TODO extensions: mark jvmInline
+
+// TODO extensions: mark Extensions for constructor

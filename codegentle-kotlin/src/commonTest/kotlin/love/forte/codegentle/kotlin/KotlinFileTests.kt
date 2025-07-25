@@ -471,7 +471,10 @@ class KotlinFileTests {
         val parameter = KotlinValueParameterSpec.builder("value", ClassName("kotlin", "String").kotlinRef())
             .immutableProperty()
             .build()
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val constructor = KotlinConstructorSpec.builder()
+            .addParameter(parameter)
+            .build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", constructor)
             .build()
 
         val kotlinFile = KotlinFile.builder(packageName)

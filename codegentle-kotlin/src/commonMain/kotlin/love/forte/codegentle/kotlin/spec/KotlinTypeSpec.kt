@@ -172,14 +172,14 @@ public sealed interface KotlinTypeSpec : KotlinSpec, KotlinModifierContainer {
          * Create a builder for a value class.
          *
          * @param name the value class name
-         * @param primaryParameter the primary constructor parameter
+         * @param primaryConstructor the primary constructor
          * @return a new builder
          */
         public fun valueClassBuilder(
             name: String,
-            primaryParameter: KotlinValueParameterSpec
+            primaryConstructor: KotlinConstructorSpec
         ): KotlinValueClassSpec.Builder {
-            return KotlinValueClassSpec.builder(name, primaryParameter)
+            return KotlinValueClassSpec.builder(name, primaryConstructor)
         }
 
         /**

@@ -8,7 +8,10 @@ import love.forte.codegentle.common.ref.AnnotationRef
 import love.forte.codegentle.common.ref.TypeRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.MutableKotlinModifierSet
-import love.forte.codegentle.kotlin.spec.*
+import love.forte.codegentle.kotlin.spec.KotlinConstructorSpec
+import love.forte.codegentle.kotlin.spec.KotlinFunctionSpec
+import love.forte.codegentle.kotlin.spec.KotlinPropertySpec
+import love.forte.codegentle.kotlin.spec.KotlinValueClassSpec
 import love.forte.codegentle.kotlin.spec.emitter.emitTo
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 
@@ -19,7 +22,7 @@ import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
  */
 internal data class KotlinValueClassSpecImpl(
     override val name: String,
-    override val primaryParameter: KotlinValueParameterSpec,
+    override val primaryConstructor: KotlinConstructorSpec,
     override val kDoc: CodeValue,
     override val annotations: List<AnnotationRef>,
     override val modifiers: Set<KotlinModifier>,
@@ -45,12 +48,26 @@ internal data class KotlinValueClassSpecImpl(
  */
 internal class KotlinValueClassSpecBuilderImpl(
     override val name: String,
-    override val primaryParameter: KotlinValueParameterSpec
+    override val primaryConstructor: KotlinConstructorSpec
 ) : KotlinValueClassSpec.Builder {
     init {
-        val propertyization = primaryParameter.propertyfication
+        // Validate that the constructor cannot have constructorDelegation
+        require(primaryConstructor.constructorDelegation == null) {
+            "Value class primary constructor cannot have constructorDelegation " +
+                "since value classes cannot inherit from other classes, " +
+                "but found constructorDelegation: ${primaryConstructor.constructorDelegation}"
+        }
+        
+        // Validate that the constructor has exactly one parameter and it's immutable
+        require(primaryConstructor.parameters.size == 1) {
+            "Value class primary constructor must have exactly one parameter, " +
+                "but found ${primaryConstructor.parameters.size} parameters"
+        }
+        
+        val parameter = primaryConstructor.parameters.first()
+        val propertyization = parameter.propertyfication
         require(propertyization?.mutable == false) {
-            "The primary parameter property of value class must be immutable " +
+            "The primary constructor parameter property of value class must be immutable " +
                 "(`propertyization.mutable` must be `false`), " +
                 "but current parameter's `propertyization.mutable` is ${propertyization?.mutable}"
         }
@@ -162,7 +179,7 @@ internal class KotlinValueClassSpecBuilderImpl(
 
         return KotlinValueClassSpecImpl(
             name = name,
-            primaryParameter = primaryParameter,
+            primaryConstructor = primaryConstructor,
             kDoc = kDoc.build(),
             annotations = annotationRefs.toList(),
             modifiers = immutableModifiers,

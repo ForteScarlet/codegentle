@@ -18,14 +18,27 @@ import kotlin.test.assertTrue
  */
 class KotlinValueClassSpecTests {
 
+    /**
+     * Helper function to create a KotlinConstructorSpec from a single parameter
+     * for value class testing.
+     */
+    private fun createValueClassConstructor(parameter: KotlinValueParameterSpec): KotlinConstructorSpec {
+        return KotlinConstructorSpec.builder()
+            .addParameter(parameter)
+            .build()
+    }
+
     @Test
     fun testBasicValueClass() {
         val stringType = ClassName("kotlin", "String").kotlinRef()
         val parameter = KotlinValueParameterSpec.builder("value", stringType)
             .immutableProperty()
             .build()
+        val constructor = KotlinConstructorSpec.builder()
+            .addParameter(parameter)
+            .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", constructor).build()
 
         val code = valueClass.writeToKotlinString()
         assertEquals("value class UserId(val value: String)", code)
@@ -38,7 +51,7 @@ class KotlinValueClassSpecTests {
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addKDoc("A value class representing a user ID.")
             .addKDoc("\n@param value the string value of the user ID")
             .build()
@@ -62,7 +75,7 @@ value class UserId(val value: String)"""
         val serializable = ClassName("kotlinx.serialization", "Serializable").annotationRef()
         val jvmInline = ClassName("kotlin.jvm", "JvmInline").annotationRef()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addAnnotationRef(serializable)
             .addAnnotationRef(jvmInline)
             .build()
@@ -89,7 +102,7 @@ value class UserId(val value: String)"""
             addMember("message", "\"Use NewUserId instead\"")
         }
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addAnnotationRefs(listOf(serializable, jvmInline, deprecated))
             .build()
 
@@ -110,7 +123,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addModifier(KotlinModifier.INTERNAL)
             .build()
 
@@ -127,7 +140,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("Wrapper", parameter)
+        val valueClass = KotlinValueClassSpec.builder("Wrapper", createValueClassConstructor(parameter))
             .addTypeVariable(tRef)
             .build()
 
@@ -148,7 +161,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("Wrapper", parameter)
+        val valueClass = KotlinValueClassSpec.builder("Wrapper", createValueClassConstructor(parameter))
             .addTypeVariable(tRef)
             .addTypeVariable(uRef)
             .build()
@@ -168,7 +181,7 @@ value class UserId(val value: String)"""
         val comparable = ClassName("kotlin", "Comparable")
         val serializable = ClassName("java.io", "Serializable")
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addSuperinterface(comparable)
             .addSuperinterface(serializable)
             .build()
@@ -192,7 +205,7 @@ value class UserId(val value: String)"""
             }
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addProperty(lengthProperty)
             .build()
 
@@ -216,7 +229,7 @@ value class UserId(val value: String)"""
             .addCode("return value.isEmpty()")
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addFunction(isEmptyFunction)
             .build()
 
@@ -240,7 +253,7 @@ value class UserId(val value: String)"""
             immutableProperty()
         }
 
-        val valueClass = KotlinValueClassSpec("UserId", parameter) {
+        val valueClass = KotlinValueClassSpec("UserId", createValueClassConstructor(parameter)) {
             addInitializerBlock("require(value.isNotEmpty()) { \"UserId cannot be empty\" }")
         }
 
@@ -260,7 +273,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addInitializerBlock("require(value.isNotEmpty()) { \"UserId cannot be empty\" }")
             .addInitializerBlock("\nprintln(\"Creating UserId with value: \$value\")")
             .build()
@@ -282,7 +295,7 @@ value class UserId(val value: String)"""
             .immutableProperty() // immutable property
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter)).build()
 
         val code = valueClass.writeToKotlinString()
         assertTrue(code.contains("val value: String"))
@@ -296,7 +309,7 @@ value class UserId(val value: String)"""
             .defaultValue("\"default\"")
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter)).build()
 
         val code = valueClass.writeToKotlinString()
         assertEquals(
@@ -331,7 +344,7 @@ value class UserId(val value: String)"""
             .addCode("return id.isNotEmpty() && id.length >= 3")
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("ComplexUserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("ComplexUserId", createValueClassConstructor(parameter))
             .addKDoc("A complex value class for user identification.")
             .addKDoc("\n@param id the string identifier")
             .addAnnotationRef(serializable)
@@ -379,7 +392,7 @@ value class UserId(val value: String)"""
             .build()
 
         // Test that VALUE modifier is automatically added and validated
-        val builder = KotlinValueClassSpec.builder("UserId", parameter)
+        val builder = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
         val valueClass = builder.build()
 
         assertTrue(valueClass.modifiers.contains(KotlinModifier.VALUE))
@@ -393,7 +406,7 @@ value class UserId(val value: String)"""
             .build()
 
         // Create a builder and try to remove VALUE modifier (this should fail during build)
-        val builder = KotlinValueClassSpec.builder("UserId", parameter)
+        val builder = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
 
         // The implementation should ensure VALUE modifier is always present
         val valueClass = builder.build()
@@ -407,7 +420,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec("UserId", parameter) {
+        val valueClass = KotlinValueClassSpec("UserId", createValueClassConstructor(parameter)) {
             addKDoc("Convenience function test")
             addModifier(KotlinModifier.INTERNAL)
         }
@@ -427,7 +440,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter)
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter))
             .addKDoc("Test KDoc") {
                 // Test KDoc extension
             }
@@ -458,7 +471,7 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter)).build()
 
         // Value classes cannot have superclasses
         assertEquals(null, valueClass.superclass)
@@ -471,9 +484,78 @@ value class UserId(val value: String)"""
             .immutableProperty()
             .build()
 
-        val valueClass = KotlinValueClassSpec.builder("UserId", parameter).build()
+        val valueClass = KotlinValueClassSpec.builder("UserId", createValueClassConstructor(parameter)).build()
 
         // Value classes cannot have subtypes
         assertTrue(valueClass.subtypes.isEmpty())
+    }
+
+    @Test
+    fun testValueClassConstructorCannotHaveConstructorDelegation() {
+        val stringType = ClassName("kotlin", "String").kotlinRef()
+        val parameter = KotlinValueParameterSpec.builder("value", stringType)
+            .immutableProperty()
+            .build()
+
+        // Test that constructor with super delegation is rejected
+        try {
+            val constructorWithSuperDelegation = KotlinConstructorSpec.builder()
+                .addParameter(parameter)
+                .superConstructorDelegation()
+                .build()
+            
+            KotlinValueClassSpec.builder("InvalidUserId", constructorWithSuperDelegation).build()
+            kotlin.test.fail("Should have thrown an exception for constructor with super delegation")
+        } catch (e: IllegalArgumentException) {
+            assertTrue(e.message!!.contains("constructorDelegation"))
+        }
+
+        // Test that constructor with this delegation is rejected
+        try {
+            val constructorWithThisDelegation = KotlinConstructorSpec.builder()
+                .addParameter(parameter)
+                .thisConstructorDelegation()
+                .build()
+            
+            KotlinValueClassSpec.builder("InvalidUserId", constructorWithThisDelegation).build()
+            kotlin.test.fail("Should have thrown an exception for constructor with this delegation")
+        } catch (e: IllegalArgumentException) {
+            assertTrue(e.message!!.contains("constructorDelegation"))
+        }
+    }
+
+    @Test
+    fun testValueClassConstructorMustHaveExactlyOneParameter() {
+        // Test that constructor with no parameters is rejected
+        try {
+            val constructorWithNoParameters = KotlinConstructorSpec.builder().build()
+            
+            KotlinValueClassSpec.builder("InvalidUserId", constructorWithNoParameters).build()
+            kotlin.test.fail("Should have thrown an exception for constructor with no parameters")
+        } catch (e: IllegalArgumentException) {
+            assertTrue(e.message!!.contains("exactly one parameter"))
+        }
+
+        // Test that constructor with multiple parameters is rejected
+        try {
+            val stringType = ClassName("kotlin", "String").kotlinRef()
+            val intType = ClassName("kotlin", "Int").kotlinRef()
+            val param1 = KotlinValueParameterSpec.builder("value1", stringType)
+                .immutableProperty()
+                .build()
+            val param2 = KotlinValueParameterSpec.builder("value2", intType)
+                .immutableProperty()
+                .build()
+            
+            val constructorWithMultipleParameters = KotlinConstructorSpec.builder()
+                .addParameter(param1)
+                .addParameter(param2)
+                .build()
+            
+            KotlinValueClassSpec.builder("InvalidUserId", constructorWithMultipleParameters).build()
+            kotlin.test.fail("Should have thrown an exception for constructor with multiple parameters")
+        } catch (e: IllegalArgumentException) {
+            assertTrue(e.message!!.contains("exactly one parameter"))
+        }
     }
 }

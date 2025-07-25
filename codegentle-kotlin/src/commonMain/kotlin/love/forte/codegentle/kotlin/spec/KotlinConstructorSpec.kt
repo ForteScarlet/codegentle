@@ -14,7 +14,7 @@ public interface KotlinConstructorSpec : KotlinCallableSpec {
     public val constructorDelegation: ConstructorDelegation?
 
     // Not primary constructor may have non-empty code,
-    // but if used as a primary constructor, it must be empty: this is validated in TypeSpec.
+    // but if used as a primary constructor, it must be empty.
     override val code: CodeValue
 
     public companion object {

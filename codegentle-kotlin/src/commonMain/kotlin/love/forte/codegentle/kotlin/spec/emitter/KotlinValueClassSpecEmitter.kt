@@ -51,7 +51,7 @@ private fun KotlinValueClassSpec.emitInTypeVariableRefs(
     codeWriter: KotlinCodeWriter,
     blankLineManager: BlankLineManager
 ) {
-    emitPrimaryParameter(codeWriter)
+    emitPrimaryConstructor(codeWriter)
 
     // Emit superinterfaces
     if (superinterfaces.isNotEmpty()) {
@@ -63,19 +63,21 @@ private fun KotlinValueClassSpec.emitInTypeVariableRefs(
     emitBody(codeWriter, blankLineManager)
 }
 
-private fun KotlinValueClassSpec.emitPrimaryParameter(codeWriter: KotlinCodeWriter) {
-    val hasKDoc = !primaryParameter.kDoc.isEmpty()
+private fun KotlinValueClassSpec.emitPrimaryConstructor(codeWriter: KotlinCodeWriter) {
+    // Value class primary constructor should have exactly one parameter
+    val parameter = primaryConstructor.parameters.first()
+    val hasKDoc = !parameter.kDoc.isEmpty()
 
-    // Emit primary parameter
+    // Emit primary constructor parameter
     codeWriter.emit("(")
     if (hasKDoc) {
         codeWriter.withIndent {
             codeWriter.emitNewLine()
-            primaryParameter.emitTo(codeWriter)
+            parameter.emitTo(codeWriter)
         }
         codeWriter.emitNewLine()
     } else {
-        primaryParameter.emitTo(codeWriter)
+        parameter.emitTo(codeWriter)
     }
     codeWriter.emit(")")
 }
