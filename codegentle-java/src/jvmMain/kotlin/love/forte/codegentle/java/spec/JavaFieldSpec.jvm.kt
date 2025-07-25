@@ -20,7 +20,7 @@
 package love.forte.codegentle.java.spec
 
 import love.forte.codegentle.common.naming.TypeName
-import love.forte.codegentle.common.ref.AnnotationRefBuilder
+import love.forte.codegentle.common.ref.BasicAnnotationRefBuilderDsl
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.java.naming.toJavaClassName
 import love.forte.codegentle.java.naming.toTypeName
@@ -42,14 +42,14 @@ public inline fun Type.toJavaFieldSpec(
 
 public inline fun JavaFieldSpecBuilder.addAnnotationRef(
     cls: Class<*>,
-    block: AnnotationRefBuilder.() -> Unit = {}
+    block: BasicAnnotationRefBuilderDsl = {}
 ): JavaFieldSpecBuilder = apply {
     addAnnotation(cls.toJavaClassName().annotationRef(block))
 }
 
 public inline fun JavaFieldSpecBuilder.addAnnotationRef(
     cls: KClass<*>,
-    block: AnnotationRefBuilder.() -> Unit = {}
+    block: BasicAnnotationRefBuilderDsl = {}
 ): JavaFieldSpecBuilder = apply {
     addAnnotation(cls.toJavaClassName().annotationRef(block))
 }

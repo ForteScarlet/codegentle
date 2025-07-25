@@ -624,8 +624,13 @@ class KotlinEnumTypeSpecTests {
     fun testEnumConstantWithAnnotationCodeGeneration() {
         val enumSpec = KotlinEnumTypeSpec.builder("Color")
             .addEnumConstant("RED") {
-                addDeprecated {
-                    setMessage("Use CRIMSON instead")
+                // addDeprecated {
+                //     addMember("message", CodeValue(CodePart.string("Use CRIMSON instead")))
+                // }
+                addAnnotation(ClassName("kotlin", "Deprecated")) {
+                    addMember("message", "%V") {
+                        emitString("Use CRIMSON instead")
+                    }
                 }
             }
             .addEnumConstant("GREEN")
