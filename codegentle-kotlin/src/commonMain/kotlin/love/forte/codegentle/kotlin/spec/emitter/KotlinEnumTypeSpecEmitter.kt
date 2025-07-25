@@ -78,19 +78,29 @@ private fun KotlinEnumTypeSpec.emitEnumConstants(
         for ((index, entry) in enumConstants.entries.withIndex()) {
             val (constantName, anonymousClass) = entry
             // Add comma and newline for all but the last constant
+            val anonymousClassKDoc = anonymousClass?.kDoc
+            val anonymousClassKDocNotEmpty = anonymousClassKDoc?.isNotEmpty() == true
+
             if (index in 1..enumConstants.size - 1) {
                 codeWriter.emit(",")
                 codeWriter.emitNewLine()
+
+                // pre item has body, or current item has kdoc, emit a new line.
+                if (blankLineManager.blankLineRequired || anonymousClassKDocNotEmpty) {
+                    codeWriter.emitNewLine()
+                    blankLineManager.clear()
+                }
             }
 
-            // pre item has body, or current item has kdoc, emit a new line.
-            if (blankLineManager.blankLineRequired || anonymousClass?.kDoc?.isNotEmpty() == true) {
-                codeWriter.emitNewLine()
-                blankLineManager.clear()
+            // emit kdoc
+            if (anonymousClassKDocNotEmpty) {
+                codeWriter.emitDoc(anonymousClassKDoc)
             }
 
-            // TODO emit kdoc
-            // TODO emit annotations
+            // emit annotations
+            if (anonymousClass?.annotations?.isNotEmpty() == true) {
+                codeWriter.emitAnnotationRefs(anonymousClass.annotations, false)
+            }
 
             codeWriter.emit(constantName)
 
@@ -104,7 +114,10 @@ private fun KotlinEnumTypeSpec.emitEnumConstants(
 
         // Add semicolon after enum constants if there are other members
         val hasOtherMembers =
-            initializerBlock.isNotEmpty() || properties.isNotEmpty() || functions.isNotEmpty() || subtypes.isNotEmpty()
+            initializerBlock.isNotEmpty()
+                || properties.isNotEmpty()
+                || functions.isNotEmpty()
+                || subtypes.isNotEmpty()
 
         if (hasOtherMembers) {
             codeWriter.emit(";")

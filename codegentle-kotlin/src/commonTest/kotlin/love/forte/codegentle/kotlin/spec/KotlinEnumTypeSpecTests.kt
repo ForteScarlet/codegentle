@@ -1,8 +1,14 @@
 package love.forte.codegentle.kotlin.spec
 
+import love.forte.codegentle.common.code.CodePart
+import love.forte.codegentle.common.code.emitString
 import love.forte.codegentle.common.code.isEmpty
 import love.forte.codegentle.common.naming.ClassName
+import love.forte.codegentle.common.naming.PackageNames
 import love.forte.codegentle.common.naming.TypeVariableName
+import love.forte.codegentle.common.naming.className
+import love.forte.codegentle.common.ref.addAnnotationRef
+import love.forte.codegentle.common.ref.addMember
 import love.forte.codegentle.common.ref.annotationRef
 import love.forte.codegentle.kotlin.KotlinModifier
 import love.forte.codegentle.kotlin.ref.kotlinRef
@@ -582,6 +588,189 @@ class KotlinEnumTypeSpecTests {
             enum class EmptyColor {
                 ;
                 fun getDefault(): String = "none"
+            }""".trimIndent()
+
+        assertEquals(expectedCode, generatedCode.trim())
+    }
+
+    // ========== Enum Constant KDoc and Annotation Tests ==========
+
+    @Test
+    fun testEnumConstantWithKDocCodeGeneration() {
+        val enumSpec = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED") {
+                addKDoc("Represents the red color with RGB value (255, 0, 0).")
+            }
+            .addEnumConstant("GREEN")
+            .build()
+
+        val generatedCode = enumSpec.writeToKotlinString()
+        val expectedCode = """
+            enum class Color {
+                /**
+                 * Represents the red color with RGB value (255, 0, 0).
+                 */
+                RED,
+                GREEN
+            }""".trimIndent()
+
+        assertEquals(expectedCode, generatedCode.trim())
+    }
+
+    @Test
+    fun testEnumConstantWithAnnotationCodeGeneration() {
+        val enumSpec = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED") {
+                addAnnotationRef(PackageNames.KOTLIN.className("Deprecated")) {
+                    addMember("message", "%V") {
+                        emitString("Use CRIMSON instead")
+                    }
+                }
+            }
+            .addEnumConstant("GREEN")
+            .build()
+
+        val generatedCode = enumSpec.writeToKotlinString()
+        val expectedCode = """
+            enum class Color {
+                @Deprecated(message = "Use CRIMSON instead")
+                RED,
+                GREEN
+            }""".trimIndent()
+
+        assertEquals(expectedCode, generatedCode.trim())
+    }
+
+    @Test
+    fun testEnumConstantWithKDocAndAnnotationCodeGeneration() {
+        val enumSpec = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED") {
+                addKDoc("Represents the red color.")
+                addAnnotationRef(ClassName("kotlin", "Deprecated")) {
+                    addMember("message", "%V") {
+                        emitString("Use CRIMSON instead")
+                    }
+                }
+            }
+            .addEnumConstant("GREEN")
+            .build()
+
+        val generatedCode = enumSpec.writeToKotlinString()
+        val expectedCode = """
+            enum class Color {
+                /**
+                 * Represents the red color.
+                 */
+                @Deprecated(message = "Use CRIMSON instead")
+                RED,
+                GREEN
+            }""".trimIndent()
+
+        assertEquals(expectedCode, generatedCode.trim())
+    }
+
+    @Test
+    fun testEnumConstantWithMultipleAnnotationsCodeGeneration() {
+        val enumSpec = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED") {
+                addAnnotationRef(ClassName("kotlin", "Deprecated")) {
+                    addMember("message", "%V") {
+                        emitString("Use CRIMSON instead")
+                    }
+                }
+                addAnnotationRef(ClassName("kotlin", "Suppress")) {
+                    addMember("names", "%V", CodePart.string("DEPRECATION"))
+                }
+            }
+            .addEnumConstant("GREEN")
+            .build()
+
+        val generatedCode = enumSpec.writeToKotlinString()
+        val expectedCode = """
+            enum class Color {
+                @Deprecated(message = "Use CRIMSON instead")
+                @Suppress(names = "DEPRECATION")
+                RED,
+                GREEN
+            }""".trimIndent()
+
+        assertEquals(expectedCode, generatedCode.trim())
+    }
+
+    @Test
+    fun testEnumConstantWithKDocAnnotationAndFunctionCodeGeneration() {
+        val redAnonymous = KotlinAnonymousClassTypeSpec.builder()
+            .addKDoc("Red color with custom implementation.")
+            .addAnnotationRef(ClassName("kotlin", "Suppress").annotationRef {
+                addMember("names", "\"UNUSED\"")
+            })
+            .addFunction(
+                KotlinFunctionSpec.builder("getValue", intTypeRef)
+                    .addModifier(KotlinModifier.OVERRIDE)
+                    .addCode("return 255")
+                    .build()
+            )
+            .build()
+
+        val enumSpec = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED", redAnonymous)
+            .addEnumConstant("GREEN")
+            .build()
+
+        val generatedCode = enumSpec.writeToKotlinString()
+        val expectedCode = """
+            enum class Color {
+                /**
+                 * Red color with custom implementation.
+                 */
+                @Suppress(names = "UNUSED")
+                RED {
+                    override fun getValue(): Int = 255
+                },
+
+                GREEN
+            }""".trimIndent()
+
+        assertEquals(expectedCode, generatedCode.trim())
+    }
+
+    @Test
+    fun testMultipleEnumConstantsWithKDocAndAnnotationsCodeGeneration() {
+        val redAnonymous = KotlinAnonymousClassTypeSpec.builder()
+            .addKDoc("Primary red color.")
+            .addAnnotationRef(ClassName("kotlin", "Deprecated").annotationRef {
+                addMember("message", "\"Use CRIMSON instead\"")
+            })
+            .build()
+
+        val blueAnonymous = KotlinAnonymousClassTypeSpec.builder()
+            .addKDoc("Primary blue color.")
+            .addAnnotationRef(ClassName("kotlin", "Suppress").annotationRef {
+                addMember("names", "\"UNUSED\"")
+            })
+            .build()
+
+        val enumSpec = KotlinEnumTypeSpec.builder("Color")
+            .addEnumConstant("RED", redAnonymous)
+            .addEnumConstant("GREEN")
+            .addEnumConstant("BLUE", blueAnonymous)
+            .build()
+
+        val generatedCode = enumSpec.writeToKotlinString()
+        val expectedCode = """
+            enum class Color {
+                /**
+                 * Primary red color.
+                 */
+                @Deprecated(message = "Use CRIMSON instead")
+                RED,
+                GREEN,
+
+                /**
+                 * Primary blue color.
+                 */
+                @Suppress(names = "UNUSED")
+                BLUE
             }""".trimIndent()
 
         assertEquals(expectedCode, generatedCode.trim())

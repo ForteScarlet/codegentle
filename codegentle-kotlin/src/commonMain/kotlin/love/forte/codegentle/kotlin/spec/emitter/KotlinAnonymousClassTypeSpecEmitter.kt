@@ -5,6 +5,7 @@ import love.forte.codegentle.common.utils.BlankLineManager
 import love.forte.codegentle.common.writer.withIndentBlock
 import love.forte.codegentle.kotlin.spec.KotlinAnonymousClassTypeSpec
 import love.forte.codegentle.kotlin.spec.KotlinTypeSpec
+import love.forte.codegentle.kotlin.spec.isMemberNotEmpty
 import love.forte.codegentle.kotlin.writer.KotlinCodeWriter
 import love.forte.codegentle.kotlin.writer.inType
 
@@ -84,9 +85,12 @@ private fun KotlinAnonymousClassTypeSpec.emitTo0(codeWriter: KotlinCodeWriter, i
     // Emit the body
     // Anonymous classes cannot have constructors, so we skip constructor emission
 
-    val blankLineManager = BlankLineManager(codeWriter)
-
-    codeWriter.withIndentBlock(prefix = " ") {
-        emitMembers(codeWriter, blankLineManager)
+    if (!isEnum || isMemberNotEmpty()) {
+        val blankLineManager = BlankLineManager(codeWriter)
+        codeWriter.withIndentBlock(prefix = " ") {
+            emitMembers(codeWriter, blankLineManager)
+        }
     }
+
+
 }

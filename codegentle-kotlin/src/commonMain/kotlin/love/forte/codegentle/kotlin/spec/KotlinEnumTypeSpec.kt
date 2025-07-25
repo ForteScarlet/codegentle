@@ -97,3 +97,8 @@ public inline fun KotlinEnumTypeSpec(
 ): KotlinEnumTypeSpec {
     return KotlinEnumTypeSpec.builder(name).apply(block).build()
 }
+
+public inline fun KotlinEnumTypeSpec.Builder.addEnumConstant(
+    name: String,
+    block: KotlinAnonymousClassTypeSpec.Builder.() -> Unit = {}
+): KotlinEnumTypeSpec.Builder = addEnumConstant(name, KotlinAnonymousClassTypeSpec(block))

@@ -1,5 +1,6 @@
 package love.forte.codegentle.common.ref
 
+import love.forte.codegentle.common.BuilderDsl
 import love.forte.codegentle.common.code.CodeValue
 import love.forte.codegentle.common.computeValueIfAbsent
 import love.forte.codegentle.common.naming.ClassName
@@ -36,6 +37,7 @@ public inline fun ClassName.annotationRef(block: AnnotationRefBuilder.() -> Unit
  * Builder for [AnnotationRef].
  */
 public class AnnotationRefBuilder(public val className: ClassName) :
+    BuilderDsl,
     AnnotationRefBuildable<AnnotationRefBuilder> {
     private val members: MutableMap<String, MutableList<CodeValue>> = linkedMapOf()
 
