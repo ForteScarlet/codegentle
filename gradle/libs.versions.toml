@@ -1,0 +1,68 @@
+[versions]
+kotlin = "2.2.0"
+kotlinCoroutines = "1.10.2"
+dokka = "2.0.0"
+mockk = "1.13.14"
+# https://detekt.dev/docs/intro
+detekt = "1.23.8"
+# https://github.com/Kotlin/kotlinx-io/
+kotlinx-io = "0.6.0"
+ksp = "2.2.0-2.0.2"
+#ksp = "2.1.20-1.0.32"
+# https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-publish-libraries.html#configure-the-project
+# https://github.com/vanniktech/gradle-maven-publish-plugin
+# https://plugins.gradle.org/plugin/com.vanniktech.maven.publish
+maven-publish-plugin = "0.34.0"
+
+## compose
+compose-plugin = "1.8.2"
+androidx-lifecycle = "2.9.1"
+## https://github.com/SnipMeDev/Highlights
+## https://github.com/SnipMeDev/KodeView
+highlights = "1.0.0"
+compose-hot-reload = "1.0.0-beta04"
+
+## https://github.com/diffplug/spotless
+## https://plugins.gradle.org/plugin/com.diffplug.spotless
+## id("com.diffplug.spotless")
+spotless = "7.2.1"
+#spotless = "6.25.0"
+
+[libraries]
+maven-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "maven-publish-plugin" }
+spotless = { module = "com.diffplug.spotless:com.diffplug.spotless.gradle.plugin", version.ref = "spotless" }
+
+ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+
+# dokka
+dokka-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+dokka-core = { group = "org.jetbrains.dokka", name = "dokka-core", version.ref = "dokka" }
+dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref = "dokka" }
+
+# kotlinx-io
+kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io" }
+
+# kotlinx-coroutines
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
+
+# mockk
+## https://mockk.io/
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
+androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+highlights = { module = "dev.snipme:highlights", version.ref = "highlights" }
+
+[plugins]
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+dokka = { id = "org.jetbrains.dokka" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hot-reload" }
+spotless = { id = "com.diffplug.spotless" }
+
