@@ -89,8 +89,8 @@ jobs:
         with:
           gradle-version: ${{ env.GRADLE_VERSION }}
 
-      - name: Create changelog
-        run: gradle createChangelog
+#      - name: Create changelog
+#        run: gradle createChangelog
 
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
