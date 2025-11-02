@@ -210,3 +210,22 @@ public fun ClassName(bestGuessClassNameString: String): ClassName {
 
     return className!!
 }
+
+
+//// From others
+
+/**
+ * Attempts to convert the current instance of [TypeName] to a [ClassName].
+ *
+ * - If the instance is a [ClassName], it is returned as-is.
+ * - If the instance is a [ParameterizedTypeName], its [rawType][ParameterizedTypeName.rawType] is returned.
+ * - For any other instance, `null` is returned.
+ *
+ * @return The converted [ClassName] if applicable, otherwise `null`.
+ */
+public fun TypeName.toClassNameOrNull(): ClassName? =
+    when (this) {
+        is ClassName -> this
+        is ParameterizedTypeName -> rawType
+        else -> null
+    }

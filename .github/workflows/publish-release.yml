@@ -60,7 +60,7 @@ jobs:
           gradle-version: ${{ env.GRADLE_VERSION }}
 
       - name: Publish to Maven Central
-        run: gradle publishAndReleaseToMavenCentral -s --warning-mode all -x test --build-cache --no-configuration-cache
+        run: gradle publishToMavenCentral -s --warning-mode all -x test --build-cache --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_org.gradle.jvmargs: "-XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
           ORG_GRADLE_PROJECT_org.gradle.daemon: "false"

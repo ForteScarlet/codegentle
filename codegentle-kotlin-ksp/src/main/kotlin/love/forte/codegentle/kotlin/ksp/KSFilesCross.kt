@@ -31,7 +31,7 @@ public fun KotlinFile.writeTo(
     strategy: KotlinWriteStrategy = DefaultKotlinWriteStrategy()
 ) {
     val dependencies = Dependencies(aggregating = aggregating, sources = originatingKSFiles.toList().toTypedArray())
-    val file = codeGenerator.createNewFile(dependencies, packageName.toString(), type.name)
+    val file = codeGenerator.createNewFile(dependencies, packageName.toString(), name)
     // Don't use writeTo(file) because that tries to handle directories under the hood
     OutputStreamWriter(file, StandardCharsets.UTF_8)
         .use { this.writeTo(it, strategy) }
