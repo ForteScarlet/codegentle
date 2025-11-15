@@ -47,8 +47,8 @@ include(":codegentle-kotlin-ksp")
 // include("tests:test-java-apt:proc")
 // include("tests:test-java-apt:proj")
 
-include("tests:test-ksp:proc")
-include("tests:test-ksp:proj")
+include("tests:test-ksp-receiver-and-contexts:proc")
+include("tests:test-ksp-receiver-and-contexts:proj")
 
 include("internal:code-value-extensions")
 include("internal:enum-set")
