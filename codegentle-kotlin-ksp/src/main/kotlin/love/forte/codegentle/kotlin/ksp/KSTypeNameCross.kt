@@ -16,6 +16,7 @@
 package love.forte.codegentle.kotlin.ksp
 
 import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.validate
 import love.forte.codegentle.common.ksp.boundClassNames
 import love.forte.codegentle.common.ksp.getArrayComponentType
 import love.forte.codegentle.common.ksp.isArrayType
@@ -126,25 +127,70 @@ public fun KSType.toTypeName(): TypeName {
 }
 
 private fun KSType.toFunctionTypeName(isSuspend: Boolean): KotlinLambdaTypeName {
+
+
     // Use KotlinLambdaTypeName for proper function type representation
     return KotlinLambdaTypeName {
         suspend(isSuspend)
 
         // Extract parameter types and return type from function type arguments
         // For function types like (A, B) -> C, the arguments are [A, B, C] where C is the return type
+        // For extension function types like T.() -> R, the arguments are [T, R] where T is the receiver
+        // and R is the return type. Extension function types are marked with @kotlin.ExtensionFunctionType
         val typeArgs = arguments.map { arg ->
             arg.toTypeRef()
         }
 
-        if (typeArgs.isNotEmpty()) {
-            // The last argument is the return type
-            val returnType = typeArgs.last()
-            returns(returnType)
+        // Check if this is an extension function type (has a receiver)
+        val isExtensionFunctionType = annotations.any { annotation ->
+            // annotation: @ExtensionFunctionType
+            // annotation.annotationType: <ERROR TYPE: kotlin.ExtensionFunctionType>
+            // annotation.annotationType.validate(): false
+            // annotation.annotationType.resolve(): <ERROR TYPE: kotlin.ExtensionFunctionType>
+            // annotation.annotationType.resolve().declaration: <ERROR TYPE: kotlin.ExtensionFunctionType>
+            // annotation.annotationType.resolve().declaration.name: null
+            val annotationType = annotation.annotationType
+            val annotationTypeValidated = annotation.annotationType.validate()
 
-            // All arguments except the last are parameter types
-            for ((index, paramType) in typeArgs.withIndex()) {
-                if (index != typeArgs.lastIndex) {
+            annotation.shortName.asString() == "ExtensionFunctionType" &&
+                if (annotationTypeValidated) {
+                    annotationType.resolve().declaration.qualifiedName?.asString() == "kotlin.ExtensionFunctionType"
+                } else {
+                    // TODO how to do?
+                    annotationType.toString() == "<ERROR TYPE: kotlin.ExtensionFunctionType>"
+                }
+        }
+
+        if (typeArgs.isNotEmpty()) {
+            if (isExtensionFunctionType) {
+                // For extension function types like T.(P1, P2) -> R:
+                // - First argument is the receiver type (T)
+                // - Middle arguments are parameter types (P1, P2)
+                // - Last argument is the return type (R)
+                val receiverType = typeArgs.first()
+                receiver(receiverType)
+
+                // The last argument is the return type
+                val returnType = typeArgs.last()
+                returns(returnType)
+
+                // Middle arguments (if any) are parameter types
+                for (index in 1 until typeArgs.lastIndex) {
+                    val paramType = typeArgs[index]
                     addParameter(KotlinValueParameterSpec.builder("", paramType).build())
+                }
+            } else {
+                // For regular function types like (A, B) -> C:
+                // - All arguments except the last are parameter types
+                // - Last argument is the return type
+                val returnType = typeArgs.last()
+                returns(returnType)
+
+                // All arguments except the last are parameter types
+                for ((index, paramType) in typeArgs.withIndex()) {
+                    if (index != typeArgs.lastIndex) {
+                        addParameter(KotlinValueParameterSpec.builder("", paramType).build())
+                    }
                 }
             }
         }
