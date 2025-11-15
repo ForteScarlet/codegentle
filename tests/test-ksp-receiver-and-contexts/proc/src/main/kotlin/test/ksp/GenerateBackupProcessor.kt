@@ -48,6 +48,16 @@ class GenerateBackupProcessor(
 
         try {
             // 使用 codegentle-kotlin-ksp 将 KSP 函数转换为 KotlinFunctionSpec
+            println("original function: $function")
+            function.parameters.forEach {
+                println("\toriginal function parameter: $it")
+                println("\toriginal function parameter.name: ${it.name?.asString()}")
+                println("\toriginal function parameter.type: ${it.type}")
+                println("\toriginal function parameter.type.annotations: ${it.type.annotations.toList()}")
+                println("\toriginal function parameter.type.annotations: ${it.type.annotations.map { a -> a.annotationType }.toList()}")
+                println("\toriginal function parameter.type.annotations.resolve(): ${it.type.resolve()}")
+                println("\toriginal function parameter.type.annotations.resolve().annotations: ${it.type.resolve().annotations.toList()}")
+            }
             val originalSpec = function.toKotlinFunctionSpec()
 
             // 创建备份函数 - 使用新名字重建

@@ -137,11 +137,35 @@ private fun KSType.toFunctionTypeName(isSuspend: Boolean): KotlinLambdaTypeName 
         // For function types like (A, B) -> C, the arguments are [A, B, C] where C is the return type
         // For extension function types like T.() -> R, the arguments are [T, R] where T is the receiver
         // and R is the return type. Extension function types are marked with @kotlin.ExtensionFunctionType
+        // For context function types like context(C1, C2) T.(P1) -> R, the arguments are [C1, C2, T, P1, R]
+        // where C1, C2 are context receivers, T is the receiver, P1 is the parameter, and R is the return type
         val typeArgs = arguments.map { arg ->
             arg.toTypeRef()
         }
 
-        // Check if this is an extension function type (has a receiver)
+        // check context receivers（via @ContextFunctionTypeParams）
+        // TODO see https://github.com/google/ksp/issues/2702
+        val contextReceiverCount = annotations.firstNotNullOfOrNull { annotation ->
+            val annotationType = annotation.annotationType
+            val annotationTypeValidated = annotation.annotationType.validate()
+
+            val isContextAnnotation = annotation.shortName.asString() == "ContextFunctionTypeParams" &&
+                if (annotationTypeValidated) {
+                    annotationType.resolve().declaration.qualifiedName?.asString() == "kotlin.ContextFunctionTypeParams"
+                } else {
+                    // handle ERROR TYPE situation
+                    annotationType.toString() == "<ERROR TYPE: kotlin.ContextFunctionTypeParams>"
+                }
+
+            if (isContextAnnotation) {
+                // annotation's first argument is the number of context receivers
+                annotation.arguments.firstOrNull()?.value as? Int
+            } else {
+                null
+            }
+        } ?: 0
+
+        // check if this is an extension function type (has a receiver)
         val isExtensionFunctionType = annotations.any { annotation ->
             // annotation: @ExtensionFunctionType
             // annotation.annotationType: <ERROR TYPE: kotlin.ExtensionFunctionType>
@@ -156,42 +180,36 @@ private fun KSType.toFunctionTypeName(isSuspend: Boolean): KotlinLambdaTypeName 
                 if (annotationTypeValidated) {
                     annotationType.resolve().declaration.qualifiedName?.asString() == "kotlin.ExtensionFunctionType"
                 } else {
-                    // TODO how to do?
+                    // ERROR TYPE
                     annotationType.toString() == "<ERROR TYPE: kotlin.ExtensionFunctionType>"
                 }
         }
 
         if (typeArgs.isNotEmpty()) {
+            var currentIndex = 0
+
+            // extract context receivers (if any)
+            if (contextReceiverCount > 0) {
+                repeat(contextReceiverCount) {
+                    addContextReceiver(typeArgs[currentIndex])
+                    currentIndex++
+                }
+            }
+
+            // extract receiver (if any)
             if (isExtensionFunctionType) {
-                // For extension function types like T.(P1, P2) -> R:
-                // - First argument is the receiver type (T)
-                // - Middle arguments are parameter types (P1, P2)
-                // - Last argument is the return type (R)
-                val receiverType = typeArgs.first()
-                receiver(receiverType)
+                receiver(typeArgs[currentIndex])
+                currentIndex++
+            }
 
-                // The last argument is the return type
-                val returnType = typeArgs.last()
-                returns(returnType)
+            // last is return type
+            val returnType = typeArgs.last()
+            returns(returnType)
 
-                // Middle arguments (if any) are parameter types
-                for (index in 1 until typeArgs.lastIndex) {
-                    val paramType = typeArgs[index]
-                    addParameter(KotlinValueParameterSpec.builder("", paramType).build())
-                }
-            } else {
-                // For regular function types like (A, B) -> C:
-                // - All arguments except the last are parameter types
-                // - Last argument is the return type
-                val returnType = typeArgs.last()
-                returns(returnType)
-
-                // All arguments except the last are parameter types
-                for ((index, paramType) in typeArgs.withIndex()) {
-                    if (index != typeArgs.lastIndex) {
-                        addParameter(KotlinValueParameterSpec.builder("", paramType).build())
-                    }
-                }
+            // middle is parameter type
+            for (index in currentIndex until typeArgs.lastIndex) {
+                val paramType = typeArgs[index]
+                addParameter(KotlinValueParameterSpec.builder("", paramType).build())
             }
         }
     }
