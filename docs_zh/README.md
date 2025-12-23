@@ -149,16 +149,3 @@ class MyProcessor : SymbolProcessor {
 - **English Documentation**: See [`docs/`](../docs/README.md) for English documentation
 - **中文文档**: 您正在这里（`docs_zh/`）
 
-## 💡 获取帮助
-
-如果您有问题或需要帮助：
-1. 检查相关文档部分
-2. 查看本指南中的示例
-3. 探索仓库中的测试文件
-4. 在 GitHub 上提交 issue
-
----
-
-**许可证**: Apache License 2.0
-
-**版权**: (C) 2024-2025 Forte Scarlet

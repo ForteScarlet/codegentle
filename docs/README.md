@@ -149,16 +149,3 @@ class MyProcessor : SymbolProcessor {
 - **English Documentation**: You are here (`docs/`)
 - **中文文档**: See [`docs_zh/`](../docs_zh/README.md) for Chinese documentation
 
-## 💡 Getting Help
-
-If you have questions or need help:
-1. Check the relevant documentation section
-2. Review the examples in this guide
-3. Explore the test files in the repository
-4. Open an issue on GitHub
-
----
-
-**License**: Apache License 2.0
-
-**Copyright**: (C) 2024-2025 Forte Scarlet
