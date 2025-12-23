@@ -72,7 +72,7 @@ public interface DocCollector<T> {
 ```kotlin
 // 在扩展 DocCollector 的规范构建器中
 builder.addDoc("这是一个文档注释。")
-builder.addDoc("带参数的方法 %T", someType.ref())
+builder.addDoc("带参数的方法 %V", CodePart.type(someType))
 ```
 
 ### InitializerBlockCollector<T>
@@ -117,8 +117,8 @@ public interface TypeVariableCollector<T> {
 **使用示例：**
 ```kotlin
 // 添加泛型类型参数如 <T>、<T extends Something>
-val tParam = TypeVariableName.get("T").ref()
-val boundedParam = TypeVariableName.get("E", someInterface).ref()
+val tParam = TypeVariableName("T").ref()
+val boundedParam = TypeVariableName("E", someInterface.ref()).ref()
 
 builder.addTypeVariable(tParam)
 builder.addTypeVariable(boundedParam)
@@ -171,7 +171,7 @@ public interface SuperclassConfigurer<T> {
 **使用示例：**
 ```kotlin
 // 为扩展另一个类的类设置超类
-builder.superclass(ClassName.get("com.example", "BaseClass"))
+builder.superclass(ClassName("com.example", "BaseClass"))
 builder.superclass(someClassRef)
 ```
 
@@ -196,12 +196,12 @@ public interface SuperinterfaceCollector<T> {
 **使用示例：**
 ```kotlin
 // 添加接口实现
-builder.addSuperinterface(ClassName.get("java.io", "Serializable"))
+builder.addSuperinterface(ClassName("java.io", "Serializable"))
 builder.addSuperinterface(someInterfaceRef)
 
 val interfaces = listOf(
-    ClassName.get("java.lang", "Comparable"),
-    ClassName.get("java.lang", "Cloneable")
+    ClassName("java.lang", "Comparable"),
+    ClassName("java.lang", "Cloneable")
 )
 builder.addSuperinterfaces(interfaces)
 ```

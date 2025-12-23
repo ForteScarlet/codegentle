@@ -72,7 +72,7 @@ public interface DocCollector<T> {
 ```kotlin
 // In a spec builder that extends DocCollector
 builder.addDoc("This is a documentation comment.")
-builder.addDoc("Method with parameter %T", someType.ref())
+builder.addDoc("Method with parameter %V", CodePart.type(someType))
 ```
 
 ### InitializerBlockCollector<T>
@@ -117,8 +117,8 @@ public interface TypeVariableCollector<T> {
 **Usage Example:**
 ```kotlin
 // Add generic type parameters like <T>, <T extends Something>
-val tParam = TypeVariableName.get("T").ref()
-val boundedParam = TypeVariableName.get("E", someInterface).ref()
+val tParam = TypeVariableName("T").ref()
+val boundedParam = TypeVariableName("E", someInterface.ref()).ref()
 
 builder.addTypeVariable(tParam)
 builder.addTypeVariable(boundedParam)
@@ -171,7 +171,7 @@ public interface SuperclassConfigurer<T> {
 **Usage Example:**
 ```kotlin
 // Set superclass for a class that extends another
-builder.superclass(ClassName.get("com.example", "BaseClass"))
+builder.superclass(ClassName("com.example", "BaseClass"))
 builder.superclass(someClassRef)
 ```
 
@@ -196,12 +196,12 @@ public interface SuperinterfaceCollector<T> {
 **Usage Example:**
 ```kotlin
 // Add interface implementations
-builder.addSuperinterface(ClassName.get("java.io", "Serializable"))
+builder.addSuperinterface(ClassName("java.io", "Serializable"))
 builder.addSuperinterface(someInterfaceRef)
 
 val interfaces = listOf(
-    ClassName.get("java.lang", "Comparable"),
-    ClassName.get("java.lang", "Cloneable")
+    ClassName("java.lang", "Comparable"),
+    ClassName("java.lang", "Cloneable")
 )
 builder.addSuperinterfaces(interfaces)
 ```

@@ -329,7 +329,7 @@ val methodWithExceptions = JavaMethodSpec("readFile") {
     addModifier(JavaModifier.PUBLIC)
     returns(JavaClassNames.STRING.ref())
     addParameter(JavaParameterSpec("path", JavaClassNames.STRING.ref()))
-    addException(ClassName.get("java.io", "IOException").ref())
+    addException(ClassName("java.io", "IOException").ref())
     addCode("// File reading code")
 }
 ```
@@ -398,12 +398,12 @@ val constantSpec = JavaFieldSpec("MAX_SIZE", JavaPrimitiveTypeNames.INT.ref()) {
 // Generic field
 val listFieldSpec = JavaFieldSpec("items", 
     ParameterizedTypeName.get(
-        ClassName.get("java.util", "List"),
+        ClassName("java.util", "List"),
         JavaClassNames.STRING
     ).ref()
 ) {
     addModifier(JavaModifier.PRIVATE)
-    initializer("new %T()", ClassName.get("java.util", "ArrayList"))
+    initializer("new %V()", CodePart.type(ClassName("java.util", "ArrayList")))
 }
 ```
 
@@ -443,7 +443,7 @@ val paramSpec = JavaParameterSpec("value", JavaClassNames.STRING.ref())
 
 // Parameter with annotations
 val annotatedParamSpec = JavaParameterSpec("id", JavaPrimitiveTypeNames.LONG.ref()) {
-    addAnnotation(ClassName.get("javax.annotation", "Nonnull").ref())
+    addAnnotation(ClassName("javax.annotation", "Nonnull").ref())
 }
 
 // Final parameter
@@ -585,7 +585,7 @@ val serviceClass = JavaSimpleTypeSpec(JavaTypeSpec.Kind.CLASS, "UserService") {
     addDoc("Service for managing users.")
     
     // Add interface
-    addSuperinterface(ClassName.get("com.example", "Service"))
+    addSuperinterface(ClassName("com.example", "Service"))
     
     // Private field
     addField(JavaFieldSpec("repository", repositoryType) {
@@ -604,7 +604,7 @@ val serviceClass = JavaSimpleTypeSpec(JavaTypeSpec.Kind.CLASS, "UserService") {
         addModifier(JavaModifier.PUBLIC)
         returns(userType.ref())
         addParameter(JavaParameterSpec("id", JavaPrimitiveTypeNames.LONG.ref()))
-        addException(ClassName.get("java.sql", "SQLException").ref())
+        addException(ClassName("java.sql", "SQLException").ref())
         addCode("""
             return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -614,7 +614,7 @@ val serviceClass = JavaSimpleTypeSpec(JavaTypeSpec.Kind.CLASS, "UserService") {
     // Static factory method
     addMethod(JavaMethodSpec("create") {
         addModifier(JavaModifier.PUBLIC, JavaModifier.STATIC)
-        returns(ClassName.get("com.example", "UserService").ref())
+        returns(ClassName("com.example", "UserService").ref())
         addParameter(JavaParameterSpec("repository", repositoryType))
         addCode("return new UserService(repository);")
     })
