@@ -15,8 +15,7 @@
  */
 package love.forte.codegentle.java.ref
 
-import love.forte.codegentle.common.code.CodePart.Companion.literal
-import love.forte.codegentle.common.code.CodePart.Companion.string
+import love.forte.codegentle.common.code.emitLiteral
 import love.forte.codegentle.common.code.emitString
 import love.forte.codegentle.common.code.emitType
 import love.forte.codegentle.common.naming.ClassName
@@ -47,7 +46,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addDepre
     return collector.addAnnotation(JavaAnnotationNames.Deprecated) {
         since?.also { since ->
             addMember("since", "%V") {
-                string(since)
+                emitString(since)
             }
         }
         forRemoval?.also { forRemoval ->
@@ -65,7 +64,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addSuppr
     return collector.addAnnotation(JavaAnnotationNames.SuppressWarnings) {
         if (values.isNotEmpty()) {
             for (value in values) {
-                addMember("value", "%V") { string(value) }
+                addMember("value", "%V") { emitString(value) }
             }
         }
     }
@@ -102,7 +101,7 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addReten
         javaRetentionName?.also { retentionName ->
             addMember("value", "%V.%V") {
                 emitType(ClassName("java.lang.annotation", "Retention"))
-                literal(retentionName)
+                emitLiteral(retentionName)
             }
         }
     }
@@ -123,10 +122,10 @@ public fun <B : AnnotationRefCollector<B>> AnnotationRefCollectorOps<B>.addTarge
         if (values.isNotEmpty()) {
             for (value in values) {
                 val elementName = value.uppercase()
-                require(elementName.all { it in 'A'..'Z' || it == '_' })
+                require(elementName.all { it in 'A'..'Z' || it == '_' }) { "Invalid element name: $value" }
                 addMember("value", "%V.%V") {
                     emitType(ClassName("java.lang.annotation", "ElementType"))
-                    literal(elementName)
+                    emitLiteral(elementName)
                 }
             }
         }
