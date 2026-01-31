@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2014 Google, Inc.
- * Copyright (C) 2014-2025 Forte Scarlet
+ * Copyright (C) 2014-2026 Forte Scarlet
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
